@@ -1,0 +1,69 @@
+---
+title: "Step 2 and Step 3"
+author: "Lisa Leung"
+date: '2018-03-03'
+output: github_document
+---
+#Step 2 - eQTM
+
+```{r}
+library(tidyverse)
+library(reshape)
+load("~/STAT540/STAT540/rosmap_postprocV1.rdata")
+probes_subjects[1:5,1:5]
+subjects_genes[1:5,1:5]
+
+rownames(subjects_genes)==names(probes_subjects)
+cor.test(subjects_genes[,1],as.numeric(t(probes_subjects[1,])))$p.value
+
+class(probes_subjects[1,])
+
+subjects_genes[,1]
+
+pcs <- prcomp(t(subjects_genes), center = FALSE, scale = FALSE)
+plot(pcs$rotation[, c("PC1", "PC2")], pch = 21, cex = 1.5)
+
+dat <- as.data.frame(as.matrix(probes_genes_distance))
+dim(dat)
+colnames(dat) <- names(subjects_genes)
+rownames(dat) <- rownames(probes_subjects)
+
+## using for loop - not recommended: below is for our own references 
+
+#res <- data.frame()
+#for (i in 1:ncol(subjects_genes)){
+#  m <- data.frame()
+#  toLoop = which(dat[,i] != 0) 
+  
+#  for (j in toLoop){
+#    print(paste0(i," and ",j))
+#    m <- rbind(m, data.frame(gene = names(subjects_genes)[i], probe = rownames(probes_subjects)[j], estimate = #cor.test(subjects_genes[,i], as.numeric(t(probes_subjects[j,])))$estimate,
+#pvalue = cor.test(subjects_genes[,i], as.numeric(t(probes_subjects[j,])))$p.value))
+#  }
+#  res <- rbind(res, m)
+#  rm(m)
+#}
+
+#saveRDS(res,"subset_of_results_new.rds")
+#saveRDS(res[res$pvalue<0.05,], "subset_of_results_new_005.rds")
+#summary(res$pvalue)
+
+## using lapply - recommended
+results = parallel::mclapply(1:ncol(subjects_genes), function(i){
+    toLoop = which(dat[,i] != 0) 
+    out <- lapply(toLoop, function(j){
+      data.frame(gene = names(subjects_genes)[i],
+                probe = rownames(probes_subjects)[j], 
+                estimate = cor.test(subjects_genes[,i],
+                                    as.numeric(t(probes_subjects[j,])))$estimate,
+                pvalue = cor.test(subjects_genes[,i], as.numeric(t(probes_subjects[j,])))$p.value)
+      })
+    do.call(rbind,out)
+}, mc.cores = 7)
+
+lapply_results <- do.call(rbind,results)
+
+lapply_results[1:4,]
+
+saveRDS(lapply_results,"subset_of_results_lapply.rds")
+```
