@@ -67,7 +67,7 @@ results_pca_AKT2 = lapply(1:n, function(i){
 })
 
 lapply_results_pca_AKT2 <- do.call(rbind,results_pca_AKT2)
-plot(lapply_results_pca_AKT2$num_PC, lapply_results_pca_AKT2$num_less_pvalue)
+ggplot(aes(x=num_PC, y=num_less_pvalue), data = lapply_results_pca_AKT2) + geom_point() + geom_line( ) + ggtitle("Number of DNA probes less than pvalue = 0.1 on number of PCs for AKT2") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
 
 #APP on gene
 results_pca_APP = lapply(1:n, function(i){
@@ -162,7 +162,7 @@ results_50_genes_average
 
 
 p <- ggplot(aes(x=num_PC, y = average_sig), data=results_50_genes_average)
-p + geom_line( )+ ggtitle("Average number of DNA probes less than pvalue = 0.1 on number of PCs for 50 genes") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
+p + geom_line( ) + ggtitle("Average number of DNA probes less than pvalue = 0.1 on number of PCs for 50 genes") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
 
 
 ## using for loop - not recommended: below is for our own references 
