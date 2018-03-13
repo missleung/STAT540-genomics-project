@@ -160,9 +160,11 @@ do.call(rbind, out_genes)
 
 #results_50_genes <- do.call(rbind, results_pca_50_genes)
 results_50_genes_bonerroni_05 <- do.call(rbind, results_pca_50_genes)
+results_50_genes_bonerroni_05$eqtl<-0
+results_50_genes_bonerroni_05$eqtl[results_50_genes_bonerroni_05$num_less_pvalue>0] <- 1
 #saveRDS(results_50_genes, "results_50_genes.RDS")
-
-results_50_genes_average <- results_50_genes_bonerroni_05 %>% group_by(num_PC) %>% summarise(average_sig = mean(num_less_pvalue))
+saveRDS(results_50_genes_bonerroni_05, "results_50_genes_bonerroni_05.RDS")
+results_50_genes_average <- results_50_genes_bonerroni_05 %>% group_by(num_PC) %>% summarise(average_sig = mean(eqtl))
 results_50_genes_average
 
 
