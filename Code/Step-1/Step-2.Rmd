@@ -117,19 +117,22 @@ out_genes = lapply(n_genes, function(i){
                 pvalue = cor.test(m[[k]][,i], as.numeric(t(probes_subjects[j,])))$p.value)
       })
     gene_out <- do.call(rbind,out)
-    data.frame(num_PC=k, gene = colnames(m[[k]])[i], num_less_pvalue=sum(gene_out$pvalue <= 0.1))
+    gene_out$bonferroni <- p.adjust(gene_out$pvalue, method = "bonferroni")
+    data.frame(num_PC=k, gene = colnames(m[[k]])[i],    num_less_pvalue=sum(gene_out$bonferroni <= 0.05))
+   # num_less_pvalue=sum(gene_out$pvalue <= 0.1))
 })
 do.call(rbind, out_genes)
 }, mc.cores = 7)
 
-results_10_genes <- do.call(rbind, results_pca_10_genes)
-
-saveRDS(results_10_genes, "results_10_genes.RDS")
+#results_10_genes <- do.call(rbind, results_pca_10_genes)
+results_10_genes_bonferroni_05 <- do.call(rbind, results_pca_10_genes)
+#saveRDS(results_10_genes, "results_10_genes.RDS")
+saveRDS(results_10_genes_bonferroni_05, "results_10_genes_bonferroni_05.RDS")
 
 g1 <- ggplot(aes(x=num_PC, y=num_less_pvalue, group=gene, colour=gene), data = results_10_genes)
 g1 + geom_point() + geom_line() + ggtitle("Number of DNA probes less than pvalue = 0.1 on number of PCs adjusted by gene") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
 
-results_10_genes_average <- results_10_genes %>% group_by(num_PC) %>% summarise(average_sig = mean(num_less_pvalue))
+results_10_genes_average <- results_10_genes_bonferroni_05 %>% group_by(num_PC) %>% summarise(average_sig = mean(num_less_pvalue))
 results_10_genes_average
 
 p1 <- ggplot(aes(x=num_PC, y = average_sig), data=results_10_genes_average)
@@ -148,21 +151,26 @@ out_genes = lapply(n_genes, function(i){
                 pvalue = cor.test(m[[k]][,i], as.numeric(t(probes_subjects[j,])))$p.value)
       })
     gene_out <- do.call(rbind,out)
-    data.frame(num_PC=k, gene = colnames(m[[k]])[i], num_less_pvalue=sum(gene_out$pvalue <= 0.05))
+    gene_out$bonferroni <- p.adjust(gene_out$pvalue, method = "bonferroni")
+    data.frame(num_PC=k, gene = colnames(m[[k]])[i],    num_less_pvalue=sum(gene_out$bonferroni <= 0.05))
+   # num_less_pvalue=sum(gene_out$pvalue <= 0.1))
 })
 do.call(rbind, out_genes)
-}, mc.cores = 6)
+}, mc.cores = 7)
 
-results_50_genes <- do.call(rbind, results_pca_50_genes)
+#results_50_genes <- do.call(rbind, results_pca_50_genes)
+results_50_genes_bonerroni_05 <- do.call(rbind, results_pca_50_genes)
+#saveRDS(results_50_genes, "results_50_genes.RDS")
 
-saveRDS(results_50_genes, "results_50_genes.RDS")
-
-results_50_genes_average <- results_50_genes %>% group_by(num_PC) %>% summarise(average_sig = mean(num_less_pvalue))
+results_50_genes_average <- results_50_genes_bonerroni_05 %>% group_by(num_PC) %>% summarise(average_sig = mean(num_less_pvalue))
 results_50_genes_average
 
 
+#p <- ggplot(aes(x=num_PC, y = average_sig), data=results_50_genes_average)
+#p + geom_line( ) + ggtitle("Average number of DNA probes less than pvalue = 0.1 on #number of PCs for 50 genes") + xlab("Number of PCs") + ylab("Number of significant #DNA probes for alpha at 0.1")
+
 p <- ggplot(aes(x=num_PC, y = average_sig), data=results_50_genes_average)
-p + geom_line( ) + ggtitle("Average number of DNA probes less than pvalue = 0.1 on number of PCs for 50 genes") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
+p + geom_line( ) + ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs") + ylab("Proportion of genes")
 
 
 ## using for loop - not recommended: below is for our own references 
