@@ -133,7 +133,7 @@ results_10_genes_average <- results_10_genes %>% group_by(num_PC) %>% summarise(
 results_10_genes_average
 
 p1 <- ggplot(aes(x=num_PC, y = average_sig), data=results_10_genes_average)
-p1 + geom_line()
+p1 + geom_line()+ ggtitle("Average number of DNA probes less than pvalue = 0.1 on number of PCs for 10 genes") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
 
 # look at random 50 genes
 set.seed(100)
@@ -157,14 +157,12 @@ results_50_genes <- do.call(rbind, results_pca_50_genes)
 
 saveRDS(results_50_genes, "results_50_genes.RDS")
 
-g <- ggplot(aes(x=num_PC, y=num_less_pvalue, group=gene, colour=gene), data = results_50_genes)
-g + geom_point() + geom_line() + ggtitle("Number of DNA probes less than pvalue = 0.05 on number of PCs adjusted and grouped by gene") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.05")
-
 results_50_genes_average <- results_50_genes %>% group_by(num_PC) %>% summarise(average_sig = mean(num_less_pvalue))
 results_50_genes_average
 
+
 p <- ggplot(aes(x=num_PC, y = average_sig), data=results_50_genes_average)
-p + geom_line()
+p + geom_line( )+ ggtitle("Average number of DNA probes less than pvalue = 0.1 on number of PCs for 50 genes") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
 
 
 ## using for loop - not recommended: below is for our own references 
