@@ -1,0 +1,71 @@
+---
+title: "Step 3"
+date: "3/9/2018"
+output: html_document
+---
+
+```{r}
+library(pheatmap)
+library(reshape2)
+library(tidyverse)
+library(GEOquery)
+library(RColorBrewer)
+library(cluster)
+library(pvclust)
+library(xtable)
+library(limma)
+library(dplyr)
+library(lattice)
+library(RCurl)
+library(GEOquery)
+library(knitr)
+library(pheatmap)#
+library(reshape2)#
+library(purrr)
+library(knitr)
+```
+
+
+
+```{r}
+rawdata<- readRDS("~/Desktop/BIOF/Group project/multiple regression/subset_of_results_lapply.rds")
+#head(rawdata)
+#dim(rawdata)
+gene1 <-rawdata %>%  filter(gene=="RAB4B:ENSG00000167578.11")
+#head(gene1)
+gene1.sorted<- gene1[order(gene1$pvalue),]
+head(gene1.sorted)
+load("~/Desktop/BIOF/Group project/multiple regression/rosmap_postprocV1.RData")
+```
+
+```{r}
+head(gene1.sorted)
+```
+
+```{r}
+
+#head(probes_subjects)
+#head(probes_genes_distance)
+#rosmap
+subjects_probes <- as.data.frame(t(probes_subjects))
+#head(subjects_probes)
+#head(subjects_genes)
+gene1.expression <- subjects_genes$"RAB4B:ENSG00000167578.11"
+probe1.value <- subjects_probes$"cg25258938"
+```
+
+```{r}
+gene1_probe1 <- cbind(gene1.expression,probe1.value)
+gene1_probe1 <- as.data.frame(gene1_probe1)
+head(gene1_probe1)
+ggplot(gene1_probe1, aes(x=probe1.value,y=gene1.expression) ) +
+  geom_point()
+```
+
+```{r}
+summary(lm(gene1.expression ~ probe1.value,data = gene1_probe1))
+```
+
+
+
+
