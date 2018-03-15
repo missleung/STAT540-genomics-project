@@ -175,6 +175,17 @@ p <- ggplot(aes(x=num_PC, y = average_sig), data=results_50_genes_average)
 p + geom_line( ) + ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs") + ylab("Proportion of genes")
 
 
+#Cumulative variation explained by PCs
+#ref:http://genomicsclass.github.io/book/pages/pca_svd.html
+#cum all
+plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 481), type = "b", pch = 16, xlab = "principal components", 
+     ylab = "cumulative variance explained")
+#cum of first 50
+cumsum(pc_svd$d^2/sum(pc_svd$d^2))[1:50] #total variance seems to stabilize at 47th pc with 78% of variation explained
+plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 50), type = "b", pch = 16, xlab = "principal components", 
+     ylab = "cumulative variance explained")
+
+
 ## using for loop - not recommended: below is for our own references 
 
 #res <- data.frame()
