@@ -34,7 +34,7 @@ plot(pc_svd$u[, 1], pc_svd$u[, 2], main = "SVD", xlab = "U1", ylab = "U2") #plot
 # reconstructing the same values is shown below:
 # SVD$u %*% diag(SVD$d) %*% t(SVD$v)
 
-# Adjusting for the PCs according to number of PCA you want to adjust (right now it's first 5 pca)
+# Adjusting for the PCs according to number of PCA you want to adjust
 m <- list()
 n <- 20
 for (i in 1:n){
@@ -205,23 +205,27 @@ plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 50), type = "b", pch = 16, 
 #saveRDS(res,"subset_of_results_new.rds")
 #saveRDS(res[res$pvalue<0.05,], "subset_of_results_new_005.rds")
 #summary(res$pvalue)
+```
 
+With the results on plots above, we decide to adjust for three PCAs.
+
+```{r}
 ## using lapply - recommended
-results = parallel::mclapply(1:ncol(subjects_genes), function(i){
+results_PCA = parallel::mclapply(1:ncol(m[[3]]), function(i){
     toLoop = which(dat[,i] != 0) 
     out <- lapply(toLoop, function(j){
-      data.frame(gene = names(subjects_genes)[i],
+      data.frame(gene = names(m[[3]])[i],
                 probe = rownames(probes_subjects)[j], 
-                estimate = cor.test(subjects_genes[,i],
+                estimate = cor.test(m[[3]][,i],
                                     as.numeric(t(probes_subjects[j,])))$estimate,
-                pvalue = cor.test(subjects_genes[,i], as.numeric(t(probes_subjects[j,])))$p.value)
+                pvalue = cor.test(m[[3]][,i], as.numeric(t(probes_subjects[j,])))$p.value)
       })
     do.call(rbind,out)
 }, mc.cores = 7)
 
-lapply_results <- do.call(rbind,results)
+lapply_results_PCA <- do.call(rbind,results_PCA)
 
-lapply_results[1:4,]
+lapply_results_PCA[1:4,]
 
-saveRDS(lapply_results,"subset_of_results_lapply.rds")
+saveRDS(lapply_results_PCA,"cor_test_results_PCA_lapply.rds")
 ```
