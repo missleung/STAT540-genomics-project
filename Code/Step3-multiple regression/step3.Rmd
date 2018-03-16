@@ -4,6 +4,8 @@ date: "3/9/2018"
 output: html_document
 ---
 
+
+###Libraries
 ```{r}
 library(pheatmap)
 library(reshape2)
@@ -22,25 +24,29 @@ library(knitr)
 library(pheatmap)#
 library(reshape2)#
 library(purrr)
-library(knitr)
+library(corrplot) # We'll use corrplot later on in this example too.
+#library(rgl)#3D plot not working yet
+#library(scatterplot3d)#3D plot not working yet
+#library(visreg)
+library(Hmisc)
+library(psych)
+library(MASS)
+library(DAAG)
 ```
 
 
-
+##1- Here we load the data from a local directoty. after that we will check the way that we are can access a gene like "RAB4B:ENSG00000167578.11". the results will be stored at gene1. then we will sort the gene1 due to P.value s of the probes
 ```{r}
-rawdata<- readRDS("~/Desktop/BIOF/Group project/multiple regression/subset_of_results_lapply.rds")
-#head(rawdata)
+rawdata<- readRDS("~/Desktop/BIOF/Group project/Step3-multiple regression/subset_of_results_lapply.rds")
+head(rawdata)
 #dim(rawdata)
 gene1 <-rawdata %>%  filter(gene=="RAB4B:ENSG00000167578.11")
 #head(gene1)
 gene1.sorted<- gene1[order(gene1$pvalue),]
 head(gene1.sorted)
-load("~/Desktop/BIOF/Group project/multiple regression/rosmap_postprocV1.RData")
+load("~/Desktop/BIOF/Group project/Step3-multiple regression/rosmap_postprocV1.RData")
 ```
 
-```{r}
-head(gene1.sorted)
-```
 
 ```{r}
 
@@ -58,13 +64,173 @@ probe1.value <- subjects_probes$"cg25258938"
 gene1_probe1 <- cbind(gene1.expression,probe1.value)
 gene1_probe1 <- as.data.frame(gene1_probe1)
 head(gene1_probe1)
-ggplot(gene1_probe1, aes(x=probe1.value,y=gene1.expression) ) +
-  geom_point()
+
+#ggplot(gene1_probe1, aes(x=probe1.value,y=gene1.expression) ) +
+# geom_point()
 ```
 
 ```{r}
+class(gene1.expression)
 summary(lm(gene1.expression ~ probe1.value,data = gene1_probe1))
 ```
+
+
+
+
+## New added parts:
+```{r}
+head(subjects_genes)
+head(probes_subjects)
+head(rawdata)
+```
+
+##computing designated.dataframe.for.specific.gene for only gene number 1:
+```{r}
+                gene.number <-1 # then we can put the whole thing in a function
+                gene.name  <- names(subjects_genes)[gene.number]
+                # exclude of subse of raw data which is for this gene
+                rawdata.for.specific.gene <-rawdata %>% filter(gene==gene.name)
+                # sort the raws (which are prob numbers) due to P value:
+                print(gene.name)
+                rawdata.for.specific.gene <-          
+                rawdata.for.specific.gene[order(rawdata.for.specific.gene$pvalue),]
+                gene.expressions<-data.frame(expression=subjects_genes[,gene.name])
+                names.of.ordered.probes<-rawdata.for.specific.gene$probe
+                ordered.probe.value<-as.data.frame(t(probes_subjects[as.character(names.of.ordered.probes),]))
+                designated.dataframe.for.specific.gene<-cbind(gene.expressions,ordered.probe.value)
+                #head(rawdata.for.specific.gene)
+                head(designated.dataframe.for.specific.gene)
+          
+```
+##plot correlation between elements and asses gene Vs. probes
+```{r}
+number.of.picked.probes <- 4
+plot(designated.dataframe.for.specific.gene[,1:number.of.picked.probes], pch=1,main=gene.name)
+linear.model <-lm(expression~cg25258938,data=designated.dataframe.for.specific.gene)
+summary( linear.model)
+datacor = cor(designated.dataframe.for.specific.gene[1:number.of.picked.probes])
+corrplot(datacor, method = "number")
+
+```
+
+
+3D plot not working yet:
+```{r}
+#3D plot not working yet
+#newdat <- expand.grid(cg25258938=seq(0.9,0.98,by=0.01),cg13793525=seq(0,0.03,by=0.01))
+#newdat$pp <- predict(linear.model,designated.dataframe.for.specific.gene[1:36,]=newdat)
+#with(designated.dataframe.for.specific.gene,plot3d(expression,cg25258938,cg13793525, col="blue", size=1, type="s", main="3D Linear Model Fit"))
+#with(newdat,surface3d(unique(cg25258938),unique(cg13793525),pp,alpha=0.3,front="line", back="line"))
+```
+
+
+
+
+fit linear model (multiple regression) to data + validation
+```{r}
+
+head(designated.dataframe.for.specific.gene)
+#x <- names.of.ordered.probes[1]
+
+#summary(lm(designated.dataframe.for.specific.gene[,1]~designated.dataframe.for.specific.gene[,2] +designated.dataframe.for.specific.gene[,3]+designated.dataframe.for.specific.gene[,4]+designated.dataframe.for.specific.gene[,5],data=designated.dataframe.for.specific.gene))
+
+
+#quick visualizing data
+auto.sel <- designated.dataframe.for.specific.gene[,1:number.of.picked.probes]
+#plot : distribution , linear , and correlation:
+pairs.panels(auto.sel, col="red")
+```
+```{r}
+#for more info: https://www.youtube.com/watch?v=HP3RhjLhRjY
+
+# Split data into training and validation samples
+# We will use (train.size)% for training and (100-train.size)% for validation
+set.seed(2017)
+train.size <- 0.8 
+train.index <- sample.int(length(designated.dataframe.for.specific.gene[,1]), round(length(designated.dataframe.for.specific.gene[,1]) * train.size))
+train.sample <- auto.sel[train.index,]
+valid.sample <- auto.sel[-train.index,]
+
+#fit linear model
+fit.train<- lm(expression~.,data = train.sample)
+summary(fit.train)
+plot(fit.train)
+```
+
+
+make anova between two nested models:
+```{r}
+
+x<- designated.dataframe.for.specific.gene[,1:2]
+fit1<- lm(expression~.,data =x )
+summary(fit1)
+x<- designated.dataframe.for.specific.gene[,1:8]
+fit2<- lm(expression~.,data =x )
+summary(fit2)
+#anova(fit1,fit2)
+```
+
+
+variable selection
+```{r}
+
+x<- designated.dataframe.for.specific.gene[,1:10]
+fit <- lm(expression~.,data=x)
+step <- stepAIC(fit, direction="both")
+step$anova # display results 
+```
+
+
+
+
+cross validation:
+```{r}
+
+fit<- lm(expression~.,data = designated.dataframe.for.specific.gene[1:number.of.picked.probes])
+cv.lm(designated.dataframe.for.specific.gene[1:number.of.picked.probes], fit, m=3)
+```
+
+
+
+
+
+
+
+
+
+
+#```{r}
+#number.of.genes <- ncol(subjects_genes)
+number.of.genes <- 1
+#number.of.probes <- ncol(subjects_probes)
+number.of.probes <- 3
+results <- lapply(1:number.of.genes, function(i){
+                #find the gene name due to the gene number in subject_gene
+                gene.number <- i
+                gene.name  <- names(subjects_genes)[gene.number]
+                # exclude of subse of raw data which is for this gene
+                rawdata.for.specific.gene <-rawdata %>% filter(gene==gene.name)
+                # sort the raws (which are prob numbers) due to P value:
+                print(gene.name)
+                rawdata.for.specific.gene <-          
+                rawdata.for.specific.gene[order(rawdata.for.specific.gene$pvalue),]
+                rawdata.for.specific.gene
+                
+                # number of probes to fil lm
+                out <- lapply(1:number.of.probes, function(j){
+                  }
+    #  data.frame(gene = names(subjects_genes)[i],
+    #            probe = rownames(probes_subjects)[j], 
+    #            estimate = cor.test(subjects_genes[,i],
+    #                                as.numeric(t(probes_subjects[j,])))$estimate,
+    #            pvalue = cor.test(subjects_genes[,i], as.numeric(t(probes_subjects[j,])))$p.value)
+    #  })
+    #do.call(rbind,out)
+})
+
+```
+
+
 
 
 
