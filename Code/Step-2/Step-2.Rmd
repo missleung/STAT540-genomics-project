@@ -10,7 +10,7 @@ output: github_document
 library(tidyverse)
 library(reshape)
 library(ggplot2)
-load("~/STAT540/STAT540/rosmap_postprocV1.rdata")
+m <- load("~/STAT540/Repo_team_Gene_Heroes/Code/Step-2/rosmap_postprocV2.rdata")
 probes_subjects[1:5,1:5]
 subjects_genes[1:5,1:5]
 
@@ -163,7 +163,7 @@ results_50_genes_bonerroni_05 <- do.call(rbind, results_pca_50_genes)
 results_50_genes_bonerroni_05$eqtl<-0
 results_50_genes_bonerroni_05$eqtl[results_50_genes_bonerroni_05$num_less_pvalue>0] <- 1
 #saveRDS(results_50_genes, "results_50_genes.RDS")
-saveRDS(results_50_genes_bonerroni_05, "results_50_genes_bonerroni_05.RDS")
+saveRDS(results_50_genes_bonerroni_05, "results_50_genes_bonerroni_05_V2.RDS")
 results_50_genes_average <- results_50_genes_bonerroni_05 %>% group_by(num_PC) %>% summarise(average_sig = mean(eqtl))
 results_50_genes_average
 
@@ -171,20 +171,25 @@ results_50_genes_average
 #p <- ggplot(aes(x=num_PC, y = average_sig), data=results_50_genes_average)
 #p + geom_line( ) + ggtitle("Average number of DNA probes less than pvalue = 0.1 on #number of PCs for 50 genes") + xlab("Number of PCs") + ylab("Number of significant #DNA probes for alpha at 0.1")
 
+jpeg("prop_of_genes_sig_on_50_genes.jpg")
 p <- ggplot(aes(x=num_PC, y = average_sig), data=results_50_genes_average)
 p + geom_line( ) + ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs") + ylab("Proportion of genes")
-
+dev.off()
 
 #Cumulative variation explained by PCs
 #ref:http://genomicsclass.github.io/book/pages/pca_svd.html
 #cum all
+jpeg("cum_var_explained_all.jpg")
 plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 481), type = "b", pch = 16, xlab = "principal components", 
      ylab = "cumulative variance explained")
+dev.off()
+
 #cum of first 50
+jpeg("cum_var_explained_50.jpg")
 cumsum(pc_svd$d^2/sum(pc_svd$d^2))[1:50] #total variance seems to stabilize at 47th pc with 78% of variation explained
 plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 50), type = "b", pch = 16, xlab = "principal components", 
      ylab = "cumulative variance explained")
-
+dev.off()
 
 ## using for loop - not recommended: below is for our own references 
 
@@ -210,11 +215,13 @@ plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 50), type = "b", pch = 16, 
 With the results on plots above, we decide to adjust for three PCAs.
 
 ```{r}
+saveRDS(m[[3]], "subjects_genes_PCA_adjusted_V2.RDS")
+
 ## using lapply - recommended
 results_PCA = parallel::mclapply(1:ncol(m[[3]]), function(i){
     toLoop = which(dat[,i] != 0) 
     out <- lapply(toLoop, function(j){
-      data.frame(gene = names(m[[3]])[i],
+      data.frame(gene = colnames(m[[3]])[i],
                 probe = rownames(probes_subjects)[j], 
                 estimate = cor.test(m[[3]][,i],
                                     as.numeric(t(probes_subjects[j,])))$estimate,
@@ -227,5 +234,5 @@ lapply_results_PCA <- do.call(rbind,results_PCA)
 
 lapply_results_PCA[1:4,]
 
-saveRDS(lapply_results_PCA,"cor_test_results_PCA_lapply.rds")
+saveRDS(lapply_results_PCA,"cor_test_results_PCA_lapply_V2.rds")
 ```
