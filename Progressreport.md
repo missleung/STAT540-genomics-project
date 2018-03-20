@@ -1,7 +1,7 @@
 Progress Report
 ================
 Zohreh Sharafian
-March 19, 2018
+March 19,2018
 
 ### What has changed based on the final proposal (1 pt.)
 
