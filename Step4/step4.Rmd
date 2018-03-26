@@ -1,0 +1,165 @@
+---
+title: "Step4"
+author: "Zohreh Sharafian"
+date: "March 24, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(pheatmap)
+library(reshape2)
+library(tidyverse)
+library(GEOquery)
+library(RColorBrewer)
+library(cluster)
+library(pvclust)
+library(xtable)
+library(limma)
+library(dplyr)
+library(lattice)
+library(RCurl)
+library(GEOquery)
+library(knitr)
+library(pheatmap)#
+library(reshape2)#
+library(purrr)
+library(corrplot) # We'll use corrplot later on in this example too.
+#library(rgl)#3D plot not working yet
+#library(scatterplot3d)#3D plot not working yet
+#library(visreg)
+
+
+library(Hmisc)
+library(psych)
+library(MASS)
+library(DAAG)
+```
+
+```{r}
+RosmapData <- load("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/rosmap_postprocV2.RData")
+probes_subjects[1:5, 1:5]
+subjects_genes[1:5,1:5]
+str(RosmapData)
+```
+```{r}
+nrow(probes_genes_distance) #number of probes
+ncol(probes_genes_distance) #number of genes
+```
+
+
+```{r}
+cor_test_results_PCA_lapply_V2 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/cor_test_results_PCA_lapply_V2.rds")
+head (cor_test_results_PCA_lapply_V2)
+
+```
+
+```{r}
+extracted_matrix <- cor_test_results_PCA_lapply_V2 [,c(1,2, 5)]
+
+nrow(extracted_matrix)
+
+filtered_pvalue <- extracted_matrix[extracted_matrix$adjusted.pvalue<0.05,]
+nrow(filtered_pvalue)
+```
+
+```{r}
+
+data <- as.data.frame(as.matrix(probes_genes_distance))
+
+```
+```{r}
+colnames(data) <- names(subjects_genes)
+rownames(data) <- rownames(probes_subjects)
+
+```
+```{r}
+#list1$test1value <- list2$test[match(list1$id, list2$id)]
+
+x <- match(filtered_pvalue$probe, rownames(data) )
+y <- match(filtered_pvalue$gene, colnames(data) )
+inds=cbind(x,y)
+x2 <- data[inds]
+rrrr=hist(x2)
+#ggplot() + aes(x2)+ geom_histogram(binwidth=1, colour="black", fill="white")
+
+qplot(x2,
+      geom="histogram",
+  main="Histogram for p value", 
+      xlab="p value", 
+      fill=I("blue"), 
+      col="green")
+
+```
+
+
+
+# graph No.2 the average of pValue vs the distance of probes
+```{r}
+tmp <- hist(x2)
+intervals_values=findInterval(x2,tmp$breaks)
+
+
+```
+
+
+```{r}
+
+histog <-  integer (10)
+for(i in 1:10) {
+elemenets_in_this_interval <-which(intervals_values==i);
+histog[i]=mean(filtered_pvalue$adjusted.pvalue[elemenets_in_this_interval])
+print((histog[i]))
+}
+
+
+```
+
+```{r}
+#p<-ggplot(data=hist.data.frame(tmp), aes(x=tmp$mids, y=tmp$counts)) +
+  
+  #geom_bar(stat="identity")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#gene1 <- cor_test_results_PCA_lapply_V2 %>%  filter(gene=="RAB4B:ENSG00000167578.11")
+#gene1
+#gene1.sorted<- gene1[order(gene1$pvalue),]
+
+#head(gene1.sorted)
+
+#gene1_ros <- RosmapData %>%  filter(gene=="RAB4B:ENSG00000167578.11")
+```
+
