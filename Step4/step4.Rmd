@@ -1,8 +1,8 @@
 ---
-title: "Step4"
+title: "Biological Analysis-part 1"
 author: "Zohreh Sharafian"
 date: "March 24, 2018"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -18,18 +18,8 @@ library(dplyr)
 library(lattice)
 library(RCurl)
 library(knitr)
-library(reshape2)#
 library(purrr)
-library(corrplot) # We'll use corrplot later on in this example too.
-#library(rgl)#3D plot not working yet
-#library(scatterplot3d)#3D plot not working yet
-#library(visreg)
-
-
-library(Hmisc)
-library(psych)
-library(MASS)
-library(DAAG)
+library(corrplot) 
 ```
 
 ```{r}
@@ -43,63 +33,73 @@ nrow(probes_genes_distance) #number of probes
 ncol(probes_genes_distance) #number of genes
 ```
 
-
 ```{r}
-cor_test_results_PCA_lapply_V2 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/cor_test_results_PCA_lapply_V2.rds")
+cor_test_results_PCA_lapply_V2 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/cor_test_results_PCA_lapply_V3.rds")
 head (cor_test_results_PCA_lapply_V2)
-
-hist(cor_test_results_PCA_lapply_V2$adjusted.pvalue[cor_test_results_PCA_lapply_V2$adjusted.pvalue<0.05])
+#hist(cor_test_results_PCA_lapply_V2$adjusted.pvalue[cor_test_results_PCA_lapply_V2$adjusted.pvalue<0.05])
 ```
 
 ```{r}
+#extracting three columns inclusing gene, probe, and adjusted.pvalue
+
 extracted_matrix <- cor_test_results_PCA_lapply_V2 [,c(1,2, 5)]
 head(extracted_matrix)
 nrow(extracted_matrix)
 
+# cut off (0.05) for the p value
 filtered_pvalue <- extracted_matrix[extracted_matrix$adjusted.pvalue<0.05,]
-nrow(filtered_pvalue)
+
 ```
 
 ```{r}
+
 data <- as.data.frame(as.matrix(probes_genes_distance))
 colnames(data) <- names(subjects_genes)
 rownames(data) <- rownames(probes_subjects)
 
-#list1$test1value <- list2$test[match(list1$id, list2$id)]
-
-x <- match(filtered_pvalue$probe, rownames(data) )
-y <- match(filtered_pvalue$gene, colnames(data) )
-inds=cbind(x,y)
-x2 <- data[inds]
-rrrr=hist(x2)
-
-#melt_x2 <- melt(rownames_to_column(data, var="probe"), id="probe")
-#head(melt_x2)
-
-#ggplot() + aes(x2)+ geom_histogram(binwidth=1, colour="black", fill="white")
-
-
-
-#new_Data <- left_join(filtered_pvalue, melt_x2, by= c("probe"="probe", "gene"="variable"))
-head(x2)
-dim(data)
-dim(filtered_pvalue)
-summary(x)
-class(filtered_pvalue)
 ```
+
+```{r}
+#matching the probes and genes from two data set
+
+match_probes <- match(filtered_pvalue$probe, rownames(data) )
+matche_genes <- match(filtered_pvalue$gene, colnames(data) )
+
+inds=cbind(match_probes,matche_genes)
+
+match_data <- data[inds]
+
+qplot(match_data,
+      geom="histogram",
+      main = "The distance of methylated CpG sites to the genes ", 
+      xlab = "methylated CpG sites distance to the gene",  
+      fill=I("blue"), 
+      col=I("red"), 
+      ) +theme_minimal()
+#tmp = hist(match_data)
+
+
+
+
+```
+
 
 
 
 # graph No.2 the average of pValue vs the distance of probes
-```{r}
-tmp <- hist(x2)
-intervals_values=findInterval(x2,tmp$breaks)
+```{r} 
+
+tmp <- hist(match_data) 
+
+intervals_values=findInterval(match_data,tmp$breaks)  #get the interval values from the histogram
 
 
 ```
 
 
 ```{r}
+
+#for loop to get the interval values for all the genes
 
 histog <-  integer (10)
 for(i in 1:10) {
@@ -107,20 +107,25 @@ elemenets_in_this_interval <-which(intervals_values==i);
 histog[i]=mean(filtered_pvalue$adjusted.pvalue[elemenets_in_this_interval])
 print((histog[i]))
 }
+
+
 x=tmp$mids;
 y=histog;
-data=cbind(x,y)
-data=as.data.frame(data)
-colnames(data)=c("x_val","y_val")
-data %>% ggplot2::ggplot(aes(x=x_val,y=y_val)) +geom_line()
+data_plot=cbind(x,y)
+data_plot=as.data.frame(data_plot)
+colnames(data_plot)=c("CpG_site_distance","Average_of_adjusted_Pvalue")
+
+data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_line(color='steelblue', size=2)+theme_minimal()
 
 ```
 
 ```{r}
-#p<-ggplot(data=hist.data.frame(tmp), aes(x=tmp$mids, y=tmp$counts)) +
-  
-  #geom_bar(stat="identity")
-
+x=tmp$mids;
+y=histog;
+data_plot=cbind(x,y)
+data_plot=as.data.frame(data_plot)
+colnames(data_plot)=c("CpG_site_distance","Average_of_adjusted_Pvalue")
+data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_bar(stat="identity",fill="Green4")+theme_minimal()
 ```
 
 
@@ -153,15 +158,20 @@ data %>% ggplot2::ggplot(aes(x=x_val,y=y_val)) +geom_line()
 
 
 
-
-
 ```{r}
-#gene1 <- cor_test_results_PCA_lapply_V2 %>%  filter(gene=="RAB4B:ENSG00000167578.11")
-#gene1
-#gene1.sorted<- gene1[order(gene1$pvalue),]
 
 #head(gene1.sorted)
 
 #gene1_ros <- RosmapData %>%  filter(gene=="RAB4B:ENSG00000167578.11")
+
+
+
+
+#melt_x2 <- melt(rownames_to_column(data, var="probe"), id="probe")
+#head(melt_x2)
+
+#ggplot() + aes(x2)+ geom_histogram(binwidth=1, colour="black", fill="white")
+
+#new_Data <- left_join(filtered_pvalue, melt_x2, by= c("probe"="probe", "gene"="variable"))
 ```
 
