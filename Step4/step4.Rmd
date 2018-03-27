@@ -20,7 +20,6 @@ library(lattice)
 library(RCurl)
 library(GEOquery)
 library(knitr)
-library(pheatmap)#
 library(reshape2)#
 library(purrr)
 library(corrplot) # We'll use corrplot later on in this example too.
@@ -51,11 +50,12 @@ ncol(probes_genes_distance) #number of genes
 cor_test_results_PCA_lapply_V2 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/cor_test_results_PCA_lapply_V2.rds")
 head (cor_test_results_PCA_lapply_V2)
 
+hist(cor_test_results_PCA_lapply_V2$adjusted.pvalue[cor_test_results_PCA_lapply_V2$adjusted.pvalue<0.05])
 ```
 
 ```{r}
 extracted_matrix <- cor_test_results_PCA_lapply_V2 [,c(1,2, 5)]
-
+head(extracted_matrix)
 nrow(extracted_matrix)
 
 filtered_pvalue <- extracted_matrix[extracted_matrix$adjusted.pvalue<0.05,]
@@ -63,16 +63,10 @@ nrow(filtered_pvalue)
 ```
 
 ```{r}
-
 data <- as.data.frame(as.matrix(probes_genes_distance))
-
-```
-```{r}
 colnames(data) <- names(subjects_genes)
 rownames(data) <- rownames(probes_subjects)
 
-```
-```{r}
 #list1$test1value <- list2$test[match(list1$id, list2$id)]
 
 x <- match(filtered_pvalue$probe, rownames(data) )
@@ -80,15 +74,20 @@ y <- match(filtered_pvalue$gene, colnames(data) )
 inds=cbind(x,y)
 x2 <- data[inds]
 rrrr=hist(x2)
+
+#melt_x2 <- melt(rownames_to_column(data, var="probe"), id="probe")
+#head(melt_x2)
+
 #ggplot() + aes(x2)+ geom_histogram(binwidth=1, colour="black", fill="white")
 
-qplot(x2,
-      geom="histogram",
-  main="Histogram for p value", 
-      xlab="p value", 
-      fill=I("blue"), 
-      col="green")
 
+
+#new_Data <- left_join(filtered_pvalue, melt_x2, by= c("probe"="probe", "gene"="variable"))
+head(x2)
+dim(data)
+dim(filtered_pvalue)
+summary(x)
+class(filtered_pvalue)
 ```
 
 
@@ -110,7 +109,12 @@ elemenets_in_this_interval <-which(intervals_values==i);
 histog[i]=mean(filtered_pvalue$adjusted.pvalue[elemenets_in_this_interval])
 print((histog[i]))
 }
-
+x=tmp$mids;
+y=histog;
+data=cbind(x,y)
+data=as.data.frame(data)
+colnames(data)=c("x_val","y_val")
+data %>% ggplot2::ggplot(aes(x=x_val,y=y_val)) +geom_line()
 
 ```
 
