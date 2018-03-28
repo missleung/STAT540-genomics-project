@@ -1,29 +1,32 @@
 ---
-title: "Step 2"
+title: "Step 2 - eQTM"
 author: "Lisa Leung"
 date: '2018-03-03'
 output: github_document
 ---
-#Step 2 - eQTM
+
+#Loading Libraries
+For Step 2, we will load three library packages: tidyverse, reshape, ggplot2. We will load the data sets built from Step 1: probes_subjects that contains DNA methylation probe values, subjects_genes that contains gene expression values, and probes_genes_distance that is a sparse matrix containing the distances between a gene and a probe. Note that probes_genes_distance is 0 when probe and gene distance is over 1Mb.
 
 ```{r}
 library(tidyverse)
 library(reshape)
 library(ggplot2)
 m <- load("~/STAT540/Repo_team_Gene_Heroes/Code/Step-2/rosmap_postprocV2.rdata")
-probes_subjects[1:5,1:5]
+probes_subjects[1:5,1:5] #look at what are these data sets
 subjects_genes[1:5,1:5]
 
 rownames(subjects_genes)==names(probes_subjects)
-# cor.test(subjects_genes[,1],as.numeric(t(probes_subjects[1,])))$p.value
 
 dat <- as.data.frame(as.matrix(probes_genes_distance))
 dim(dat)
 colnames(dat) <- names(subjects_genes)
-rownames(dat) <- rownames(probes_subjects)
+rownames(dat) <- rownames(probes_subjects) #putting the genes and probes name back to the data frame
 ```
 
-Adjust PCs for gene expression data (labelled as m)
+#Adjust PCs for gene expression data (labelled as m)
+
+Here we are going to build gene expression data sets adjusted for various numbers of PCs. Although this data set is assumed not to have any batch effects (they are coming from one batch), we would like to adjust for gene expression data to account for hidden confounders that are not recorded in the study. Because we are unsure of how many PCs to adjust for, we would like to explore what happens to the results of correlation tests between gene and probe pair To run PCA, we will use svd() and adjust for 1, 5, 10, 15, 20, 25, 30 PCAs. The data set is saved as "subjects_genes_PCA_adjusted_V3.RDS"
 
 ```{r}
 #SVD PCA
@@ -52,7 +55,10 @@ colnames(m[[i]]) <- colnames(subjects_genes)
 saveRDS(m, "subjects_genes_PCA_adjusted_V3.RDS")
 ```
 
-Below is adjusting for the DNA methylation probes (labelled as m2)
+#Adjust PCs for DNA methylation probe data (labelled as m2)
+
+Below is adjusting for the DNA methylation probes. The reasons to adjust for DNA methylation probes are the same as why we decide to adjust for gene expression data (described above). Again, we will use svd() to adjust for 1, 5, 10, 15, 20, 25, 30 PCAs. The data set is saved as probes_subjects_PCA_adjusted_V3.RDS.
+
 ```{r}
 #SVD PCA
 pc_svd_probes <- svd(t(probes_subjects))
@@ -79,12 +85,9 @@ colnames(m2[[i]]) <- rownames(probes_subjects)
 saveRDS(m2, "probes_subjects_PCA_adjusted_V3.RDS")
 ```
 
-Look at random 50 genes on number of significant results on:
+#Look at the number of significant results on 50 random genes
 
-1, 5, 10, 15, 20, 25, 30 adjusted PCs in DNA methylation probe
-1, 5, 10, 15, 20, 25, 30 adjusted PCs in gene expression data 
-
-This include plots with the number of PCs adjusted in either data set with the proportion of genes with at least one significant hit.
+To look at what happens to the correlation test results on 49 different setting combination (7 different numbers of PCA adjusted for either gene expression data and DNA methylation probe data), we would like to see the nuber of significant results on 50 random genes. We believe that 50 can give us a rough estimate on what happens to these genes. This code will result plots with the number of PCs adjusted in either data set, and the proportion of genes that has at least one significant eQTM hit.
 
 ```{r}
 set.seed(100)
@@ -127,7 +130,11 @@ dev.off()
 
 ```
 
-Let's look at some random genes and look at what happens individually
+Looks like adjusting for PCAs in DNA methylation probes don't do much when few PCAs are adjusted in the gene expression data, but changes when many PCAs are adjusted in gene expression data. On the other hand, it is apparent that adjusting for PCAs in gene expression data does a lot - number of genes that contains at least one significant eQTM increases when PCAs adjusted increase. Based on the results, we will keep 1 PC adjusted for DNA methylation and 30 PC adjusted for gene expression data. 
+
+#Look at some random genes individually
+
+We will plot the pvalues based on the number of adjusted PCs in the gene expression data set and observe what happens.
 
 ```{r}
 #finding genes in data set
@@ -137,85 +144,49 @@ colnames(subjects_genes)[grep("AKT2",colnames(subjects_genes))]
 colnames(subjects_genes)[grep("APP",colnames(subjects_genes))]
 
 ## using lapply looking at number of bonferroni = 0.05 based on number of PCA - recommended
-#AKT2 on gene
-results_pca_AKT2 = lapply(1:n, function(i){
+#AKT2 on gene - Zohreh mentioned that this is a cnacer related gene
+results_pca_AKT2 = lapply(n, function(i){
     toLoop = which(dat[,"AKT2:ENSG00000105221.10"] != 0) 
     out <- lapply(toLoop, function(j){
       data.frame(probe = rownames(probes_subjects)[j], 
                 estimate = cor.test(m[[i]][,"AKT2:ENSG00000105221.10"],
-                                    as.numeric(t(probes_subjects[j,])))$estimate,
-                pvalue = cor.test(m[[i]][,"AKT2:ENSG00000105221.10"], as.numeric(t(probes_subjects[j,])))$p.value)
+                                    m2[[1]][,j])$estimate,
+                pvalue = cor.test(m[[i]][,"AKT2:ENSG00000105221.10"], m2[[1]][,j])$p.value)
       })
    gene_out <-  do.call(rbind,out)
-   #gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
-   data.frame(num_PC=i, num_less_pvalue=sum(gene_out$pvalue <= 0.1))
+   gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
+   data.frame(num_PC=i, num_less_pvalue=sum(gene_out$pvalue <= 0.1), num_less_fdr = sum(gene_out$fdr <= 0.1))
 })
 
 lapply_results_pca_AKT2 <- do.call(rbind,results_pca_AKT2)
-ggplot(aes(x=num_PC, y=num_less_pvalue), data = lapply_results_pca_AKT2) + geom_point() + geom_line( ) + ggtitle("Number of DNA probes less than pvalue = 0.1 on number of PCs for AKT2") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
+ggplot(aes(x=num_PC, y=num_less_pvalue), data = lapply_results_pca_AKT2) + geom_point() + geom_line( ) + ggtitle("Number of DNA probes less than pvalue = 0.1 based on number of PCs for AKT2") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
 
-#APP on gene
-results_pca_APP = lapply(1:n, function(i){
+#seems like there's nothing there, let's try another gene 
+
+#APP on gene - Hiwot mentioned that this is related to Alzheimer's
+results_pca_APP = lapply(n, function(i){
     toLoop = which(dat[,"APP:ENSG00000142192.14"] != 0) 
     out <- lapply(toLoop, function(j){
       data.frame(probe = rownames(probes_subjects)[j], 
-                estimate = cor.test(m[[i]][,"APP:ENSG00000142192.14"],
-                                    as.numeric(t(probes_subjects[j,])))$estimate,
-                pvalue = cor.test(m[[i]][,"APP:ENSG00000142192.14"], as.numeric(t(probes_subjects[j,])))$p.value)
+                  estimate = cor.test(m[[i]][,"APP:ENSG00000142192.14"],
+                                    m2[[1]][,j])$estimate,
+                pvalue = cor.test(m[[i]][,"APP:ENSG00000142192.14"], m2[[1]][,j])$p.value)
       })
-   gene_out <-  do.call(rbind,out)
-   #gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
-   data.frame(num_PC=i, num_less_pvalue=sum(gene_out$pvalue <= 0.1))
+  gene_out <-  do.call(rbind,out)
+   gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
+   data.frame(num_PC=i, num_less_pvalue=sum(gene_out$pvalue <= 0.1), num_less_fdr = sum(gene_out$fdr <= 0.1))
 })
 
 lapply_results_pca_APP <- do.call(rbind,results_pca_APP)
-plot(lapply_results_pca_APP$num_PC, lapply_results_pca_APP$num_less_pvalue)
-
-#CCDC106 on gene
-results_pca_CCDC106 = lapply(1:n, function(i){
-    toLoop = which(dat[,"CCDC106:ENSG00000173581.3"] != 0) 
-    out <- lapply(toLoop, function(j){
-      data.frame(probe = rownames(probes_subjects)[j], 
-                estimate = cor.test(m[[i]][,"CCDC106:ENSG00000173581.3"],
-                                    as.numeric(t(probes_subjects[j,])))$estimate,
-                pvalue = cor.test(m[[i]][,"CCDC106:ENSG00000173581.3"], as.numeric(t(probes_subjects[j,])))$p.value)
-      })
-   gene_out <-  do.call(rbind,out)
-   #gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
-   data.frame(num_PC=i, num_less_pvalue=sum(gene_out$pvalue <= 0.1))
-})
-
-lapply_results_pca_CCDC106 <- do.call(rbind,results_pca_CCDC106)
-plot(lapply_results_pca_CCDC106$num_PC, lapply_results_pca_CCDC106$num_less_pvalue)
-
-
-## using for loop - not recommended: below is for our own references 
-
-#res <- data.frame()
-#for (i in 1:ncol(subjects_genes)){
-#  m <- data.frame()
-#  toLoop = which(dat[,i] != 0) 
-  
-#  for (j in toLoop){
-#    print(paste0(i," and ",j))
-#    m <- rbind(m, data.frame(gene = names(subjects_genes)[i], probe = rownames(probes_subjects)[j], estimate = #cor.test(subjects_genes[,i], as.numeric(t(probes_subjects[j,])))$estimate,
-#pvalue = cor.test(subjects_genes[,i], as.numeric(t(probes_subjects[j,])))$p.value))
-#  }
-#  res <- rbind(res, m)
-#  rm(m)
-#}
-
+ggplot(aes(x=num_PC, y=num_less_pvalue), data = lapply_results_pca_APP) + geom_point() + geom_line( ) + ggtitle("Number of DNA probes less than pvalue = 0.1 based on number of PCs for APP") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
 ```
 
-Below is the Cumulative variation explained by PCs
+Nothing much is going on in any of these genes, let's come back to this after we run the correlation test results on each pair of gene and probe.
+
+#Cumulative variation explained by PCs
 
 ```{r}
 #ref:http://genomicsclass.github.io/book/pages/pca_svd.html
-#cum all
-jpeg("cum_var_explained_all_V2.jpg")
-plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 481), type = "b", pch = 16, xlab = "principal components", 
-     ylab = "cumulative variance explained")
-dev.off()
 
 #cum of first 50
 jpeg("cum_var_explained_50_V2.jpg")
@@ -226,21 +197,22 @@ dev.off()
 
 ```
 
-Let's do correlation tests based on the PC adjusted data sets
+#Correlation tests based on the PC adjusted data sets
+
+This set of correlation test results will be passed on to Step 3. It contains all the statistics and significances for each pair of gene and probe. 
 
 ```{r}
 ## using lapply - recommended
 PC_probes <- 1 # of PCs adjusted for probes data set
 PC_genes <- 30 # of PCs adjusted for genes data set
 
-results_PCA = lapply(1:ncol(m[[3]]), function(i){
+results_PCA = lapply(1:ncol(m[[PC_genes]]), function(i){
     toLoop = which(dat[,i] != 0) 
     out <- lapply(toLoop, function(j){
-      data.frame(gene = colnames(m[[3]])[i],
-                probe = rownames(probes_subjects)[j], 
-                estimate = cor.test(m[[3]][,i],
-                                    as.numeric(t(probes_subjects[j,])))$estimate,
-                pvalue = cor.test(m[[3]][,i], as.numeric(t(probes_subjects[j,])))$p.value)
+      data.frame(gene = colnames(m[[PC_genes]])[i],
+                probe = colnames(m2[[PC_probes]])[j], 
+                estimate = cor.test(m[[PC_genes]][,i],m2[[PC_probes]][,j])$estimate,
+                pvalue = cor.test(m[[PC_genes]][,i],m2[[PC_probes]][,j])$p.value)
       })
     do.call(rbind,out)
 })
@@ -249,13 +221,71 @@ lapply_results_PCA <- do.call(rbind,results_PCA)
 lapply_results_PCA$adjusted.pvalue <- p.adjust(lapply_results_PCA$pvalue, method="fdr") #adjusting for fdr
 saveRDS(lapply_results_PCA,"cor_test_results_PCA_lapply_V3.rds")
 
-jpeg("histogram_pvalue.jpeg")
-hist(lapply_results_PCA$pvalue, main = "Histogram of p-value on correlation tests")
+jpeg("histogram_pvalue_V3.jpeg")
+ggplot(aes(pvalue), data = lapply_results_PCA) + geom_histogram(bins=500) + ggtitle("Histogram of p-value on correlation tests")
 dev.off()
 
 summary(lapply_results_PCA$adjusted.pvalue)
 min(lapply_results_PCA$adjusted.pvalue)
+
+saveRDS(t(m2[[1]]), "probes_subjects_PCA_adjusted_V3.RDS")
+saveRDS(m[[30]], "subjects_genes_PCA_adjusted_V3.RDS")
 ```
 
+#Following up to looking at genes individually 
+
+
+
+```{r}
+ordered_cor_test_results <- lapply_results_PCA[order(lapply_results_PCA$adjusted.pvalue),]
+ordered_cor_test_results[1:20,]
+
+#                                     gene      probe   estimate       pvalue adjusted.pvalue
+#cor1661318        FRG1B:ENSG00000149531.9 cg04945608 -0.7502561 4.059672e-88    5.421871e-82
+#cor717719        NLRP2:ENSG00000022556.11 cg06679262 -0.7262288 5.483988e-80    3.662054e-74
+#cor914085       ZNF714:ENSG00000160352.10 cg19716018 -0.7066983 5.429976e-74    2.417324e-68
+#cor170065         FRG1B:ENSG00000149531.9 cg05256204 -0.7051708 1.523655e-73    5.087272e-68
+#cor872626       SLC25A1:ENSG00000100075.5 cg05279387 -0.6835404 1.708119e-67    4.562536e-62
+#cor2121327    C21orf56:ENSG00000160284.10 cg10215919 -0.6818413 4.847792e-67    1.079073e-61
+#cor1491306    C21orf56:ENSG00000160284.10 cg04383274  0.6619444 5.886908e-62    1.123175e-56
+#cor842887        NLRP2:ENSG00000022556.11 cg16580934  0.6551690 2.590970e-60    4.325442e-55
+#cor580788       SLC25A1:ENSG00000100075.5 cg04121214 -0.6407521 5.933186e-57    8.804478e-52
+#cor327748          MRI1:ENSG00000037757.9 cg01404753 -0.6170794 8.230820e-52    1.099262e-46
+#cor731089         RRP7A:ENSG00000189306.6 cg03166514 -0.6075400 7.348182e-50    8.921654e-45
+#cor584542          MRI1:ENSG00000037757.9 cg13699804 -0.6029851 5.950092e-49    6.622174e-44
+#cor764651         VN1R1:ENSG00000178201.3 cg27285056  0.5962712 1.221835e-47    1.255242e-42
+#cor843139        ZNF580:ENSG00000213015.4 cg00844791  0.5945945 2.570314e-47    2.451977e-42
+#cor571387        NDUFA6:ENSG00000184983.4 cg19092981 -0.5932794 4.591942e-47    4.088494e-42
+#cor1132571 RP4-564F22.2:ENSG00000196756.5 cg06269001  0.5907740 1.376809e-46    1.149243e-41
+#cor651943        RWDD2B:ENSG00000156253.2 cg21231689 -0.5882080 4.197630e-46    3.297718e-41
+#cor56815        CYP2D6:ENSG00000100197.16 cg07869308  0.5839219 2.642936e-45    1.960976e-40
+#cor142944          YBEY:ENSG00000182362.9 cg05169244  0.5805809 1.088377e-44    7.650394e-40
+#cor372291         RRP7A:ENSG00000189306.6 cg17961378  0.5753953 9.482605e-44    6.332218e-39
+
+```
+
+#Looking at individual genes
+To look at what is actually going on 
+
+```{r}
+#C21orf56:ENSG00000160284.10 - a gene that contains multiple significant probes 
+
+results_pca_APP = lapply(n, function(i){
+    toLoop = which(dat[,"APP:ENSG00000142192.14"] != 0) 
+    out <- lapply(toLoop, function(j){
+      data.frame(probe = rownames(probes_subjects)[j], 
+                estimate = cor.test(m[[i]][,"APP:ENSG00000142192.14"],
+                                    as.numeric(t(probes_subjects[j,])))$estimate,
+                pvalue = cor.test(m[[i]][,"APP:ENSG00000142192.14"], as.numeric(t(probes_subjects[j,])))$p.value)
+      })
+  gene_out <-  do.call(rbind,out)
+   gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
+   data.frame(num_PC=i, num_less_pvalue=sum(gene_out$pvalue <= 0.1), num_less_fdr = sum(gene_out$fdr <= 0.1))
+})
+
+lapply_results_pca_APP <- do.call(rbind,results_pca_APP)
+ggplot(aes(x=num_PC, y=num_less_pvalue), data = lapply_results_pca_APP) + geom_point() + geom_line( ) + ggtitle("Number of DNA probes less than pvalue = 0.1 based on number of PCs for APP") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
+
+```
 
 
