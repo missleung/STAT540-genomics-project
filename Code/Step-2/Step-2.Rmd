@@ -52,7 +52,7 @@ rownames(m[[i]]) <- rownames(subjects_genes)
 colnames(m[[i]]) <- colnames(subjects_genes)
 }
 
-saveRDS(m, "subjects_genes_PCA_adjusted_all.RDS")
+#saveRDS(m, "subjects_genes_PCA_adjusted_all.RDS")
 ```
 
 #Adjust PCs for DNA methylation probe data (labelled as m2)
@@ -82,7 +82,7 @@ rownames(m2[[i]]) <- colnames(probes_subjects)
 colnames(m2[[i]]) <- rownames(probes_subjects)
 }
 
-saveRDS(m2, "probes_subjects_PCA_adjusted_all.RDS")
+#saveRDS(m2, "probes_subjects_PCA_adjusted_all.RDS")
 ```
 
 #Look at the number of significant results on 50 random genes
@@ -122,7 +122,7 @@ toPlot_50_genes_PCA_gdata_probedata$eqtl_fdr[toPlot_50_genes_PCA_gdata_probedata
 toPlot_50_genes_PCA_gdata_probedata$eqtl_bonferroni<-0
 toPlot_50_genes_PCA_gdata_probedata$eqtl_bonferroni[toPlot_50_genes_PCA_gdata_probedata$num_less_bonferroni>0] <- 1
 
-saveRDS(toPlot_50_genes_PCA_gdata_probedata, "toPlot_50_genes_PCA_gdata_probedata_V4.RDS")
+#saveRDS(toPlot_50_genes_PCA_gdata_probedata, "toPlot_50_genes_PCA_gdata_probedata_V4.RDS")
 
 toPlot_50_genes_PCA_gdata_probedata_average <- toPlot_50_genes_PCA_gdata_probedata %>% group_by(num_PC_gdata, num_PC_probedata) %>% summarise(average_sig_fdr = mean(eqtl_fdr), average_sig_bonferroni = mean(eqtl_bonferroni))
 
@@ -214,7 +214,7 @@ This set of correlation test results will be passed on to Step 3. It contains al
 
 ```{r}
 ## using lapply - recommended
-PC_probes <- 1 # of PCs adjusted for probes data set
+PC_probes <- 5 # of PCs adjusted for probes data set
 PC_genes <- 30 # of PCs adjusted for genes data set
 
 results_PCA = lapply(1:ncol(m[[PC_genes]]), function(i){
@@ -239,8 +239,8 @@ dev.off()
 summary(lapply_results_PCA$adjusted.pvalue)
 min(lapply_results_PCA$adjusted.pvalue)
 
-saveRDS(t(m2[[5]]), "probes_subjects_PCA_adjusted_V4.RDS")
-saveRDS(m[[30]], "subjects_genes_PCA_adjusted_V4.RDS")
+#saveRDS(t(m2[[5]]), "probes_subjects_PCA_adjusted_V4.RDS")
+#saveRDS(m[[30]], "subjects_genes_PCA_adjusted_V4.RDS")
 ```
 
 #Following up to looking at genes individually 
