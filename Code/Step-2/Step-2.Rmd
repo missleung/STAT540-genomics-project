@@ -12,7 +12,7 @@ For Step 2, we will load three library packages: tidyverse, reshape, ggplot2. We
 library(tidyverse)
 library(reshape)
 library(ggplot2)
-m <- load("~/STAT540/Repo_team_Gene_Heroes/Code/Step-2/rosmap_postprocV2.rdata")
+m <- load("~/STAT540/Repo_team_gene_heroes/rosmap_postprocV2.rdata")
 probes_subjects[1:5,1:5] #look at what are these data sets
 subjects_genes[1:5,1:5]
 
@@ -52,7 +52,7 @@ rownames(m[[i]]) <- rownames(subjects_genes)
 colnames(m[[i]]) <- colnames(subjects_genes)
 }
 
-saveRDS(m, "subjects_genes_PCA_adjusted_V3.RDS")
+saveRDS(m, "subjects_genes_PCA_adjusted_all.RDS")
 ```
 
 #Adjust PCs for DNA methylation probe data (labelled as m2)
@@ -82,7 +82,7 @@ rownames(m2[[i]]) <- colnames(probes_subjects)
 colnames(m2[[i]]) <- rownames(probes_subjects)
 }
 
-saveRDS(m2, "probes_subjects_PCA_adjusted_V3.RDS")
+saveRDS(m2, "probes_subjects_PCA_adjusted_all.RDS")
 ```
 
 #Look at the number of significant results on 50 random genes
@@ -108,7 +108,7 @@ out_per_gene <-  lapply(n_genes, function(i){
     gene_out <- do.call(rbind, out)
     gene_out$fdr <- p.adjust(gene_out$pvalue, method = "fdr")
     gene_out$bonferroni <- p.adjust(gene_out$pvalue, method = "bonferroni")
-    data.frame(num_PC_gdata=k, gene = colnames(m[[k]])[i], num_less_fdr=sum(gene_out$fdr <= 0.1, num_less_bonferroni=sum(gene_out$bonferroni <= 0.1))
+    data.frame(num_PC_gdata=k, gene = colnames(m[[k]])[i], num_less_fdr=sum(gene_out$fdr <= 0.1), num_less_bonferroni=sum(gene_out$bonferroni <= 0.1))
    # num_less_pvalue=sum(gene_out$pvalue <= 0.1))
 }) 
 do.call(rbind, out_per_gene) %>% mutate(num_PC_probedata = l)
@@ -122,26 +122,26 @@ toPlot_50_genes_PCA_gdata_probedata$eqtl_fdr[toPlot_50_genes_PCA_gdata_probedata
 toPlot_50_genes_PCA_gdata_probedata$eqtl_bonferroni<-0
 toPlot_50_genes_PCA_gdata_probedata$eqtl_bonferroni[toPlot_50_genes_PCA_gdata_probedata$num_less_bonferroni>0] <- 1
 
-saveRDS(toPlot_50_genes_PCA_gdata_probedata, "toPlot_50_genes_PCA_gdata_probedata_V2.RDS")
+saveRDS(toPlot_50_genes_PCA_gdata_probedata, "toPlot_50_genes_PCA_gdata_probedata_V4.RDS")
 
 toPlot_50_genes_PCA_gdata_probedata_average <- toPlot_50_genes_PCA_gdata_probedata %>% group_by(num_PC_gdata, num_PC_probedata) %>% summarise(average_sig_fdr = mean(eqtl_fdr), average_sig_bonferroni = mean(eqtl_bonferroni))
 
 toPlot_50_genes_PCA_gdata_probedata_average$num_PC_gdata <- as.factor(toPlot_50_genes_PCA_gdata_probedata_average$num_PC_gdata )
 toPlot_50_genes_PCA_gdata_probedata_average$num_PC_probedata <- as.factor(toPlot_50_genes_PCA_gdata_probedata_average$num_PC_probedata )
 
-jpeg("prop_of_genes_sig_on_50_genes_V3_fdr.jpg")
+jpeg("prop_of_genes_sig_on_50_genes_V4_fdr.jpg")
 p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PCA_gdata_probedata_average) + geom_tile(aes(fill=average_sig_fdr), color = "white") + scale_fill_gradient(low= "white", high = "steelblue", name = "Proportion of genes significant") 
 p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs Adjusted for Gene Expression Data") + ylab("Number of PCs Adjusted for DNA Methylation Data")
 dev.off()
 
-jpeg("prop_of_genes_sig_on_50_genes_V3_bonferroni.jpg")
+jpeg("prop_of_genes_sig_on_50_genes_V4_bonferroni.jpg")
 p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PCA_gdata_probedata_average) + geom_tile(aes(fill=average_sig_bonferroni), color = "white") + scale_fill_gradient(low= "white", high = "steelblue", name = "Proportion of genes significant") 
 p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs Adjusted for Gene Expression Data") + ylab("Number of PCs Adjusted for DNA Methylation Data")
 dev.off()
 
 ```
 
-Looks like adjusting for PCAs in DNA methylation probes don't do much when very few PCAs are adjusted in the gene expression data, but changes when many PCAs are adjusted in gene expression data. On the other hand, it is apparent that adjusting for PCAs in gene expression data does a lot - number of genes that contains at least one significant eQTM increases when PCAs adjusted increase. Based on the results, we will keep 1 PC adjusted for DNA methylation and 30 PC adjusted for gene expression data. 
+Looks like adjusting for PCs in DNA methylation probes don't do much when very few PCAs are adjusted in the gene expression data, but changes when many PCs are adjusted in gene expression data. On the other hand, it is apparent that adjusting for PCAs in gene expression data does a lot - number of genes that contains at least one significant eQTM increases when PCAs adjusted increase. Based on the results, we will keep 5 PCs adjusted for DNA methylation and 30 PC adjusted for gene expression data. 
 
 #Look at some random genes individually
 
@@ -161,7 +161,7 @@ results_pca_AKT2 = lapply(n, function(i){
     out <- lapply(toLoop, function(j){
       data.frame(probe = rownames(probes_subjects)[j], 
                 estimate = cor.test(m[[i]][,"AKT2:ENSG00000105221.10"],
-                                    m2[[1]][,j])$estimate,
+                                    m2[[5]][,j])$estimate,
                 pvalue = cor.test(m[[i]][,"AKT2:ENSG00000105221.10"], m2[[1]][,j])$p.value)
       })
    gene_out <-  do.call(rbind,out)
@@ -180,8 +180,8 @@ results_pca_APP = lapply(n, function(i){
     out <- lapply(toLoop, function(j){
       data.frame(probe = rownames(probes_subjects)[j], 
                   estimate = cor.test(m[[i]][,"APP:ENSG00000142192.14"],
-                                    m2[[1]][,j])$estimate,
-                pvalue = cor.test(m[[i]][,"APP:ENSG00000142192.14"], m2[[1]][,j])$p.value)
+                                    m2[[5]][,j])$estimate,
+                pvalue = cor.test(m[[i]][,"APP:ENSG00000142192.14"], m2[[5]][,j])$p.value)
       })
   gene_out <-  do.call(rbind,out)
    gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
@@ -200,7 +200,7 @@ Nothing much is going on in any of these genes, let's come back to this after we
 #ref:http://genomicsclass.github.io/book/pages/pca_svd.html
 
 #cum of first 50
-jpeg("cum_var_explained_50_V2.jpg")
+jpeg("cum_var_explained_50_V4.jpg")
 cumsum(pc_svd$d^2/sum(pc_svd$d^2))[1:50] #total variance seems to stabilize at 47th pc with 78% of variation explained
 plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 50), type = "b", pch = 16, xlab = "principal components", 
      ylab = "cumulative variance explained")
@@ -230,17 +230,17 @@ results_PCA = lapply(1:ncol(m[[PC_genes]]), function(i){
 
 lapply_results_PCA <- do.call(rbind,results_PCA)
 lapply_results_PCA$adjusted.pvalue <- p.adjust(lapply_results_PCA$pvalue, method="fdr") #adjusting for fdr
-saveRDS(lapply_results_PCA,"cor_test_results_PCA_lapply_V3.rds")
+saveRDS(lapply_results_PCA,"cor_test_results_PCA_lapply_V4.rds")
 
-jpeg("histogram_pvalue_V3.jpeg")
+jpeg("histogram_pvalue_V4.jpeg")
 ggplot(aes(pvalue), data = lapply_results_PCA) + geom_histogram(bins=500) + ggtitle("Histogram of p-value on correlation tests")
 dev.off()
 
 summary(lapply_results_PCA$adjusted.pvalue)
 min(lapply_results_PCA$adjusted.pvalue)
 
-saveRDS(t(m2[[1]]), "probes_subjects_PCA_adjusted_V3.RDS")
-saveRDS(m[[30]], "subjects_genes_PCA_adjusted_V3.RDS")
+saveRDS(t(m2[[5]]), "probes_subjects_PCA_adjusted_V4.RDS")
+saveRDS(m[[30]], "subjects_genes_PCA_adjusted_V4.RDS")
 ```
 
 #Following up to looking at genes individually 
@@ -273,8 +273,8 @@ results_pca_CYP2D6 = lapply(n, function(i){
     out <- lapply(toLoop, function(j){
       data.frame(probe = rownames(probes_subjects)[j], 
                 estimate = cor.test(m[[i]][,"CYP2D6:ENSG00000100197.16"],
-                                    m2[[1]][,j])$estimate,
-                pvalue = cor.test(m[[i]][,"CYP2D6:ENSG00000100197.16"], m2[[1]][,j])$p.value)
+                                    m2[[5]][,j])$estimate,
+                pvalue = cor.test(m[[i]][,"CYP2D6:ENSG00000100197.16"], m2[[5]][,j])$p.value)
       })
    gene_out <-  do.call(rbind,out)
    gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
@@ -295,8 +295,8 @@ results_pca_C21orf56 = lapply(n, function(i){
     out <- lapply(toLoop, function(j){
       data.frame(probe = rownames(probes_subjects)[j], 
                 estimate = cor.test(m[[i]][,"C21orf56:ENSG00000160284.10"],
-                                    m2[[1]][,j])$estimate,
-                pvalue = cor.test(m[[i]][,"C21orf56:ENSG00000160284.10"], m2[[1]][,j])$p.value)
+                                    m2[[5]][,j])$estimate,
+                pvalue = cor.test(m[[i]][,"C21orf56:ENSG00000160284.10"], m2[[5]][,j])$p.value)
       })
    gene_out <-  do.call(rbind,out)
    gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
