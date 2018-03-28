@@ -146,13 +146,13 @@ Looks like adjusting for PCs in DNA methylation probes don't do much when very f
 #Cumulative variation explained by PCs
 
 ```{r}
-#ref:http://genomicsclass.github.io/book/pages/pca_svd.html
-
-#cum of first 50
-jpeg("cum_var_explained_50_V4.jpg")
-cumsum(pc_svd$d^2/sum(pc_svd$d^2))[1:50] #total variance seems to stabilize at 47th pc with 78% of variation explained
-plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 50), type = "b", pch = 16, xlab = "principal components", 
-     ylab = "cumulative variance explained")
+#first calculate the ratio of variance explained by each principal component
+#and sum variances to find the cumulative variance explained by each additional PC
+cum_var_explained_d<-(as.data.frame(cumsum(pc_svd$d^2/sum(pc_svd$d^2))))
+cum_var_explained_d$pcs<-c(1:nrow(cum_var_explained_d))
+colnames(cum_var_explained_d)<- c("cum_var_explained","PCs")
+jpeg("cum_var_explained_50_V2.jpg")
+ggplot(aes( x=PCs, y=cum_var_explained), data = cum_var_explained_d[1:50,]) + geom_point(size=1) + geom_line() + ggtitle("Cumulative variance explained by PCs") + xlab("Number of PCs") + ylab("Variance Explained")
 dev.off()
 
 ```
