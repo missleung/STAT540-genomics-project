@@ -106,8 +106,9 @@ out_per_gene <-  lapply(n_genes, function(i){
                                     m2[[l]][,j])$p.value)
       })
     gene_out <- do.call(rbind, out)
+    gene_out$fdr <- p.adjust(gene_out$pvalue, method = "fdr")
     gene_out$bonferroni <- p.adjust(gene_out$pvalue, method = "bonferroni")
-    data.frame(num_PC_gdata=k, gene = colnames(m[[k]])[i], num_less_pvalue=sum(gene_out$bonferroni <= 0.05))
+    data.frame(num_PC_gdata=k, gene = colnames(m[[k]])[i], num_less_fdr=sum(gene_out$fdr <= 0.1, num_less_bonferroni=sum(gene_out$bonferroni <= 0.1))
    # num_less_pvalue=sum(gene_out$pvalue <= 0.1))
 }) 
 do.call(rbind, out_per_gene) %>% mutate(num_PC_probedata = l)
@@ -116,21 +117,31 @@ do.call(rbind, out_per_gdata)
 })
 
 toPlot_50_genes_PCA_gdata_probedata <- do.call(rbind, results_pca_50_genes)
-toPlot_50_genes_PCA_gdata_probedata$eqtl<-0
-toPlot_50_genes_PCA_gdata_probedata$eqtl[toPlot_50_genes_PCA_gdata_probedata$num_less_pvalue>0] <- 1
+toPlot_50_genes_PCA_gdata_probedata$eqtl_fdr<-0
+toPlot_50_genes_PCA_gdata_probedata$eqtl_fdr[toPlot_50_genes_PCA_gdata_probedata$num_less_fdr>0] <- 1
+toPlot_50_genes_PCA_gdata_probedata$eqtl_bonferroni<-0
+toPlot_50_genes_PCA_gdata_probedata$eqtl_bonferroni[toPlot_50_genes_PCA_gdata_probedata$num_less_bonferroni>0] <- 1
+
 saveRDS(toPlot_50_genes_PCA_gdata_probedata, "toPlot_50_genes_PCA_gdata_probedata_V2.RDS")
-toPlot_50_genes_PCA_gdata_probedata_average <- toPlot_50_genes_PCA_gdata_probedata %>% group_by(num_PC_gdata, num_PC_probedata) %>% summarise(average_sig = mean(eqtl))
+
+toPlot_50_genes_PCA_gdata_probedata_average <- toPlot_50_genes_PCA_gdata_probedata %>% group_by(num_PC_gdata, num_PC_probedata) %>% summarise(average_sig_fdr = mean(eqtl_fdr), average_sig_bonferroni = mean(eqtl_bonferroni))
+
 toPlot_50_genes_PCA_gdata_probedata_average$num_PC_gdata <- as.factor(toPlot_50_genes_PCA_gdata_probedata_average$num_PC_gdata )
 toPlot_50_genes_PCA_gdata_probedata_average$num_PC_probedata <- as.factor(toPlot_50_genes_PCA_gdata_probedata_average$num_PC_probedata )
 
-jpeg("prop_of_genes_sig_on_50_genes_V3.jpg")
-p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PCA_gdata_probedata_average) + geom_tile(aes(fill=average_sig), color = "white") + scale_fill_gradient(low= "white", high = "steelblue", name = "Proportion of genes significant") 
+jpeg("prop_of_genes_sig_on_50_genes_V3_fdr.jpg")
+p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PCA_gdata_probedata_average) + geom_tile(aes(fill=average_sig_fdr), color = "white") + scale_fill_gradient(low= "white", high = "steelblue", name = "Proportion of genes significant") 
+p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs Adjusted for Gene Expression Data") + ylab("Number of PCs Adjusted for DNA Methylation Data")
+dev.off()
+
+jpeg("prop_of_genes_sig_on_50_genes_V3_bonferroni.jpg")
+p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PCA_gdata_probedata_average) + geom_tile(aes(fill=average_sig_bonferroni), color = "white") + scale_fill_gradient(low= "white", high = "steelblue", name = "Proportion of genes significant") 
 p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs Adjusted for Gene Expression Data") + ylab("Number of PCs Adjusted for DNA Methylation Data")
 dev.off()
 
 ```
 
-Looks like adjusting for PCAs in DNA methylation probes don't do much when few PCAs are adjusted in the gene expression data, but changes when many PCAs are adjusted in gene expression data. On the other hand, it is apparent that adjusting for PCAs in gene expression data does a lot - number of genes that contains at least one significant eQTM increases when PCAs adjusted increase. Based on the results, we will keep 1 PC adjusted for DNA methylation and 30 PC adjusted for gene expression data. 
+Looks like adjusting for PCAs in DNA methylation probes don't do much when very few PCAs are adjusted in the gene expression data, but changes when many PCAs are adjusted in gene expression data. On the other hand, it is apparent that adjusting for PCAs in gene expression data does a lot - number of genes that contains at least one significant eQTM increases when PCAs adjusted increase. Based on the results, we will keep 1 PC adjusted for DNA methylation and 30 PC adjusted for gene expression data. 
 
 #Look at some random genes individually
 
@@ -189,13 +200,10 @@ Nothing much is going on in any of these genes, let's come back to this after we
 #ref:http://genomicsclass.github.io/book/pages/pca_svd.html
 
 #cum of first 50
-#first calculate the ratio of variance explained by each principal component
-#and sum variances to find the cumulative variance explained by each additional PC
-cum_var_explained_d<-(as.data.frame(cumsum(pc_svd$d^2/sum(pc_svd$d^2))))
-cum_var_explained_d$pcs<-c(1:nrow(cum_var_explained_d))
-colnames(cum_var_explained_d)<- c("cum_var_explained","PCs")
 jpeg("cum_var_explained_50_V2.jpg")
-ggplot(aes( x=PCs, y=cum_var_explained), data = cum_var_explained_d[1:50,]) + geom_point(size=1) + geom_line() + ggtitle("Cumulative variance explained by PCs") + xlab("Number of PCs") + ylab("Variance Explained")
+cumsum(pc_svd$d^2/sum(pc_svd$d^2))[1:50] #total variance seems to stabilize at 47th pc with 78% of variation explained
+plot(cumsum(pc_svd$d^2/sum(pc_svd$d^2)), xlim = c(0, 50), type = "b", pch = 16, xlab = "principal components", 
+     ylab = "cumulative variance explained")
 dev.off()
 
 ```
@@ -237,58 +245,70 @@ saveRDS(m[[30]], "subjects_genes_PCA_adjusted_V3.RDS")
 
 #Following up to looking at genes individually 
 
-
-
-```{r}
-ordered_cor_test_results <- lapply_results_PCA[order(lapply_results_PCA$adjusted.pvalue),]
-ordered_cor_test_results[1:20,]
-
-#                                     gene      probe   estimate       pvalue adjusted.pvalue
-#cor1661318        FRG1B:ENSG00000149531.9 cg04945608 -0.7502561 4.059672e-88    5.421871e-82
-#cor717719        NLRP2:ENSG00000022556.11 cg06679262 -0.7262288 5.483988e-80    3.662054e-74
-#cor914085       ZNF714:ENSG00000160352.10 cg19716018 -0.7066983 5.429976e-74    2.417324e-68
-#cor170065         FRG1B:ENSG00000149531.9 cg05256204 -0.7051708 1.523655e-73    5.087272e-68
-#cor872626       SLC25A1:ENSG00000100075.5 cg05279387 -0.6835404 1.708119e-67    4.562536e-62
-#cor2121327    C21orf56:ENSG00000160284.10 cg10215919 -0.6818413 4.847792e-67    1.079073e-61
-#cor1491306    C21orf56:ENSG00000160284.10 cg04383274  0.6619444 5.886908e-62    1.123175e-56
-#cor842887        NLRP2:ENSG00000022556.11 cg16580934  0.6551690 2.590970e-60    4.325442e-55
-#cor580788       SLC25A1:ENSG00000100075.5 cg04121214 -0.6407521 5.933186e-57    8.804478e-52
-#cor327748          MRI1:ENSG00000037757.9 cg01404753 -0.6170794 8.230820e-52    1.099262e-46
-#cor731089         RRP7A:ENSG00000189306.6 cg03166514 -0.6075400 7.348182e-50    8.921654e-45
-#cor584542          MRI1:ENSG00000037757.9 cg13699804 -0.6029851 5.950092e-49    6.622174e-44
-#cor764651         VN1R1:ENSG00000178201.3 cg27285056  0.5962712 1.221835e-47    1.255242e-42
-#cor843139        ZNF580:ENSG00000213015.4 cg00844791  0.5945945 2.570314e-47    2.451977e-42
-#cor571387        NDUFA6:ENSG00000184983.4 cg19092981 -0.5932794 4.591942e-47    4.088494e-42
-#cor1132571 RP4-564F22.2:ENSG00000196756.5 cg06269001  0.5907740 1.376809e-46    1.149243e-41
-#cor651943        RWDD2B:ENSG00000156253.2 cg21231689 -0.5882080 4.197630e-46    3.297718e-41
-#cor56815        CYP2D6:ENSG00000100197.16 cg07869308  0.5839219 2.642936e-45    1.960976e-40
-#cor142944          YBEY:ENSG00000182362.9 cg05169244  0.5805809 1.088377e-44    7.650394e-40
-#cor372291         RRP7A:ENSG00000189306.6 cg17961378  0.5753953 9.482605e-44    6.332218e-39
-
-```
-
-#Looking at individual genes
-To look at what is actually going on 
+Because we haven't identified genes that gave multiple significant probes previously, we will do that now by looking at the correlation tests for all pairs below and take a look at which genes have multiple eQTMs
 
 ```{r}
-#C21orf56:ENSG00000160284.10 - a gene that contains multiple significant probes 
+filtered_cor_test_results <- lapply_results_PCA[lapply_results_PCA$adjusted.pvalue<=0.1,]
+summary_cor_test_results <- filtered_cor_test_results %>% group_by(gene) %>% count()
+summary_cor_test_results[order(-summary_cor_test_results$n),]
 
-results_pca_APP = lapply(n, function(i){
-    toLoop = which(dat[,"APP:ENSG00000142192.14"] != 0) 
+# Groups:   gene [610]
+#   gene                             n
+#   <fct>                        <int>
+# 1 CYP2D6:ENSG00000100197.16       19
+# 2 C21orf56:ENSG00000160284.10     18
+# 3 NLRP2:ENSG00000022556.11        18
+# 4 CSDC2:ENSG00000172346.9         17
+# 5 L3MBTL1:ENSG00000185513.9       17
+# 6 NKAIN4:ENSG00000101198.10       17
+# 7 ELL:ENSG00000105656.5           16
+# 8 AC016629.2:ENSG00000213753.4    16
+# 9 POLR3H:ENSG00000100413.12       15
+#10 C22orf32:ENSG00000183172.6      15
+
+#CYP2D6:ENSG00000100197.16 - a gene that contains multiple significant probes 
+
+results_pca_CYP2D6 = lapply(n, function(i){
+    toLoop = which(dat[,"CYP2D6:ENSG00000100197.16"] != 0) 
     out <- lapply(toLoop, function(j){
       data.frame(probe = rownames(probes_subjects)[j], 
-                estimate = cor.test(m[[i]][,"APP:ENSG00000142192.14"],
-                                    as.numeric(t(probes_subjects[j,])))$estimate,
-                pvalue = cor.test(m[[i]][,"APP:ENSG00000142192.14"], as.numeric(t(probes_subjects[j,])))$p.value)
+                estimate = cor.test(m[[i]][,"CYP2D6:ENSG00000100197.16"],
+                                    m2[[1]][,j])$estimate,
+                pvalue = cor.test(m[[i]][,"CYP2D6:ENSG00000100197.16"], m2[[1]][,j])$p.value)
       })
-  gene_out <-  do.call(rbind,out)
+   gene_out <-  do.call(rbind,out)
    gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
    data.frame(num_PC=i, num_less_pvalue=sum(gene_out$pvalue <= 0.1), num_less_fdr = sum(gene_out$fdr <= 0.1))
 })
 
-lapply_results_pca_APP <- do.call(rbind,results_pca_APP)
-ggplot(aes(x=num_PC, y=num_less_pvalue), data = lapply_results_pca_APP) + geom_point() + geom_line( ) + ggtitle("Number of DNA probes less than pvalue = 0.1 based on number of PCs for APP") + xlab("Number of PCs") + ylab("Number of significant DNA probes for alpha at 0.1")
+lapply_results_pca_CYP2D6 <- do.call(rbind,results_pca_CYP2D6)
+toPlot_lapply_results_pca_CYP2D6 <- lapply_results_pca_CYP2D6 %>% melt(id="num_PC")
 
+jpeg("gene_CYP2D6.jpeg")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_CYP2D6) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs by number of PCs for CYP2D6") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "P-value or FDR", breaks=c("num_less_pvalue", "num_less_fdr"), labels=c("P-value < 0.1", "FDR < 0.1"))
+dev.off()
+
+#C21orf56:ENSG00000160284.10 - a gene that contains multiple significant probes 
+
+results_pca_C21orf56 = lapply(n, function(i){
+    toLoop = which(dat[,"C21orf56:ENSG00000160284.10"] != 0) 
+    out <- lapply(toLoop, function(j){
+      data.frame(probe = rownames(probes_subjects)[j], 
+                estimate = cor.test(m[[i]][,"C21orf56:ENSG00000160284.10"],
+                                    m2[[1]][,j])$estimate,
+                pvalue = cor.test(m[[i]][,"C21orf56:ENSG00000160284.10"], m2[[1]][,j])$p.value)
+      })
+   gene_out <-  do.call(rbind,out)
+   gene_out$fdr <- p.adjust(gene_out$pvalue, method="fdr")
+   data.frame(num_PC=i, num_less_pvalue=sum(gene_out$pvalue <= 0.1), num_less_fdr = sum(gene_out$fdr <= 0.1))
+})
+
+lapply_results_pca_C21orf56 <- do.call(rbind,results_pca_C21orf56)
+toPlot_lapply_results_pca_C21orf56 <- lapply_results_pca_C21orf56 %>% melt(id="num_PC")
+
+jpeg("gene_C21orf56.jpeg")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_C21orf56) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs by number of PCs for C21orf56") + xlab("Number of PCs") + ylab("Number of significant DNA probes")+ scale_colour_discrete(name = "P-value or FDR", breaks=c("num_less_pvalue", "num_less_fdr"), labels=c("P-value < 0.1", "FDR < 0.1"))
+dev.off()
 ```
 
 
