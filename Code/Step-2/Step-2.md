@@ -301,23 +301,6 @@ head(toPlot_50_genes_PCA_gdata_probedata)
     ## 6                1        1               1
 
 ``` r
-#  num_PC_gdata                      gene num_less_fdr num_less_bonferroni num_PC_probedata eqtl_fdr
-#1            5   CYYR1:ENSG00000166265.7            0                   0                5        0
-#2            5   RTDR1:ENSG00000100218.7            0                   0                5        0
-#3            5 CHAF1A:ENSG00000167670.11            4                   3                5        1
-#4            5   YWHAH:ENSG00000128245.9            0                   0                5        0
-#5            5  ABCG1:ENSG00000160179.13            0                   0                5        0
-#6            5     WIZ:ENSG00000011451.9            0                   0                5        0
-#  eqtl_bonferroni
-#1               0
-#2               0
-#3               1
-#4               0
-#5               0
-#6               0
-```
-
-``` r
 saveRDS(toPlot_50_genes_PCA_gdata_probedata, "toPlot_50_genes_PCA_gdata_probedata_V4.RDS")
 
 toPlot_50_genes_PCA_gdata_probedata_average <- toPlot_50_genes_PCA_gdata_probedata %>% group_by(num_PC_gdata, num_PC_probedata) %>% summarise(average_sig_fdr = mean(eqtl_fdr), average_sig_bonferroni = mean(eqtl_bonferroni))
@@ -338,19 +321,6 @@ head(toPlot_50_genes_PCA_gdata_probedata_average)
     ## 4 1            15                         0.280                  0.260
     ## 5 1            20                         0.360                  0.340
     ## 6 1            25                         0.280                  0.280
-
-``` r
-# A tibble: 6 x 4
-# Groups:   num_PC_gdata [2]
-#  num_PC_gdata num_PC_probedata average_sig_fdr average_sig_bonferroni
-#  <fct>        <fct>                      <dbl>                  <dbl>
-#1 5            5                          0.100                  0.100
-#2 5            10                         0.100                  0.100
-#3 5            15                         0.100                  0.100
-#4 5            20                         0.100                  0.100
-#5 10           5                          0.300                  0.300
-#6 10           10                         0.100                  0.100
-```
 
 ``` r
 jpeg("prop_of_genes_sig_on_50_genes_V4_fdr.jpg")
@@ -610,21 +580,6 @@ summary_cor_test_results[order(-summary_cor_test_results$n),]
     ## 10 AC016629.2:ENSG00000213753.4    17
     ## # ... with 669 more rows
 
-``` r
-# Groups:   gene [610]
-#   gene                             n
-#   <fct>                        <int>
-# 1 CYP2D6:ENSG00000100197.16       19
-# 2 C21orf56:ENSG00000160284.10     18
-# 3 NLRP2:ENSG00000022556.11        18
-# 4 CSDC2:ENSG00000172346.9         17
-# 5 L3MBTL1:ENSG00000185513.9       17
-# 6 NKAIN4:ENSG00000101198.10       17
-# 7 ELL:ENSG00000105656.5           16
-# 8 AC016629.2:ENSG00000213753.4    16
-# 9 POLR3H:ENSG00000100413.12       15
-#10 C22orf32:ENSG00000183172.6      15
-```
 
 Looking at individual genes which contain multiple significant probes
 =====================================================================
