@@ -192,7 +192,7 @@ rownames(m[[i]]) <- rownames(subjects_genes)
 colnames(m[[i]]) <- colnames(subjects_genes)
 }
 
-saveRDS(m, "subjects_genes_PCA_adjusted_all.RDS")
+#saveRDS(m, "subjects_genes_PCA_adjusted_all.RDS")
 ```
 
 Adjust PCs for DNA methylation probe data (labelled as m2)
@@ -242,7 +242,7 @@ rownames(m2[[i]]) <- colnames(probes_subjects)
 colnames(m2[[i]]) <- rownames(probes_subjects)
 }
 
-saveRDS(m2, "probes_subjects_PCA_adjusted_all.RDS")
+#saveRDS(m2, "probes_subjects_PCA_adjusted_all.RDS")
 ```
 
 Look at the number of significant results on 50 random genes
@@ -301,7 +301,7 @@ head(toPlot_50_genes_PCA_gdata_probedata)
     ## 6                1        1               1
 
 ``` r
-saveRDS(toPlot_50_genes_PCA_gdata_probedata, "toPlot_50_genes_PCA_gdata_probedata_V4.RDS")
+#saveRDS(toPlot_50_genes_PCA_gdata_probedata, "toPlot_50_genes_PCA_gdata_probedata_V4.RDS")
 
 toPlot_50_genes_PCA_gdata_probedata_average <- toPlot_50_genes_PCA_gdata_probedata %>% group_by(num_PC_gdata, num_PC_probedata) %>% summarise(average_sig_fdr = mean(eqtl_fdr), average_sig_bonferroni = mean(eqtl_bonferroni))
 
@@ -323,24 +323,28 @@ head(toPlot_50_genes_PCA_gdata_probedata_average)
     ## 6 1            25                         0.280                  0.280
 
 ``` r
-jpeg("prop_of_genes_sig_on_50_genes_V4_fdr.jpg")
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/prop_of_genes_sig_on_50_genes_V4_fdr.png")
 p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PCA_gdata_probedata_average) + geom_tile(aes(fill=average_sig_fdr), color = "white") + scale_fill_gradient(low= "white", high = "steelblue", name = "Proportion of genes significant") 
 p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs Adjusted for Gene Expression Data") + ylab("Number of PCs Adjusted for DNA Methylation Data")
-dev.off()
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 ``` r
-jpeg("prop_of_genes_sig_on_50_genes_V4_bonferroni.jpg")
-p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PCA_gdata_probedata_average) + geom_tile(aes(fill=average_sig_bonferroni), color = "white") + scale_fill_gradient(low= "white", high = "steelblue", name = "Proportion of genes significant") 
-p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs Adjusted for Gene Expression Data") + ylab("Number of PCs Adjusted for DNA Methylation Data")
-dev.off()
+#dev.off()
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+``` r
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/prop_of_genes_sig_on_50_genes_V4_bonferroni.png")
+p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PCA_gdata_probedata_average) + geom_tile(aes(fill=average_sig_bonferroni), color = "white") + scale_fill_gradient(low= "white", high = "steelblue", name = "Proportion of genes significant") 
+p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs Adjusted for Gene Expression Data") + ylab("Number of PCs Adjusted for DNA Methylation Data")
+```
+
+![](Step-2_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+``` r
+#dev.off()
+```
 
 Looks like adjusting for PCs in DNA methylation probes don't do much when very few PCAs are adjusted in the gene expression data, but changes when many PCs are adjusted in gene expression data. On the other hand, it is apparent that adjusting for PCAs in gene expression data does a lot - number of genes that contains at least one significant eQTM increases when PCAs adjusted increase. Based on the results, we will keep 5 PCs adjusted for DNA methylation and 30 PC adjusted for gene expression data.
 
@@ -357,13 +361,15 @@ cum_var_explained_gdata<-(as.data.frame(cumsum(pc_svd_genes$d^2/sum(pc_svd_genes
 cum_var_explained_gdata$pcs<-c(1:nrow(cum_var_explained_gdata))
 colnames(cum_var_explained_gdata)<- c("cum_var_explained","PCs")
 
-png("cum_var_explained_50_V4_gdata.png")
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/cum_var_explained_50_V4_gdata.png")
 ggplot(aes( x=PCs, y=cum_var_explained), data = cum_var_explained_gdata[1:30,]) + geom_point(size=1) + geom_line() + ggtitle("Cumulative variance explained by PCs on Gene Expression Data Data") + xlab("Number of PCs") + ylab("Variance Explained") + xlim(0,30) + ylim(0,1)
-dev.off()
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+``` r
+#dev.off()
+```
 
 From the above, we see when 30 PCs are adjusted for gene expression data, a total of 72% variance was accounted for.
 
@@ -375,13 +381,15 @@ cum_var_explained_probe<-(as.data.frame(cumsum(pc_svd_probes$d^2/sum(pc_svd_prob
 cum_var_explained_probe$pcs<-c(1:nrow(cum_var_explained_probe))
 colnames(cum_var_explained_probe)<- c("cum_var_explained","PCs")
 
-png("cum_var_explained_50_V4_probe.png")
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/cum_var_explained_50_V4_probe.png")
 ggplot(aes( x=PCs, y=cum_var_explained), data = cum_var_explained_probe[1:30,]) + geom_point(size=1) + geom_line() + ggtitle("Cumulative variance explained by PCs on DNA Methylation Data") + xlab("Number of PCs") + ylab("Variance Explained") + xlim(0,30) + ylim(0,1)
-dev.off()
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+``` r
+#dev.off()
+```
 
 Correlation tests based on the PC adjusted data sets
 ====================================================
@@ -406,17 +414,17 @@ results_PCA = lapply(1:ncol(m[[PC_genes]]), function(i){
 
 lapply_results_PCA <- do.call(rbind,results_PCA)
 lapply_results_PCA$adjusted.pvalue <- p.adjust(lapply_results_PCA$pvalue, method="fdr") #adjusting for fdr
-saveRDS(lapply_results_PCA,"cor_test_results_PCA_lapply_V4.rds")
+#saveRDS(lapply_results_PCA,"cor_test_results_PCA_lapply_V4.rds")
 
-png("histogram_pvalue_V4.png")
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/histogram_pvalue_V4.png")
 ggplot(aes(pvalue), data = lapply_results_PCA) + geom_histogram(bins=500) + ggtitle("Histogram of p-value on correlation tests")
-dev.off()
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 ``` r
+#dev.off()
+
 summary(lapply_results_PCA$adjusted.pvalue)
 ```
 
@@ -430,8 +438,8 @@ min(lapply_results_PCA$adjusted.pvalue)
     ## [1] 7.263e-82
 
 ``` r
-saveRDS(t(m2[[5]]), "probes_subjects_PCA_adjusted_V4.RDS")
-saveRDS(m[[30]], "subjects_genes_PCA_adjusted_V4.RDS")
+#saveRDS(t(m2[[5]]), "probes_subjects_PCA_adjusted_V4.RDS")
+#saveRDS(m[[30]], "subjects_genes_PCA_adjusted_V4.RDS")
 ```
 
 Look at some random genes individually
@@ -444,7 +452,7 @@ Create a function called results\_by\_gene that looks at how many significant pr
 
 ``` r
 results_by_gene <- function(gene){
-  results_pca_CYP2D6 = lapply(n, function(i){
+  lapply(n, function(i){
     toLoop = which(dat[,gene] != 0) 
     out <- lapply(toLoop, function(j){
       data.frame(probe = rownames(probes_subjects)[j], 
@@ -460,7 +468,7 @@ results_by_gene <- function(gene){
 }
 
 results_by_probe <- function(gene){
-  results_pca_CYP2D6 = lapply(n, function(i){
+  lapply(n, function(i){
     toLoop = which(dat[,gene] != 0) 
     out <- lapply(toLoop, function(j){
       data.frame(probe = rownames(probes_subjects)[j], 
@@ -507,25 +515,29 @@ Looking at AKT2
 lapply_results_pca_AKT2_gdata <- do.call(rbind,results_by_gene("AKT2:ENSG00000105221.10"))
 toPlot_lapply_results_pca_AKT2_gdata  <- lapply_results_pca_AKT2_gdata  %>% melt(id="num_PC")
 
-png("gene_AKT2_gdata.png")
-ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_AKT2_gdata) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs by number of PCs for AKT2 when gene data adjusted for 30 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
-dev.off()
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/gene_AKT2_gdata.png")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_AKT2_gdata) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs on AKT2 when gene data adjusted for 30 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
+``` r
+#dev.off()
+```
 
 ``` r
 lapply_results_pca_AKT2_probe <- do.call(rbind,results_by_probe("AKT2:ENSG00000105221.10"))
 toPlot_lapply_results_pca_AKT2_probe  <- lapply_results_pca_AKT2_probe  %>% melt(id="num_PC")
 
-png("gene_AKT2_probes.png")
-ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_AKT2_probe) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs by number of PCs for AKT2 when probe data adjusted for 5 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
-dev.off()
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/gene_AKT2_probes.png")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_AKT2_probe) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs on AKT2 when probe data adjusted for 5 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-14-1.png)
+
+``` r
+#dev.off()
+```
 
 There seems to be nothing showing in AKT2 gene, let's try another gene that is related to Alzheimer's disease.
 
@@ -536,25 +548,29 @@ Looking at APP
 lapply_results_pca_APP_gdata <- do.call(rbind,results_by_gene("APP:ENSG00000142192.14"))
 toPlot_lapply_results_pca_APP_gdata  <- lapply_results_pca_APP_gdata  %>% melt(id="num_PC")
 
-png("gene_APP_gdata.png")
-ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_APP_gdata) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs by number of PCs for APP when gene data adjusted for 30 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
-dev.off()
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/gene_APP_gdata.png")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_APP_gdata) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs for APP on gene data adjusted for 30 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-15-1.png)
+
+``` r
+#dev.off()
+```
 
 ``` r
 lapply_results_pca_APP_probe <- do.call(rbind,results_by_probe("APP:ENSG00000142192.14"))
 toPlot_lapply_results_pca_APP_probe  <- lapply_results_pca_APP_probe  %>% melt(id="num_PC")
 
-png("gene_APP_probes.png")
-ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_APP_probe) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs by number of PCs for APP when probe data adjusted for 5 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
-dev.off()
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/gene_APP_probes.png")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_APP_probe) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs by number of PCs on APP when probe data adjusted for 5 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-16-1.png)
+
+``` r
+#dev.off()
+```
 
 Nothing much is going on in any of these genes, we will now by look at genes that have multiple significant eQTMs.
 
@@ -580,7 +596,6 @@ summary_cor_test_results[order(-summary_cor_test_results$n),]
     ## 10 AC016629.2:ENSG00000213753.4    17
     ## # ... with 669 more rows
 
-
 Looking at individual genes which contain multiple significant probes
 =====================================================================
 
@@ -588,28 +603,62 @@ CYP2D6 - a gene that contains multiple significant probes
 ---------------------------------------------------------
 
 ``` r
-lapply_results_pca_CYP2D6 <- do.call(rbind,results_by_gene("CYP2D6:ENSG00000100197.16"))
-toPlot_lapply_results_pca_CYP2D6 <- lapply_results_pca_CYP2D6 %>% melt(id="num_PC")
+lapply_results_pca_CYP2D6_gdata <- do.call(rbind,results_by_gene("CYP2D6:ENSG00000100197.16"))
+toPlot_lapply_results_pca_CYP2D6_gdata  <- lapply_results_pca_CYP2D6_gdata  %>% melt(id="num_PC")
 
-png("gene_CYP2D6.png")
-ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_CYP2D6) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs by number of PCs for CYP2D6") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
-dev.off()
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/gene_CYP2D6_gdata.png")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_CYP2D6_gdata) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs on CYP2D6 when gene data adjusted for 30 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-18-1.png)
+
+``` r
+#dev.off()
+```
+
+``` r
+lapply_results_pca_CYP2D6_probe <- do.call(rbind,results_by_probe("CYP2D6:ENSG00000100197.16"))
+toPlot_lapply_results_pca_CYP2D6_probe  <- lapply_results_pca_CYP2D6_probe  %>% melt(id="num_PC")
+
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/gene_CYP2D6_probe.png")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_CYP2D6_probe) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs on CYP2D6 when probe data adjusted for 5 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
+```
+
+![](Step-2_files/figure-markdown_github/unnamed-chunk-19-1.png)
+
+``` r
+#dev.off()
+```
 
 C21orf56- a gene that contains multiple significant probes
 ----------------------------------------------------------
 
 ``` r
-lapply_results_pca_C21orf56 <- do.call(rbind,results_by_gene("C21orf56:ENSG00000160284.10"))
-toPlot_lapply_results_pca_C21orf56 <- lapply_results_pca_C21orf56 %>% melt(id="num_PC")
+lapply_results_pca_C21orf56_gdata <- do.call(rbind,results_by_gene("C21orf56:ENSG00000160284.10"))
+toPlot_lapply_results_pca_C21orf56_gdata  <- lapply_results_pca_C21orf56_gdata  %>% melt(id="num_PC")
 
-png("gene_C21orf56.png")
-ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_C21orf56) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs by number of PCs for C21orf56") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
-dev.off()
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/gene_C21orf56_gdata.png")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_C21orf56_gdata) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs on C21orf56 when gene data adjusted for 30 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
 ```
 
-    ## quartz_off_screen 
-    ##                 2
+![](Step-2_files/figure-markdown_github/unnamed-chunk-20-1.png)
+
+``` r
+#dev.off()
+```
+
+``` r
+lapply_results_pca_C21orf56_probe <- do.call(rbind,results_by_probe("C21orf56:ENSG00000160284.10"))
+toPlot_lapply_results_pca_C21orf56_probe  <- lapply_results_pca_C21orf56_probe  %>% melt(id="num_PC")
+
+#png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/gene_C21orf56_probes.png")
+ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca_C21orf56_probe) + geom_point() + geom_line( ) + ggtitle("Number of significant eQTMs on C21orf56 when probe data adjusted for 5 PCs") + xlab("Number of PCs") + ylab("Number of significant DNA probes") + scale_colour_discrete(name = "Type of Threshold", breaks=c("num_less_pvalue", "num_less_fdr", "num_less_bonferroni"), labels=c("P-value < 0.1", "FDR < 0.1", "Bonferroni < 0.1"))
+```
+
+![](Step-2_files/figure-markdown_github/unnamed-chunk-21-1.png)
+
+``` r
+#dev.off()
+```
+
+Here, you can see clearly how the number of PCs adjusted affects the number of significant probes by individual genes. For example, it seems that the number of PCs adjusted in probes does not affect the number of significances. This observation corresponds to the cumulative variance explained that was illustrated above - over 90% of variability was explained on the first PC. In the same gene for the second graph which looks at the number of PCs adjusted in genes affect a lot more especially between 20 to 30 PCs.
