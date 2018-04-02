@@ -21,7 +21,7 @@ Hiwot Tafessu |*Department of Statistics*
 
 **Step 2: Single Probe Analysis**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair.
 
-**Step 3: Multiple Probe Analysis**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method
+**Step 3: Multiple Probe Analysis**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method.
 
 **Step 4: Biological Plausability**:- This directory includes the visualizations and explanation behind biological reasonings
 and gene enrichment analysis. 
