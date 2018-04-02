@@ -11,8 +11,8 @@ output: html_document
 
 ## Step-2_files (Images Folder)
 
-- This directory consists of the images output that belong 
+- This directory consists of the images output from Step-2.md
 
 ## Data
 
-- The Data directory consists of 
+- The Data directory consists of any data sets relevant to Step 2
