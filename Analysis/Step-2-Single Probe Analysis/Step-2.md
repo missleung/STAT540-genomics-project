@@ -328,7 +328,7 @@ p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PC
 p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs Adjusted for Gene Expression Data") + ylab("Number of PCs Adjusted for DNA Methylation Data")
 ```
 
-![](Step-2_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](Step-2_files/prop_of_genes_sig_on_50_genes_V4_fdr.png)
 
 ``` r
 #dev.off()
@@ -340,7 +340,7 @@ p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PC
 p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab("Number of PCs Adjusted for Gene Expression Data") + ylab("Number of PCs Adjusted for DNA Methylation Data")
 ```
 
-![](Step-2_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](Step-2_files/prop_of_genes_sig_on_50_genes_V4_bonferroni.png)
 
 ``` r
 #dev.off()
