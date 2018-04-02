@@ -5,18 +5,18 @@ date: '2018-04-02'
 output: github_document
 ---
 
-# a-clust
+## a-clust
 
 -Describe the contents in a-clust (point form)
 
-# Step1.md and Step1.Rmd
+## Step1.md and Step1.Rmd
 
 Please describe the code in Step1 (point form)
 
-# project_data_description.Rmd and project_data_description.md
+## project_data_description.Rmd and project_data_description.md
 
 - These files provides a detailed description of the raw data set we have obtained for our project. It describes the ROSMAP data sets.
 
-# Step1_files (Images Folder)
+## Step1_files (Images Folder)
 
 - Step_files will include all the images that are produced in Markdown file
