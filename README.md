@@ -1,4 +1,4 @@
-# Repo_team_Gene_Heroes
+# Gene Heroes's Repository 
 
 ##Analysis
 
