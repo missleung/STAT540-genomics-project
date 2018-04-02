@@ -76,7 +76,7 @@ ncol(probes_genes_distance) #number of genes
 WE also load a data set from eQTM analysis that we have peroformed in Step 2, including all the adjusted P values for analysing single probes.
 
 ``` r
-cor_test_results_PCA_lapply_V4 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Step4/cor_test_results_PCA_lapply_V4.rds")
+cor_test_results_PCA_lapply_V4 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Code/Step4/cor_test_results_PCA_lapply_V4.rds")
 head (cor_test_results_PCA_lapply_V4)
 ```
 

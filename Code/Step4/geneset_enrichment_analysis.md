@@ -11,7 +11,7 @@ library(tidyverse)
 
     ## Warning: package 'tidyverse' was built under R version 3.4.4
 
-    ## -- Attaching packages ------------------------------------------------------------------- tidyverse 1.2.1 --
+    ## -- Attaching packages ------------------------------------------------ tidyverse 1.2.1 --
 
     ## v ggplot2 2.2.1     v purrr   0.2.4
     ## v tibble  1.4.2     v dplyr   0.7.4
@@ -34,7 +34,7 @@ library(tidyverse)
 
     ## Warning: package 'forcats' was built under R version 3.4.3
 
-    ## -- Conflicts ---------------------------------------------------------------------- tidyverse_conflicts() --
+    ## -- Conflicts --------------------------------------------------- tidyverse_conflicts() --
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -69,7 +69,7 @@ ermineR:::findJava()
 WE load a data set from eQTM analysis that we have peroformed in Step 2, including all the adjusted P values for analysing single probes.
 
 ``` r
-original_data <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Step4/cor_test_results_PCA_lapply_V4.rds")
+ original_data <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Code/Step4/cor_test_results_PCA_lapply_V4.rds")
 
 head(original_data)
 ```
@@ -246,16 +246,16 @@ enrichmentResult$results %>% arrange(CorrectedMFPvalue)
     ## # A tibble: 749 x 12
     ##    Name         ID     NumProbes NumGenes RawScore    Pval CorrectedPvalue
     ##    <chr>        <chr>      <int>    <int>    <dbl>   <dbl>           <dbl>
-    ##  1 cellular li~ GO:00~        85       85   0.0917 8.00e-4           0.590
-    ##  2 monocarboxy~ GO:00~        35       35   0.0715 9.00e-4           0.332
-    ##  3 fatty acid ~ GO:00~        26       26   0.0656 1.50e-3           0.369
-    ##  4 oxidation-r~ GO:00~        83       83   0.0875 1.60e-3           0.295
-    ##  5 lipid metab~ GO:00~       107      107   0.104  2.00e-3           0.295
-    ##  6 organic aci~ GO:00~        65       65   0.0776 2.20e-3           0.271
-    ##  7 carboxylic ~ GO:00~        62       62   0.0775 2.20e-3           0.232
-    ##  8 oxoacid met~ GO:00~        64       64   0.0778 2.20e-3           0.203
-    ##  9 drug metabo~ GO:00~        53       53   0.0654 6.70e-3           0.549
-    ## 10 steroid met~ GO:00~        22       22   0.0520 1.00e-2           0.738
+    ##  1 lipid metab~ GO:00~       107      107   0.104  7.00e-4           0.517
+    ##  2 monocarboxy~ GO:00~        35       35   0.0715 1.00e-3           0.369
+    ##  3 cellular li~ GO:00~        85       85   0.0917 1.70e-3           0.418
+    ##  4 oxidation-r~ GO:00~        83       83   0.0875 1.80e-3           0.332
+    ##  5 fatty acid ~ GO:00~        26       26   0.0656 2.60e-3           0.384
+    ##  6 organic aci~ GO:00~        65       65   0.0776 2.80e-3           0.344
+    ##  7 carboxylic ~ GO:00~        62       62   0.0775 2.80e-3           0.295
+    ##  8 oxoacid met~ GO:00~        64       64   0.0778 2.80e-3           0.258
+    ##  9 drug metabo~ GO:00~        53       53   0.0654 5.00e-3           0.410
+    ## 10 steroid met~ GO:00~        22       22   0.0520 8.70e-3           0.642
     ## # ... with 739 more rows, and 5 more variables: MFPvalue <dbl>,
     ## #   CorrectedMFPvalue <dbl>, Multifunctionality <dbl>, `Same as` <chr>,
     ## #   GeneMembers <chr>
