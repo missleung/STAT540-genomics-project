@@ -147,7 +147,7 @@ There are currently 42813 genes and 1795 probes.
 Adjust PCs for gene expression data (labelled as m)
 ===================================================
 
-Here we are going to build gene expression data sets adjusted for various numbers of PCs. Although this data set is assumed not to have any batch effects (they are coming from one batch), we would like to adjust for gene expression data to account for hidden confounders that are not recorded in the study. Because we are unsure of how many PCs to adjust for, we would like to explore what happens to the results of correlation tests between gene and probe pair To run PCA, we will use svd() and adjust for 1, 5, 10, 15, 20, 25, 30 PCAs. The data set is saved as "subjects\_genes\_PCA\_adjusted\_V3.RDS"
+Here we are going to build gene expression data sets adjusted for various numbers of PCs. Although this data set is assumed not to have any batch effects (they are coming from one batch), we would like to adjust for gene expression data to account for hidden confounders that are not recorded in the study. Because we are unsure of how many PCs to adjust for, we would like to explore what happens to the results of correlation tests between gene and probe pair To run PCA, we will use svd() and adjust for 1, 5, 10, 15, 20, 25, 30 PCAs. The data set is saved as "subjects\_genes\_PCA\_adjusted\_V4.RDS"
 
 ``` r
 #SVD PCA
@@ -198,7 +198,7 @@ colnames(m[[i]]) <- colnames(subjects_genes)
 Adjust PCs for DNA methylation probe data (labelled as m2)
 ==========================================================
 
-Below is adjusting for the DNA methylation probes. The reasons to adjust for DNA methylation probes are the same as why we decide to adjust for gene expression data (described above). Again, we will use svd() to adjust for 1, 5, 10, 15, 20, 25, 30 PCAs. The data set is saved as probes\_subjects\_PCA\_adjusted\_V3.RDS.
+Below is adjusting for the DNA methylation probes. The reasons to adjust for DNA methylation probes are the same as why we decide to adjust for gene expression data (described above). Again, we will use svd() to adjust for 1, 5, 10, 15, 20, 25, 30 PCAs. The data set is saved as probes\_subjects\_PCA\_adjusted\_V4.RDS.
 
 ``` r
 #SVD PCA
