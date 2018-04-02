@@ -7,7 +7,7 @@ output: html_document
 
 ## Step-2.Rmd and Step-2.md
 
-- These markdown files are all the codes in Step 2.
+- These markdown files are all the codes in Step 2. Please refer to Step-2.md for images and conclusions.
 
 ## Step-2_files (Images Folder)
 

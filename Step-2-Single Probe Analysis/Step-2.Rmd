@@ -145,6 +145,9 @@ p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab(
 #dev.off()
 ```
 
+This heat map shows how number of PCs adjusted in gene expression data and DNA methylation data change the number of significant correlation results on probe and gene pair. Significance levels are adjusted according to FDR values < 0.1. Visually, we see that most genes are significant on the bottom right corner of the heatmap, with the least proportion of genes towards the left side. The increasing number of PCs adjusted for gene expression data gives more significant results while the decreasing number of PCs adjusting for DNA methylation data gives us better results. With gene expression data adjusted for 30 PCs, we see that the proportion of significant genes increases when DNA methylation data is adjusted from 1 to 5 PCs, and decreases back again from 10 to 30 PCs. Hence, we conclude that the number of PCs we will use will be 30 on gene expression data and 5 on DNA methylation data.
+
+
 ```{r}
 #png("/Users/lisa/STAT540/Repo_team_gene_heroes/images/Step 2/prop_of_genes_sig_on_50_genes_V4_bonferroni.png")
 p <- ggplot(aes(x=num_PC_gdata, y = num_PC_probedata), data = toPlot_50_genes_PCA_gdata_probedata_average) + geom_tile(aes(fill=average_sig_bonferroni), color = "white") + scale_fill_gradient(low= "white", high = "steelblue", name = "Proportion of genes significant") 
@@ -153,7 +156,9 @@ p +  ggtitle("Proportion of genes with a significant eQTM for 50 genes") + xlab(
 
 ```
 
-Looks like adjusting for PCs in DNA methylation probes don't do much when very few PCAs are adjusted in the gene expression data, but changes when many PCs are adjusted in gene expression data. On the other hand, it is apparent that adjusting for PCAs in gene expression data does a lot - number of genes that contains at least one significant eQTM increases when PCAs adjusted increase. Based on the results, we will keep 5 PCs adjusted for DNA methylation and 30 PC adjusted for gene expression data. 
+
+This figure is a heatmap that shows how number of PCs adjusted in gene expression data and DNA methylation data change correlation results on probe and gene pair. Looks like adjusting for PCs in DNA methylation probes don't do much when very few PCAs are adjusted in the gene expression data, but adjusting PCs in gene expression data affects the results. Significance levels are adjusted according to bonferroni values < 0.1. The bonferroni plot is noticeably different from the FDR plot shown earlier. Visually, we see that most genes are significant on the top right and bottom right corner of the heatmap, with the least proportion of genes towards the left side. In other words, the increasing number of PC adjusted for gene expression data gives more significant results. With gene expression data adjusted for 30 PCs, we see that the proportion of significant genes decrease when DNA methylation data is adjusted from 1 to 15 PCs, and increases back again when it is adjusted from 15 to 30 PCs. Based on the results, we will keep 5 PCs adjusted for DNA methylation and 30 PC adjusted for gene expression data. 
+
 
 #Cumulative variation explained by PCs
 
