@@ -1,72 +1,17 @@
-Geneset Enrichment Analysis
+GeneSet Enrichment Analysis
 ================
 Zohreh Sharafian
 March 27, 2018
 
-We load related library packages to understand and verify the biological aspects of our analysis.We use "ermineR" package for gene enrichment analysis \[ref\].
+Question:
 
-``` r
-library(tidyverse)
-```
+Next, we study the relationship between numbers of significant methylated CpG sites, corresponding to the genes and the function of those genes. In other words, we check if the genes that correspond to multiple probes are multifunctional genes and have more biological functions.
 
-    ## Warning: package 'tidyverse' was built under R version 3.4.4
-
-    ## -- Attaching packages ------------------------------------------------ tidyverse 1.2.1 --
-
-    ## v ggplot2 2.2.1     v purrr   0.2.4
-    ## v tibble  1.4.2     v dplyr   0.7.4
-    ## v tidyr   0.8.0     v stringr 1.3.0
-    ## v readr   1.1.1     v forcats 0.3.0
-
-    ## Warning: package 'ggplot2' was built under R version 3.4.3
-
-    ## Warning: package 'tibble' was built under R version 3.4.3
-
-    ## Warning: package 'tidyr' was built under R version 3.4.3
-
-    ## Warning: package 'readr' was built under R version 3.4.3
-
-    ## Warning: package 'purrr' was built under R version 3.4.3
-
-    ## Warning: package 'dplyr' was built under R version 3.4.3
-
-    ## Warning: package 'stringr' was built under R version 3.4.3
-
-    ## Warning: package 'forcats' was built under R version 3.4.3
-
-    ## -- Conflicts --------------------------------------------------- tidyverse_conflicts() --
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
-
-``` r
-library(reshape2)
-```
-
-    ## Warning: package 'reshape2' was built under R version 3.4.4
-
-    ## 
-    ## Attaching package: 'reshape2'
-
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     smiths
-
-``` r
-library(devtools)
-```
-
-    ## Warning: package 'devtools' was built under R version 3.4.3
-
-``` r
-library(ermineR)
-ermineR:::findJava()
-```
-
-    ## [1] "C:\\Program Files\\Java\\jre1.8.0_161"
+We load related library packages to understand and verify the biological aspects of our analysis.We use "ermineR" package for gene set enrichment analysis \[ref\].
 
 ### Loading data
 
-WE load a data set from eQTM analysis that we have peroformed in Step 2, including all the adjusted P values for analysing single probes.
+WE load a data set from eQTM analysis that we have peroformed in Step 2 which includes all the adjusted P values for analysing single probes.
 
 ``` r
  original_data <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Code/Step4/cor_test_results_PCA_lapply_V4.rds")
@@ -120,7 +65,7 @@ head(modified_data)
 
 ### Preparing the inputs
 
-We extract three columns including "new gane name", "probe", and "adjusted P value" for all the genes in our data set.Next, we count the number of probes that are assiociated with a particular gene and assign zero to those probes that do not coresspond to any gene in the data set.
+We extract three columns including "new gane name", "probe", and "adjusted P value" for all the genes in our data set. Next, we count the number of probes corresponding to a particular gene and assign zero to the probees that are not significant and have P value greater than 0.05.
 
 ``` r
 extracted_data <- modified_data[,c(2, 3,6)]
@@ -157,7 +102,7 @@ filtered_adjusted_pvalue [1:20,]
     ## cor10861  RP4-697K14.7 cg00152041    7.394562e-05
     ## cor52215        IL27RA cg23218533    3.970250e-04
 
-We realize that there are 536 gene that have one or more associated probe.
+We realize that there are 536 gene that have one or more significant probes.
 
 ``` r
 nrow(filtered_adjusted_pvalue)
@@ -171,7 +116,7 @@ length(unique(filtered_adjusted_pvalue$new_gene_name))
 
     ## [1] 536
 
-We generate a new data set including the gene names and the count of related probes for each gene.We got the scores based on the number of probes corresponding to a particular gene.Those genes that have not any related probe get zero value.
+We generate a new data set including the gene names and the count of corresponding probes for each gene.Those genes that do not have any related probe get zero value.
 
 ``` r
 library(tidyverse)
@@ -237,7 +182,7 @@ enrichmentResult <- precRecall(scores = ermineInputGeneScores,
                                geneSetDescription = "GO.xml") 
 ```
 
-The result show the "correctedMFPvalue"=1 for all the genes regardless of the number of corresponding probes.This result shows that there is not any relationship between the number of significant probes and the multifunctionality of the genes as there is no significant p value for the gene sets.
+The result show the "correctedMFPvalue"=1 for all the genes regardless of the number of corresponding probes.This result shows that there is not any relationship between the number of significant probes corresponding to the genes and the multifunctionality of the genes as there is no significant p value for the gene sets.
 
 ``` r
 enrichmentResult$results %>% arrange(CorrectedMFPvalue)
@@ -246,15 +191,15 @@ enrichmentResult$results %>% arrange(CorrectedMFPvalue)
     ## # A tibble: 749 x 12
     ##    Name         ID     NumProbes NumGenes RawScore    Pval CorrectedPvalue
     ##    <chr>        <chr>      <int>    <int>    <dbl>   <dbl>           <dbl>
-    ##  1 lipid metab~ GO:00~       107      107   0.104  7.00e-4           0.517
-    ##  2 monocarboxy~ GO:00~        35       35   0.0715 1.00e-3           0.369
-    ##  3 cellular li~ GO:00~        85       85   0.0917 1.70e-3           0.418
-    ##  4 oxidation-r~ GO:00~        83       83   0.0875 1.80e-3           0.332
-    ##  5 fatty acid ~ GO:00~        26       26   0.0656 2.60e-3           0.384
-    ##  6 organic aci~ GO:00~        65       65   0.0776 2.80e-3           0.344
-    ##  7 carboxylic ~ GO:00~        62       62   0.0775 2.80e-3           0.295
-    ##  8 oxoacid met~ GO:00~        64       64   0.0778 2.80e-3           0.258
-    ##  9 drug metabo~ GO:00~        53       53   0.0654 5.00e-3           0.410
+    ##  1 monocarboxy~ GO:00~        35       35   0.0715 9.00e-4           0.664
+    ##  2 lipid metab~ GO:00~       107      107   0.104  1.10e-3           0.406
+    ##  3 fatty acid ~ GO:00~        26       26   0.0656 1.50e-3           0.369
+    ##  4 cellular li~ GO:00~        85       85   0.0917 1.60e-3           0.295
+    ##  5 organic aci~ GO:00~        65       65   0.0776 2.30e-3           0.339
+    ##  6 carboxylic ~ GO:00~        62       62   0.0775 2.30e-3           0.283
+    ##  7 oxoacid met~ GO:00~        64       64   0.0778 2.30e-3           0.242
+    ##  8 oxidation-r~ GO:00~        83       83   0.0875 2.60e-3           0.240
+    ##  9 drug metabo~ GO:00~        53       53   0.0654 6.30e-3           0.517
     ## 10 steroid met~ GO:00~        22       22   0.0520 8.70e-3           0.642
     ## # ... with 739 more rows, and 5 more variables: MFPvalue <dbl>,
     ## #   CorrectedMFPvalue <dbl>, Multifunctionality <dbl>, `Same as` <chr>,

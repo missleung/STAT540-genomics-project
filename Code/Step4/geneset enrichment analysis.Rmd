@@ -1,12 +1,16 @@
 ---
-title: "Geneset Enrichment Analysis"
+title: "GeneSet Enrichment Analysis"
 author: "Zohreh Sharafian"
 date: "March 27, 2018"
 output: github_document
 ---
+Question:
 
-We load related library packages to understand and verify the biological aspects of our analysis.We use "ermineR" package for gene enrichment analysis [ref].
-```{r}
+Next, we study the relationship between numbers of significant methylated CpG sites, corresponding to the genes and the function of those genes. In other words, we check if the genes that correspond to multiple probes are multifunctional genes and have more biological functions.
+
+We load related library packages to understand and verify the biological aspects of our analysis.We use "ermineR" package for gene set enrichment analysis [ref].
+
+```{r setup, include=FALSE}
 library(tidyverse)
 library(reshape2)
 library(devtools)
@@ -15,14 +19,17 @@ ermineR:::findJava()
 ```
 ### Loading data
 
-WE load a data set from eQTM analysis that we have peroformed in Step 2, including all the adjusted P values for analysing single probes.
+WE load a data set from eQTM analysis that we have peroformed in Step 2 which includes all the adjusted P values for analysing single probes.
+
 ```{r}
  original_data <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Code/Step4/cor_test_results_PCA_lapply_V4.rds")
 
 head(original_data)
 
 ```
+
 ### Modifiying data
+
 We remove the second part of gene names as "ermineR" accepts the HGNC symbol of the genes.
 
 ```{r}
@@ -37,7 +44,7 @@ head(modified_data)
 ```
 ### Preparing the inputs
 
-We extract three columns including "new gane name", "probe", and "adjusted P value" for all the genes in our data set.Next, we count the number of probes that are assiociated with a particular gene and assign zero to those probes that do not coresspond to any gene in the data set.
+We extract three columns including "new gane name", "probe", and "adjusted P value" for all the genes in our data set. Next, we count the number of probes corresponding to a particular gene and assign zero to the probees that are not significant and have P value greater than 0.05.
 ```{r}
 
 extracted_data <- modified_data[,c(2, 3,6)]
@@ -52,7 +59,7 @@ remaining_names$count=0;
 filtered_adjusted_pvalue [1:20,]
 
 ```
-We realize that there are 536 gene that have one or more associated probe.
+We realize that there are 536 gene that have one or more significant probes.
 ```{r}
 
 nrow(filtered_adjusted_pvalue)
@@ -62,7 +69,7 @@ length(unique(filtered_adjusted_pvalue$new_gene_name))
 
 ```
 
-We generate a new data set including the gene names and the count of related probes for each gene.We got the scores based on the number of probes corresponding to a particular gene.Those genes that have not any related probe get zero value.
+We generate a new data set including the gene names and the count of corresponding probes for each gene.Those genes that do not have any related probe get zero value.
 ```{r}
 library(tidyverse)
 
@@ -95,6 +102,7 @@ ermineInputGeneScores <- gene_list %>%
 ```
 
 We use the Precision-Recall method to perform the enrichment analysis.
+
 ```{r}
 enrichmentResult <- precRecall(scores = ermineInputGeneScores, 
                                scoreColumn = 1, 
@@ -105,7 +113,7 @@ enrichmentResult <- precRecall(scores = ermineInputGeneScores,
                                geneSetDescription = "GO.xml") 
 ```
 
-The result show the "correctedMFPvalue"=1 for all the genes regardless of the number of corresponding probes.This result shows that there is not any relationship between the number of significant probes and the multifunctionality of the genes as there is no significant p value for the gene sets.
+The result show the "correctedMFPvalue"=1 for all the genes regardless of the number of corresponding probes.This result shows that there is not any relationship between the number of significant probes corresponding to the genes and the multifunctionality of the genes as there is no significant p value for the gene sets.
 ```{r}
 
 enrichmentResult$results %>% arrange(CorrectedMFPvalue)
