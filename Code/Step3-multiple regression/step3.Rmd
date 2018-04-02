@@ -24,124 +24,504 @@ library(knitr)
 library(pheatmap)#
 library(reshape2)#
 library(purrr)
-library(corrplot) # We'll use corrplot later on in this example too.
-#library(rgl)#3D plot not working yet
-#library(scatterplot3d)#3D plot not working yet
-#library(visreg)
-
-
 library(Hmisc)
 library(psych)
 library(MASS)
 library(DAAG)
+library(olsrr)
+library(corrplot) # We'll use corrplot later on in this example too.
+#library(rgl)#3D plot not working yet
+#library(scatterplot3d)#3D plot not working yet
+#library(visreg)
+library(glmnet)
+ library(lars)
+set.seed(123)
+```
+
+#put all functions here:
+```{r}
+#-----------------------------------------------------------------
+                #plot the correlation between probes, genes ect
+                plot_correlation <- function(designated.dataframe.for.specific.gene,number.of.picked.probes){
+                plot(designated.dataframe.for.specific.gene[,1:min(number.of.picked.probes,5)], pch=1,main=gene.name)
+                #linear.model <-lm(expression~.,data=designated.dataframe.for.specific.gene)
+                #summary( linear.model)
+                datacor = cor(designated.dataframe.for.specific.gene[1:number.of.picked.probes])
+                corrplot(datacor, method = "color",addCoef.col="grey",number.cex= 7/ncol(designated.dataframe.for.specific.gene))
+                #quick visualizing data
+                auto.sel <- designated.dataframe.for.specific.gene[,1:number.of.picked.probes]
+                #plot : distribution , linear , and correlation:
+                pairs.panels(auto.sel, col="red")
+                }
+#-----------------------------------------------------------------
+#-----------------------------------------------------------------
+#-----------------------------------------------------------------
+#-----------------------------------------------------------------
+#-----------------------------------------------------------------
+#-----------------------------------------------------------------
+#-----------------------------------------------------------------
 ```
 
 
-##1- Here we load the data from a local directoty. after that we will check the way that we are can access a gene like "RAB4B:ENSG00000167578.11". the results will be stored at gene1. then we will sort the gene1 due to P.value s of the probes
+
+##1- Here we load the data from a local directoty. 
 ```{r}
-rawdata<- readRDS("~/Desktop/BIOF/Group project/Step3-multiple regression/subset_of_results_lapply.rds")
+rawdata<- readRDS("~/Desktop/BIOF/Group project/Step3-multiple regression/cor_test_results_PCA_lapply_V4.rds")
+
+load("~/Desktop/BIOF/Group project/Step3-multiple regression/rosmap_postprocV2.RData")
+
+probes_subjects<- as.data.frame( readRDS("~/Desktop/BIOF/Group project/Step3-multiple regression/probes_subjects_PCA_adjusted_V4.RDS"))
+
+subjects_genes<- as.data.frame(  readRDS("~/Desktop/BIOF/Group project/Step3-multiple regression/subjects_genes_PCA_adjusted_V4.RDS"))
+
+```
+
+
+```{r}
 head(rawdata)
-#dim(rawdata)
-gene1 <-rawdata %>%  filter(gene=="RAB4B:ENSG00000167578.11")
-#head(gene1)
-gene1.sorted<- gene1[order(gene1$pvalue),]
-head(gene1.sorted)
-load("~/Desktop/BIOF/Group project/Step3-multiple regression/rosmap_postprocV1.RData")
-```
-
-
-```{r}
-
-#head(probes_subjects)
-#head(probes_genes_distance)
-#rosmap
-subjects_probes <- as.data.frame(t(probes_subjects))
-#head(subjects_probes)
-#head(subjects_genes)
-gene1.expression <- subjects_genes$"RAB4B:ENSG00000167578.11"
-probe1.value <- subjects_probes$"cg25258938"
-```
-
-```{r}
-gene1_probe1 <- cbind(gene1.expression,probe1.value)
-gene1_probe1 <- as.data.frame(gene1_probe1)
-head(gene1_probe1)
-
-#ggplot(gene1_probe1, aes(x=probe1.value,y=gene1.expression) ) +
-# geom_point()
-```
-
-```{r}
-class(gene1.expression)
-summary(lm(gene1.expression ~ probe1.value,data = gene1_probe1))
-```
-
-
-
-
-## New added parts:
-```{r}
 head(subjects_genes)
 head(probes_subjects)
-head(rawdata)
+hist(rawdata$pvalue)
+
 ```
 
-##computing designated.dataframe.for.specific.gene for only gene number 1:
+
+
+#1.Selecting only genes that has a probe with P value greater than the P.val.tresh:
 ```{r}
-                gene.number <-1 # then we can put the whole thing in a function
+P.val.tresh <- 0.05
+max.number.of.probes <- 20
+number.of.genes <- ncol(subjects_genes)
+significance.of.gene.probes <- lapply(1:number.of.genes, function(i){
+                gene.number <- i # then we can put the whole thing in a function
                 gene.name  <- names(subjects_genes)[gene.number]
                 # exclude of subse of raw data which is for this gene
                 rawdata.for.specific.gene <-rawdata %>% filter(gene==gene.name)
                 # sort the raws (which are prob numbers) due to P value:
-                print(gene.name)
                 rawdata.for.specific.gene <-          
-                rawdata.for.specific.gene[order(rawdata.for.specific.gene$pvalue),]
+                rawdata.for.specific.gene[order(rawdata.for.specific.gene$adjusted.pvalue),]
+                #gene.expressions<-data.frame(expression=subjects_genes[,gene.name])
+                #names.of.ordered.probes<-rawdata.for.specific.gene$probe
+                #ordered.probe.value<-as.data.frame(t(probes_subjects[as.character(names.of.ordered.probes),]))
+                #designated.dataframe.for.specific.gene<-cbind(gene.expressions,ordered.probe.value)
+                #head(rawdata.for.specific.gene,30)
+                #head(designated.dataframe.for.specific.gene)
+                if(rawdata.for.specific.gene[1,"adjusted.pvalue"] < P.val.tresh){
+                     number.of.sig.probes <- 0
+                     for(j in 1:max.number.of.probes) 
+                       {
+                         if(rawdata.for.specific.gene[j,"adjusted.pvalue"] <P.val.tresh)
+                          {
+                           number.of.sig.probes <- (number.of.sig.probes+1)
+                         }
+                       else{ break }
+                     }
+                     
+                   return(c(gene.number,number.of.sig.probes))
+                }
+                else{ return(c(0,0))}
+                
+})
+significance.of.gene.probes<-as.data.frame(t(as.data.frame(significance.of.gene.probes)))
+#row.id.sig.genes<-as.matrix(row.id.sig.genes)
+names(significance.of.gene.probes) <- c("gene_number", "number_probes")
+#row.id.sig.genes<-filter(significance.of.gene.probes,gene_number!=0)
+significance.of.gene.probes<-filter(significance.of.gene.probes,gene_number!=0)
+significance.of.gene.probes
+```
+
+```{r}
+significance.of.gene.probes_raw<- significance.of.gene.probes
+significance.of.gene.probes
+hist(significance.of.gene.probes$number_probes,100)
+```
+now we found the row number of genes that at least had a one fignificant probe with the p value less than the treshold and the number of fignificant probes that each gene has. 
+Before that note that to access the genes:
+significance.of.gene.probes$gene_number
+is used
+
+before that here we filter only genes that have more than 1 significant probe:
+```{r}
+significance.of.gene.probes<-filter(significance.of.gene.probes,number_probes > 1)
+hist(significance.of.gene.probes$number_probes,100)
+nrow(significance.of.gene.probes)
+row.names(significance.of.gene.probes) <-as.character((names(subjects_genes)[(significance.of.gene.probes[,1])]))
+significance.of.gene.probes
+
+```
+
+
+
+______________________________________________________________________________________________________
+#2 fit models to a single gene
+##2.1 extract matrixes for each gene :
+```{r}
+
+                k <-1 # k could be between [ 1,nrow(significance.of.gene.probes) ]
+                gene.number <-significance.of.gene.probes[k,1]
+                gene.name  <- names(subjects_genes)[gene.number]
+                number.of.picked.probes <- significance.of.gene.probes[k,2]
+               number.of.picked.probes
+                 # exclude of subse of raw data which is for this gene
+                rawdata.for.specific.gene <-rawdata %>% filter(gene==gene.name)
+                
+                # sort the raws (which are prob numbers) due to P value:
+                rawdata.for.specific.gene <-          
+                rawdata.for.specific.gene[order(rawdata.for.specific.gene$adjusted.pvalue),]
                 gene.expressions<-data.frame(expression=subjects_genes[,gene.name])
                 names.of.ordered.probes<-rawdata.for.specific.gene$probe
                 ordered.probe.value<-as.data.frame(t(probes_subjects[as.character(names.of.ordered.probes),]))
                 designated.dataframe.for.specific.gene<-cbind(gene.expressions,ordered.probe.value)
-                #head(rawdata.for.specific.gene)
+                rawdata.for.specific.gene<-rawdata.for.specific.gene[1:number.of.picked.probes,]
+                designated.dataframe.for.specific.gene<- designated.dataframe.for.specific.gene[,1:(number.of.picked.probes+1)]
+                head(rawdata.for.specific.gene)
                 head(designated.dataframe.for.specific.gene)
           
 ```
-##plot correlation between elements and asses gene Vs. probes
+
+
+
+##2.2 fit  linear models to each significant gene
+```{r}           
+                #k
+                #head(rawdata.for.specific.gene)
+                #head(designated.dataframe.for.specific.gene)
+
+                  number.of.picked.probes <- significance.of.gene.probes[k,2]
+                #change the name of the dataframe colums from V1 to Vn  to make fitting easy:
+                make.no.names <- as.data.frame( matrix(nrow = 1,ncol =number.of.picked.probes ) )
+                designated.dataframe.for.specific.gene_NOname <- designated.dataframe.for.specific.gene
+                names(designated.dataframe.for.specific.gene_NOname) <- c("expression",names(make.no.names))
+                
+               train.designated.dataframe.for.specific.gene_NOname <-designated.dataframe.for.specific.gene_NOname[1:385,]
+               test.designated.dataframe.for.specific.gene_NOname <-designated.dataframe.for.specific.gene_NOname[386:481,]
+
+               
+               
+                #_______________stepwise/forward/backwar_______________________
+                fit.full <- lm(expression~.,data=train.designated.dataframe.for.specific.gene_NOname)
+                fit_single <- lm(expression~V1,data=train.designated.dataframe.for.specific.gene_NOname)
+                step_forward <- stepAIC(fit_single, direction="forward",trace = F)
+                step_backward <- stepAIC(fit.full, direction="backward",trace = F)
+                #step_backward$anova # display results
+                #step_forward$anova # display results
+                fit_forward<- lm(step_forward)
+                fit_backward<- lm(step_backward)
+
+                #_______________stepwise/forward/backwar_______________________
+                
+                #_______________LASSO_______________________
+                #https://www.youtube.com/watch?v=fAPCaue8UKQ
+                matrix_of_predictors_train <- as.matrix(train.designated.dataframe.for.specific.gene_NOname[,-1])
+                 matrix_of_predictors_test <- as.matrix(test.designated.dataframe.for.specific.gene_NOname[,-1])
+                response <- as.matrix(train.designated.dataframe.for.specific.gene_NOname[,1])
+                lasso.fit <- glmnet(matrix_of_predictors_train,response)
+                lasso.cv <- cv.glmnet(matrix_of_predictors_train,response,n=3)
+                msp_cv_fit_lasso <- lasso.cv$cvm[lasso.cv$lambda == lasso.cv$lambda.min]
+                #_______________LASSO_______________________
+                
+                
+                #--------------find the number of probes in each model-------
+                n_probes_single<-(dim(as.matrix(fit_single$coefficients))[1]-1)
+                n_probes_full<-(dim(as.matrix(fit.full$coefficients))[1]-1)
+                n_probes_forward<-(dim(as.matrix(fit_forward$coefficients))[1]-1)
+                n_probes_backward<-(dim(as.matrix(fit_backward$coefficients))[1]-1)
+                
+                #for lasso 
+                temp.coefficient<-as.data.frame(as.matrix(   coef(lasso.cv, s = "lambda.min")) ) 
+                names(temp.coefficient) <- "coef"
+                n_probes_lasso<-nrow(filter(temp.coefficient,coef!=0))
+                #--------------find the number of probes in each model-------
+                
+                
+                
+                #------------------ MSP on train data -----------------------------------
+                #from:  https://stackoverflow.com/questions/39811656/r-calculate-test-mse-given-a-trained-model-from-a-training-set-and-a-test-set
+                msp_train_fit_single<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_single, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_train_fit_full<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit.full, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_train_fit_forward<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_forward, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_train_fit_backward<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_backward, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_train_fit_lasso<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.glmnet(lasso.fit,matrix_of_predictors_train)) ^ 2)
+                #------------------ MSP on train data -----------------------------------  
+                
+                                
+                
+                #------------------ MSP on test data -----------------------------------
+                #from:  https://stackoverflow.com/questions/39811656/r-calculate-test-mse-given-a-trained-model-from-a-training-set-and-a-test-set
+                
+                msp_test_fit_single<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_single, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_test_fit_full<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit.full, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_test_fit_forward<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_forward, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_test_fit_backward<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_backward, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_test_fit_lasso<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.glmnet(lasso.fit,matrix_of_predictors_test)) ^ 2)
+                #------------------ MSP on test data -----------------------------------                
+                
+                #cross validating the resutls_______________________
+                cv_fit_single<-cv.lm(train.designated.dataframe.for.specific.gene_NOname,fit_single, m=3,seed = 2018,printit = F,plotit =  F)
+                msp_cv_fit_single <-attr(cv_fit_single, "ms")
+                
+                cv_fit_full<-cv.lm(train.designated.dataframe.for.specific.gene_NOname,fit.full, m=3,seed = 2018,printit = F,plotit =  F)
+                msp_cv_fit_full <-attr(cv_fit_full, "ms")
+                
+                cv_fit_forward<-cv.lm(train.designated.dataframe.for.specific.gene_NOname,fit_forward, m=3,seed = 2018,printit = F,plotit =  F)
+                msp_cv_fit_forward <-attr(cv_fit_forward, "ms")
+                
+                cv_fit_backward<-cv.lm(train.designated.dataframe.for.specific.gene_NOname,fit_backward, m=3,seed = 2018,printit = F,plotit =  F)
+                msp_cv_fit_backward<-attr(cv_fit_backward, "ms")
+                 #cross validating the resutls_______________________
+                
+                
+
+
+```
+
+##non linear models:
 ```{r}
-number.of.picked.probes <- 4
-plot(designated.dataframe.for.specific.gene[,1:number.of.picked.probes], pch=1,main=gene.name)
-linear.model <-lm(expression~cg25258938,data=designated.dataframe.for.specific.gene)
-summary( linear.model)
-datacor = cor(designated.dataframe.for.specific.gene[1:number.of.picked.probes])
-corrplot(datacor, method = "number")
+                   #----------------higher degree fitting--------------------------------
+                   higher_deg <- lapply(1:20, function(i){
+                    degree <- i
+                    fit_x <- lm(expression~ poly(V1,degree) ,data=train.designated.dataframe.for.specific.gene_NOname)
+                    msp_train_x<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_x, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                    msp_test_x<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_x, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)                    
+                    return(c(degree,msp_train_x,msp_test_x))
+                  })
+                  higher_deg<-as.data.frame(t(as.data.frame(higher_deg)))
+                  names(higher_deg) <- c("degree","train","test")
+                  higher_msp<-min(higher_deg$test)
+                  degree<-which(higher_deg$test==higher_msp)
+                  #----------------higher degree fitting--------------------------------                  
+                  #plot
+                  ggplot(higher_deg, aes(degree,test)) +
+                      geom_line(aes(degree,test), colour="blue") + 
+                      geom_line(aes(degree,train), colour = "grey") +
+                        geom_point(aes(degree,test), colour="blue") + 
+                      geom_point(aes(degree,train), colour = "grey") +
+                      ylab("erroe") + 
+                      xlab("degree")+
+                      theme(axis.line = element_line(colour = "black"),
+                      panel.grid.major = element_blank(),
+                      panel.grid.minor = element_blank(),
+                      panel.border = element_blank(),
+                      panel.background = element_blank()) 
+#ggplot(train.designated.dataframe.for.specific.gene_NOname, aes(expression,V1)) + geom_point() + stat_smooth(method = "lm")+
+#stat_smooth(method = "lm", formula = y~ poly(x,degree), size = 1,col = "red")
+```
+
+
+
+##outputs:
+```{r}
+                
+                n_probes_single
+                msp_train_fit_single
+                msp_cv_fit_single
+                msp_test_fit_single
+                
+                n_probes_full
+                msp_train_fit_full
+                msp_cv_fit_full
+                msp_test_fit_full
+                
+                n_probes_forward
+                msp_train_fit_forward
+                msp_cv_fit_forward
+                msp_test_fit_forward
+                
+                n_probes_backward
+                msp_train_fit_backward
+                msp_cv_fit_backward
+                msp_test_fit_backward
+                
+                n_probes_lasso
+                msp_train_fit_lasso
+                msp_cv_fit_lasso
+                msp_test_fit_lasso
 
 ```
 
 
-3D plot not working yet:
+Plots:
 ```{r}
-#3D plot not working yet
-#newdat <- expand.grid(cg25258938=seq(0.9,0.98,by=0.01),cg13793525=seq(0,0.03,by=0.01))
-#newdat$pp <- predict(linear.model,designated.dataframe.for.specific.gene[1:36,]=newdat)
-#with(designated.dataframe.for.specific.gene,plot3d(expression,cg25258938,cg13793525, col="blue", size=1, type="s", main="3D Linear Model Fit"))
-#with(newdat,surface3d(unique(cg25258938),unique(cg13793525),pp,alpha=0.3,front="line", back="line"))
+                #plot the correlation between probes, genes ect
+                plot_correlation(designated.dataframe.for.specific.gene,number.of.picked.probes)
+                plot(lasso.fit)
+                plot(lasso.cv)
+                
 ```
 
 
 
 
+______________________________________________________________________________________________________
+#3 fit linear models to all genes:
+
+```{r}
+ MS.of.fitts.for.all.sig.genes   <- lapply(1:nrow(significance.of.gene.probes), function(i){
+# MS.of.fitts.for.all.sig.genes   <- lapply(1:5, function(i){
+                k <-i # k could be between [ 1,nrow(significance.of.gene.probes) ]
+                gene.number <-significance.of.gene.probes[k,1]
+                gene.name  <- names(subjects_genes)[gene.number]
+                number.of.picked.probes <- significance.of.gene.probes[k,2]
+                #number.of.picked.probes
+                 # exclude of subse of raw data which is for this gene
+                rawdata.for.specific.gene <-rawdata %>% filter(gene==gene.name)
+                
+                # sort the raws (which are prob numbers) due to P value:
+                rawdata.for.specific.gene <-          
+                rawdata.for.specific.gene[order(rawdata.for.specific.gene$adjusted.pvalue),]
+                gene.expressions<-data.frame(expression=subjects_genes[,gene.name])
+                names.of.ordered.probes<-rawdata.for.specific.gene$probe
+                ordered.probe.value<-as.data.frame(t(probes_subjects[as.character(names.of.ordered.probes),]))
+                designated.dataframe.for.specific.gene<-cbind(gene.expressions,ordered.probe.value)
+                rawdata.for.specific.gene<-rawdata.for.specific.gene[1:number.of.picked.probes,]
+                designated.dataframe.for.specific.gene<- designated.dataframe.for.specific.gene[,1:(number.of.picked.probes+1)]
+                #head(rawdata.for.specific.gene)
+                #head(designated.dataframe.for.specific.gene)
+                #k
+                #head(rawdata.for.specific.gene)
+                #head(designated.dataframe.for.specific.gene)
+                #head(rawdata.for.specific.gene)
+                #head(designated.dataframe.for.specific.gene)
+                #change the name of the dataframe colums from V1 to Vn  to make fitting easy:
+                make.no.names <- as.data.frame( matrix(nrow = 1,ncol =number.of.picked.probes ) )
+                designated.dataframe.for.specific.gene_NOname <- designated.dataframe.for.specific.gene
+                names(designated.dataframe.for.specific.gene_NOname) <- c("expression",names(make.no.names))
+               train.designated.dataframe.for.specific.gene_NOname <-designated.dataframe.for.specific.gene_NOname[1:385,]
+               test.designated.dataframe.for.specific.gene_NOname <-designated.dataframe.for.specific.gene_NOname[386:481,]
+
+                #_______________stepwise/forward/backwar_______________________
+                fit.full <- lm(expression~.,data=train.designated.dataframe.for.specific.gene_NOname)
+                fit_single <- lm(expression~V1,data=train.designated.dataframe.for.specific.gene_NOname) 
+               step_forward <- stepAIC(fit_single, direction="forward",trace = F)
+                step_backward <- stepAIC(fit.full, direction="backward",trace = F)
+                #step_backward$anova # display results
+                #step_forward$anova # display results
+                fit_forward<- lm(step_forward)
+                fit_backward<- lm(step_backward)
+
+                #_______________stepwise/forward/backwar_______________________
+                
+                #_______________LASSO_______________________
+                #https://www.youtube.com/watch?v=fAPCaue8UKQ
+                matrix_of_predictors_train <- as.matrix(train.designated.dataframe.for.specific.gene_NOname[,-1])
+                 matrix_of_predictors_test <- as.matrix(test.designated.dataframe.for.specific.gene_NOname[,-1])
+                response <- as.matrix(train.designated.dataframe.for.specific.gene_NOname[,1])
+                lasso.fit <- glmnet(matrix_of_predictors_train,response)
+                lasso.cv <- cv.glmnet(matrix_of_predictors_train,response,n=3)
+                msp_cv_fit_lasso <- lasso.cv$cvm[lasso.cv$lambda == lasso.cv$lambda.min]
+                #_______________LASSO_______________________
+                
+                
+                #--------------find the number of probes in each model-------
+                n_probes_single<-(dim(as.matrix(fit_single$coefficients))[1]-1)
+                n_probes_full<-(dim(as.matrix(fit.full$coefficients))[1]-1)
+                n_probes_forward<-(dim(as.matrix(fit_forward$coefficients))[1]-1)
+                n_probes_backward<-(dim(as.matrix(fit_backward$coefficients))[1]-1)
+                
+                #for lasso 
+                temp.coefficient<-as.data.frame(as.matrix(   coef(lasso.cv, s = "lambda.min")) ) 
+                names(temp.coefficient) <- "coef"
+                n_probes_lasso<-nrow(filter(temp.coefficient,coef!=0))
+                #--------------find the number of probes in each model-------
+                
+                
+                
+                #------------------ MSP on train data -----------------------------------
+                #from:  https://stackoverflow.com/questions/39811656/r-calculate-test-mse-given-a-trained-model-from-a-training-set-and-a-test-set
+                msp_train_fit_single<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_single, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_train_fit_full<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit.full, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_train_fit_forward<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_forward, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_train_fit_backward<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_backward, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_train_fit_lasso<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.glmnet(lasso.fit,matrix_of_predictors_train)) ^ 2)
+                #------------------ MSP on train data -----------------------------------  
+                
+                                
+                
+                #------------------ MSP on test data -----------------------------------
+                #from:  https://stackoverflow.com/questions/39811656/r-calculate-test-mse-given-a-trained-model-from-a-training-set-and-a-test-set
+                
+                msp_test_fit_single<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_single, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_test_fit_full<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit.full, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_test_fit_forward<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_forward, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_test_fit_backward<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_backward, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                msp_test_fit_lasso<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.glmnet(lasso.fit,matrix_of_predictors_test)) ^ 2)
+                #------------------ MSP on test data -----------------------------------                
+                
+                #cross validating the resutls_______________________
+                cv_fit_single<-cv.lm(train.designated.dataframe.for.specific.gene_NOname,fit_single, m=3,seed = 2018,printit = F,plotit =  F)
+                msp_cv_fit_single <-attr(cv_fit_single, "ms")
+                
+                cv_fit_full<-cv.lm(train.designated.dataframe.for.specific.gene_NOname,fit.full, m=3,seed = 2018,printit = F,plotit =  F)
+                msp_cv_fit_full <-attr(cv_fit_full, "ms")
+                
+                cv_fit_forward<-cv.lm(train.designated.dataframe.for.specific.gene_NOname,fit_forward, m=3,seed = 2018,printit = F,plotit =  F)
+                msp_cv_fit_forward <-attr(cv_fit_forward, "ms")
+                
+                cv_fit_backward<-cv.lm(train.designated.dataframe.for.specific.gene_NOname,fit_backward, m=3,seed = 2018,printit = F,plotit =  F)
+                msp_cv_fit_backward<-attr(cv_fit_backward, "ms")
+                 #cross validating the resutls_______________________
+
+                
+                  #----------------higher degree fitting--------------------------------
+                   higher_deg <- lapply(2:7, function(k){
+                    degree <- k
+                    fit_x <- lm(expression~ poly(V1,degree) ,data=train.designated.dataframe.for.specific.gene_NOname)
+                    msp_train_x<-mean((train.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_x, train.designated.dataframe.for.specific.gene_NOname)) ^ 2)
+                    msp_test_x<-mean((test.designated.dataframe.for.specific.gene_NOname$expression -predict.lm(fit_x, test.designated.dataframe.for.specific.gene_NOname)) ^ 2)                    
+                    return(c(degree,msp_train_x,msp_test_x))
+                  })
+                  higher_deg<-as.data.frame(t(as.data.frame(higher_deg)))
+                  names(higher_deg) <- c("degree","train","test")
+                  higher_msp<-min(higher_deg$test)
+                  degree<-(which(higher_deg$test==higher_msp)+1)
+                  #----------------higher degree fitting--------------------------------   
+                
+                  #----------other outputs:----------------------------
+                    highes_Pvalue <-rawdata.for.specific.gene$adjusted.pvalue[1]
+                    best_model <- "single"
+                    best_msp <-msp_test_fit_single
+                    if(msp_test_fit_full<best_msp){best_model <- "full"
+                                       best_msp <-msp_test_fit_full }
+                    if(msp_test_fit_forward<best_msp){best_model <- "forward"
+                                       best_msp <-msp_test_fit_forward }
+                    if(msp_test_fit_backward<best_msp){best_model <- "backward"
+                                       best_msp <-msp_test_fit_backward }
+                    if(msp_test_fit_lasso<best_msp){best_model <- "lasso"
+                                       best_msp <-msp_test_fit_lasso }
+                    if(higher_msp<best_msp){best_model <- "higher"
+                                       best_msp <-higher_msp }
+
+                #----------other outputs:----------------------------
+                  
+                  
+                
+                return(as.data.frame(c(number.of.picked.probes,highes_Pvalue,best_model,best_msp,n_probes_single,msp_train_fit_single,msp_cv_fit_single,msp_test_fit_single,n_probes_full,msp_train_fit_full,msp_cv_fit_full, msp_test_fit_full,n_probes_forward, msp_train_fit_forward,msp_cv_fit_forward,msp_test_fit_forward,n_probes_backward,msp_train_fit_backward,msp_cv_fit_backward,msp_test_fit_backward,n_probes_lasso,msp_train_fit_lasso,msp_cv_fit_lasso,msp_test_fit_lasso,higher_msp,degree)))
+                })
+                
+
+MS.of.fitts.for.all.sig.genes<-as.data.frame(t(as.data.frame(MS.of.fitts.for.all.sig.genes)))
+names(MS.of.fitts.for.all.sig.genes) <- c("number_significant_probes","highes_Pvalue","best_model","best_msp","single_n","single_train","single_cv","single_test","full_n","full_train","full_cv","full_test", "forward_n","forward_train","forward_cv","forward_test", "backward_n","backward_train","backward_cv","backward_test","lasso_n", "lasso_train","lasso_cv","lasso_test","higher_msp","higher_degree")
+row.names(MS.of.fitts.for.all.sig.genes) <-as.character((names(subjects_genes)[(significance.of.gene.probes[,1])]))
+```
+
+
+```{r}
+MS.of.fitts.for.all.sig.genes
+saveRDS(MS.of.fitts.for.all.sig.genes,file = "~/Desktop/BIOF/Group project/Step3-multiple regression/results/data/MSP.rda")
+
+```
+
+
+```{r}
+barplot(prop.table(table(MS.of.fitts.for.all.sig.genes$best_model)))
+barplot(prop.table(table(MS.of.fitts.for.all.sig.genes$higher_degree)))
+```
+
+______________________________________________________________________________________________________
+
+
+****
 fit linear model (multiple regression) to data + validation
-```{r}
-
-head(designated.dataframe.for.specific.gene)
-#x <- names.of.ordered.probes[1]
-
-#summary(lm(designated.dataframe.for.specific.gene[,1]~designated.dataframe.for.specific.gene[,2] +designated.dataframe.for.specific.gene[,3]+designated.dataframe.for.specific.gene[,4]+designated.dataframe.for.specific.gene[,5],data=designated.dataframe.for.specific.gene))
-
-
-#quick visualizing data
-auto.sel <- designated.dataframe.for.specific.gene[,1:number.of.picked.probes]
-#plot : distribution , linear , and correlation:
-pairs.panels(auto.sel, col="red")
-```
 ```{r}
 #for more info: https://www.youtube.com/watch?v=HP3RhjLhRjY
 
@@ -160,77 +540,33 @@ plot(fit.train)
 ```
 
 
-make anova between two nested models:
+
+
+Alternatively, you can perform all-subsets regression using the leaps( ) function from the leaps package. In the following code nbest indicates the number of subsets of each size to report. Here, the ten best models will be reported for each subset size (1 predictor, 2 predictors, etc.). 
+
 ```{r}
-
-x<- designated.dataframe.for.specific.gene[,1:2]
-fit1<- lm(expression~.,data =x )
-summary(fit1)
-x<- designated.dataframe.for.specific.gene[,1:8]
-fit2<- lm(expression~.,data =x )
-summary(fit2)
-#anova(fit1,fit2)
-```
-
-
-variable selection
-```{r}
-
-x<- designated.dataframe.for.specific.gene[,1:10]
-fit <- lm(expression~.,data=x)
-step <- stepAIC(fit, direction="both")
-step$anova # display results 
-```
-
-
-
-
-cross validation:
-```{r}
-
-fit<- lm(expression~.,data = designated.dataframe.for.specific.gene[1:number.of.picked.probes])
-cv.lm(designated.dataframe.for.specific.gene[1:number.of.picked.probes], fit, m=3)
-```
-
-
-
-
-
-
-
-
-
-
-#```{r}
-#number.of.genes <- ncol(subjects_genes)
-number.of.genes <- 1
-#number.of.probes <- ncol(subjects_probes)
-number.of.probes <- 3
-results <- lapply(1:number.of.genes, function(i){
-                #find the gene name due to the gene number in subject_gene
-                gene.number <- i
-                gene.name  <- names(subjects_genes)[gene.number]
-                # exclude of subse of raw data which is for this gene
-                rawdata.for.specific.gene <-rawdata %>% filter(gene==gene.name)
-                # sort the raws (which are prob numbers) due to P value:
-                print(gene.name)
-                rawdata.for.specific.gene <-          
-                rawdata.for.specific.gene[order(rawdata.for.specific.gene$pvalue),]
-                rawdata.for.specific.gene
-                
-                # number of probes to fil lm
-                out <- lapply(1:number.of.probes, function(j){
-                  }
-    #  data.frame(gene = names(subjects_genes)[i],
-    #            probe = rownames(probes_subjects)[j], 
-    #            estimate = cor.test(subjects_genes[,i],
-    #                                as.numeric(t(probes_subjects[j,])))$estimate,
-    #            pvalue = cor.test(subjects_genes[,i], as.numeric(t(probes_subjects[j,])))$p.value)
-    #  })
-    #do.call(rbind,out)
-})
+# All Subsets Regression
+library(leaps)
+leaps<-regsubsets(expression~.,data=x, nbest=3)
+# view results
+summary(leaps)
+plot(leaps,scale="r2")
+library(car)
+subsets(leaps, statistic="rsq") 
+#https://cran.r-project.org/web/packages/olsrr/vignettes/variable_selection.html
+x<- designated.dataframe.for.specific.gene[,1:50]
+model <- lm(expression~.,data=x)
+#k <- ols_all_subset(model)
+#plot(k)
+#ols_all_subset(model)
+k<-ols_step_forward(model)
+plot(k)
+ols_step_backward(model)
 
 ```
+
+
+
 
 
 
