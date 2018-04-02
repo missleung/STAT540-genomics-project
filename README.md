@@ -9,7 +9,7 @@ Members |  Department
 ---------|------------
 Tiam Heydari | *Department of Biophysics*
 Sina Jafarzadeh|	*Department of Bioinformatics*
-Lida Leung | *Department of Statisitcs*
+Lisa Leung | *Department of Statisitcs*
 Zohreh Sharafian|	*Department of Experimental Medicine*
 Hiwot Tafessu |*Department of Statistics*
 
@@ -55,11 +55,5 @@ We use a combination of two publicly available datasets, ROSMAP, namely as The R
 *References:*
 ---------------------------------------
 
-
-Step-1-Data Processing
-
-Step-2-Single Probe Analysis
-Step-3-Multiple Probe Analysis
-
-Step-4-Biological Plausibility
+........
 
