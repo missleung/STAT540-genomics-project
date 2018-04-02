@@ -20,3 +20,7 @@ Please describe the code in Step1 (point form)
 ## Step1_files (Images Folder)
 
 - Step_files will include all the images that are produced in Markdown file
+
+## Data
+
+- The Data directory consists of any relevant data sets or links to data sets in Step 1.
