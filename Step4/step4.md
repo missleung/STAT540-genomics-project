@@ -1,7 +1,13 @@
-Biological Analysis-part 1
+Step4-Biological Analysis-part 1
 ================
 Zohreh Sharafian
 March 24, 2018
+
+We load related library packages to understand and verify the biological aspects of our analysis.
+
+### Loading data
+
+We load data set from Step 1:probes\_subjects that contains DNA methylation probe values, subjects\_genes that contains gene expression values, and probes\_genes\_distance that is a sparse matrix containing the distances between a gene and a probe.Note that probes\_genes\_distance is 0 when probe and gene distance is over 1Mb.
 
 ``` r
 RosmapData <- load("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/rosmap_postprocV2.RData")
@@ -67,44 +73,44 @@ ncol(probes_genes_distance) #number of genes
 
     ## [1] 1795
 
+WE also load a data set from eQTM analysis that we have peroformed in Step 2, including all the adjusted P values for analysing single probes.
+
 ``` r
-cor_test_results_PCA_lapply_V2 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/cor_test_results_PCA_lapply_V3.rds")
-head (cor_test_results_PCA_lapply_V2)
+cor_test_results_PCA_lapply_V4 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Step4/cor_test_results_PCA_lapply_V4.rds")
+head (cor_test_results_PCA_lapply_V4)
 ```
 
     ##                          gene      probe    estimate    pvalue
-    ## cor  RAB4B:ENSG00000167578.11 cg25697727  0.03411567 0.4553742
-    ## cor1 RAB4B:ENSG00000167578.11 cg02686662 -0.00833256 0.8553669
-    ## cor2 RAB4B:ENSG00000167578.11 cg14319773  0.03401714 0.4566779
-    ## cor3 RAB4B:ENSG00000167578.11 cg05498041 -0.05317399 0.2444297
-    ## cor4 RAB4B:ENSG00000167578.11 cg14583103  0.06457742 0.1573371
-    ## cor5 RAB4B:ENSG00000167578.11 cg18074151  0.04792373 0.2942161
+    ## cor  RAB4B:ENSG00000167578.11 cg25697727  0.04075525 0.3724587
+    ## cor1 RAB4B:ENSG00000167578.11 cg02686662 -0.01476077 0.7467678
+    ## cor2 RAB4B:ENSG00000167578.11 cg14319773  0.04823112 0.2911267
+    ## cor3 RAB4B:ENSG00000167578.11 cg05498041 -0.05633210 0.2174921
+    ## cor4 RAB4B:ENSG00000167578.11 cg14583103  0.06417159 0.1599679
+    ## cor5 RAB4B:ENSG00000167578.11 cg18074151  0.03974841 0.3843954
     ##      adjusted.pvalue
-    ## cor        0.9868831
-    ## cor1       0.9982092
-    ## cor2       0.9869856
-    ## cor3       0.9737870
-    ## cor4       0.9587483
-    ## cor5       0.9784691
+    ## cor        0.9794159
+    ## cor1       0.9957041
+    ## cor2       0.9728284
+    ## cor3       0.9633156
+    ## cor4       0.9527597
+    ## cor5       0.9801636
+
+### setting a cut of 0.05 for "adjusted P value"
+
+Next, We extract three columns including gene, probe, and adjusted P value and filtering the genes based on adjusted P value that are greater than 0.05 .
 
 ``` r
-#hist(cor_test_results_PCA_lapply_V2$adjusted.pvalue[cor_test_results_PCA_lapply_V2$adjusted.pvalue<0.05])
-```
-
-``` r
-#extracting three columns inclusing gene, probe, and adjusted.pvalue
-
-extracted_matrix <- cor_test_results_PCA_lapply_V2 [,c(1,2, 5)]
+extracted_matrix <- cor_test_results_PCA_lapply_V4 [,c(1,2, 5)]
 head(extracted_matrix)
 ```
 
     ##                          gene      probe adjusted.pvalue
-    ## cor  RAB4B:ENSG00000167578.11 cg25697727       0.9868831
-    ## cor1 RAB4B:ENSG00000167578.11 cg02686662       0.9982092
-    ## cor2 RAB4B:ENSG00000167578.11 cg14319773       0.9869856
-    ## cor3 RAB4B:ENSG00000167578.11 cg05498041       0.9737870
-    ## cor4 RAB4B:ENSG00000167578.11 cg14583103       0.9587483
-    ## cor5 RAB4B:ENSG00000167578.11 cg18074151       0.9784691
+    ## cor  RAB4B:ENSG00000167578.11 cg25697727       0.9794159
+    ## cor1 RAB4B:ENSG00000167578.11 cg02686662       0.9957041
+    ## cor2 RAB4B:ENSG00000167578.11 cg14319773       0.9728284
+    ## cor3 RAB4B:ENSG00000167578.11 cg05498041       0.9633156
+    ## cor4 RAB4B:ENSG00000167578.11 cg14583103       0.9527597
+    ## cor5 RAB4B:ENSG00000167578.11 cg18074151       0.9801636
 
 ``` r
 nrow(extracted_matrix)
@@ -116,6 +122,10 @@ nrow(extracted_matrix)
 # cut off (0.05) for the p value
 filtered_pvalue <- extracted_matrix[extracted_matrix$adjusted.pvalue<0.05,]
 ```
+
+### Merging two data sets
+
+We create a new data set with the subject\_genes as columns and probe\_subjects as rows of data.Then, we match the probes and genes from two data sets.Finally, we plot the histogram of our data to see the distance of the methylated CpG sites from transcription start site (TSS) of the genes.
 
 ``` r
 data <- as.data.frame(as.matrix(probes_genes_distance))
@@ -135,8 +145,8 @@ match_data <- data[inds]
 
 qplot(match_data,
       geom="histogram",
-      main = "The distance of methylated CpG sites to the genes ", 
-      xlab = "methylated CpG sites distance to the gene",  
+      main = "The distance of methylated CpG sites from Trascription Start Sites", 
+      xlab = "methylated CpG sites distance from TSS",  
       fill=I("blue"), 
       col=I("red"), 
       ) +theme_minimal()
@@ -146,12 +156,9 @@ qplot(match_data,
 
 ![](step4_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
-``` r
-#tmp = hist(match_data)
-```
+**The histogram clearly shows that the majority of methylated CpG sites are concentrated near the transcription start sites (TSS) of genes.**
 
-graph No.2 the average of pValue vs the distance of probes
-==========================================================
+Next, we get the mean of adjusted P value for each bin of histogram (number of methylated CpG sites) to check the distance of the significant probes from TSS.
 
 ``` r
 tmp <- hist(match_data) 
@@ -163,9 +170,9 @@ tmp <- hist(match_data)
 intervals_values=findInterval(match_data,tmp$breaks)  #get the interval values from the histogram
 ```
 
-``` r
-#for loop to get the interval values for all the genes
+Using a for loop function to get the interval values for all the genes.Then, we generate a geome line plot of adjusted P value for all the methylated CpG sites in genes promoters.
 
+``` r
 histog <-  integer (10)
 for(i in 1:10) {
 elemenets_in_this_interval <-which(intervals_values==i);
@@ -174,16 +181,16 @@ print((histog[i]))
 }
 ```
 
-    ## [1] 0.02435694
-    ## [1] 0.02167013
-    ## [1] 0.01762103
-    ## [1] 0.01554024
-    ## [1] 0.008793416
-    ## [1] 0.007746299
-    ## [1] 0.01671344
-    ## [1] 0.01947546
-    ## [1] 0.02571466
-    ## [1] 0.03191347
+    ## [1] 0.02601977
+    ## [1] 0.02198257
+    ## [1] 0.02058323
+    ## [1] 0.0164299
+    ## [1] 0.007736391
+    ## [1] 0.007949926
+    ## [1] 0.0156836
+    ## [1] 0.02037731
+    ## [1] 0.02700968
+    ## [1] 0.03858725
 
 ``` r
 x=tmp$mids;
@@ -192,34 +199,20 @@ data_plot=cbind(x,y)
 data_plot=as.data.frame(data_plot)
 colnames(data_plot)=c("CpG_site_distance","Average_of_adjusted_Pvalue")
 
-data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_line(color='steelblue', size=2)+theme_minimal()
+data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_line(color='steelblue', size=2 )+ ggtitle ("The distance of significant methylated CpG sites from TSS")+ theme_minimal()
 ```
 
 ![](step4_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
+**The bar grapgh shows that the methylated CpG sites with significant P values are located in the close distance from TSS. This result is consistant with previous data which showed that CpG sites are relatively enriched around transcription start sites of genes\[ref\].**
+
 ``` r
 x=tmp$mids;
 y=histog;
 data_plot=cbind(x,y)
 data_plot=as.data.frame(data_plot)
 colnames(data_plot)=c("CpG_site_distance","Average_of_adjusted_Pvalue")
-data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_bar(stat="identity",fill="Green4")+theme_minimal()
+data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_bar(stat="identity",fill="Green4")+ggtitle ("The distance of significant methylated CpG sites from TSS")+ theme_minimal()
 ```
 
 ![](step4_files/figure-markdown_github/unnamed-chunk-9-1.png)
-
-``` r
-#head(gene1.sorted)
-
-#gene1_ros <- RosmapData %>%  filter(gene=="RAB4B:ENSG00000167578.11")
-
-
-
-
-#melt_x2 <- melt(rownames_to_column(data, var="probe"), id="probe")
-#head(melt_x2)
-
-#ggplot() + aes(x2)+ geom_histogram(binwidth=1, colour="black", fill="white")
-
-#new_Data <- left_join(filtered_pvalue, melt_x2, by= c("probe"="probe", "gene"="variable"))
-```

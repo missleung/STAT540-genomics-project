@@ -1,27 +1,23 @@
 ---
-title: "Biological Analysis-part 1"
+title: "Step4-Biological Analysis-part 1"
 author: "Zohreh Sharafian"
 date: "March 24, 2018"
 output: github_document
 ---
-
+We load related library packages to understand and verify the biological aspects of our analysis.
 ```{r setup, include=FALSE}
-library(pheatmap)
+
 library(reshape2)
 library(tidyverse)
 library(GEOquery)
-library(RColorBrewer)
-library(cluster)
-library(pvclust)
-library(xtable)
 library(dplyr)
-library(lattice)
 library(RCurl)
 library(knitr)
 library(purrr)
-library(corrplot) 
+library(data.table)
 ```
-
+### Loading data
+We load data set from Step 1:probes_subjects that contains DNA methylation probe values, subjects_genes that contains gene expression values, and probes_genes_distance that is a sparse matrix containing the distances between a gene and a probe.Note that probes_genes_distance is 0 when probe and gene distance is over 1Mb.
 ```{r}
 RosmapData <- load("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/rosmap_postprocV2.RData")
 probes_subjects[1:5, 1:5]
@@ -32,17 +28,19 @@ str(RosmapData)
 nrow(probes_genes_distance) #number of probes
 ncol(probes_genes_distance) #number of genes
 ```
-
+WE also load a data set from eQTM analysis that we have peroformed in Step 2, including all the adjusted P values for analysing single probes.
 ```{r}
-cor_test_results_PCA_lapply_V2 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/cor_test_results_PCA_lapply_V3.rds")
-head (cor_test_results_PCA_lapply_V2)
-#hist(cor_test_results_PCA_lapply_V2$adjusted.pvalue[cor_test_results_PCA_lapply_V2$adjusted.pvalue<0.05])
+cor_test_results_PCA_lapply_V4 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Step4/cor_test_results_PCA_lapply_V4.rds")
+head (cor_test_results_PCA_lapply_V4)
+
 ```
+### setting a cut of 0.05 for "adjusted P value"
+
+Next, We extract three columns including gene, probe, and adjusted P value and filtering the genes based on adjusted P value that are greater than 0.05 .
 
 ```{r}
-#extracting three columns inclusing gene, probe, and adjusted.pvalue
 
-extracted_matrix <- cor_test_results_PCA_lapply_V2 [,c(1,2, 5)]
+extracted_matrix <- cor_test_results_PCA_lapply_V4 [,c(1,2, 5)]
 head(extracted_matrix)
 nrow(extracted_matrix)
 
@@ -50,7 +48,8 @@ nrow(extracted_matrix)
 filtered_pvalue <- extracted_matrix[extracted_matrix$adjusted.pvalue<0.05,]
 
 ```
-
+### Merging two data sets
+We create a new data set with the subject_genes as columns and probe_subjects as rows of data.Then, we match the probes and genes from two data sets.Finally, we plot the histogram of our data to see the distance of the methylated CpG sites from transcription start site (TSS) of the genes.     
 ```{r}
 
 data <- as.data.frame(as.matrix(probes_genes_distance))
@@ -60,6 +59,7 @@ rownames(data) <- rownames(probes_subjects)
 ```
 
 ```{r}
+
 #matching the probes and genes from two data set
 
 match_probes <- match(filtered_pvalue$probe, rownames(data) )
@@ -71,22 +71,18 @@ match_data <- data[inds]
 
 qplot(match_data,
       geom="histogram",
-      main = "The distance of methylated CpG sites to the genes ", 
-      xlab = "methylated CpG sites distance to the gene",  
+      main = "The distance of methylated CpG sites from Trascription Start Sites", 
+      xlab = "methylated CpG sites distance from TSS",  
       fill=I("blue"), 
       col=I("red"), 
       ) +theme_minimal()
-#tmp = hist(match_data)
-
-
-
-
 ```
 
+**The histogram clearly shows that the majority of methylated CpG sites are concentrated near the transcription start sites (TSS) of genes.** 
 
 
+Next, we get the mean of adjusted P value for each bin of histogram (number of methylated CpG sites) to check the distance of the significant probes from TSS.  
 
-# graph No.2 the average of pValue vs the distance of probes
 ```{r} 
 
 tmp <- hist(match_data) 
@@ -96,11 +92,9 @@ intervals_values=findInterval(match_data,tmp$breaks)  #get the interval values f
 
 ```
 
+Using a for loop function to get the interval values for all the genes.Then, we generate a geome line plot of adjusted P value for all the methylated CpG sites in genes promoters.
 
 ```{r}
-
-#for loop to get the interval values for all the genes
-
 histog <-  integer (10)
 for(i in 1:10) {
 elemenets_in_this_interval <-which(intervals_values==i);
@@ -115,9 +109,11 @@ data_plot=cbind(x,y)
 data_plot=as.data.frame(data_plot)
 colnames(data_plot)=c("CpG_site_distance","Average_of_adjusted_Pvalue")
 
-data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_line(color='steelblue', size=2)+theme_minimal()
+data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_line(color='steelblue', size=2 )+ ggtitle ("The distance of significant methylated CpG sites from TSS")+ theme_minimal()
 
 ```
+
+**The bar grapgh shows that the methylated CpG sites with significant P values are located in the close distance from TSS. This result is consistant with previous data which showed that CpG sites are relatively enriched around transcription start sites of genes[ref].**
 
 ```{r}
 x=tmp$mids;
@@ -125,7 +121,7 @@ y=histog;
 data_plot=cbind(x,y)
 data_plot=as.data.frame(data_plot)
 colnames(data_plot)=c("CpG_site_distance","Average_of_adjusted_Pvalue")
-data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_bar(stat="identity",fill="Green4")+theme_minimal()
+data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_bar(stat="identity",fill="Green4")+ggtitle ("The distance of significant methylated CpG sites from TSS")+ theme_minimal()
 ```
 
 
@@ -156,22 +152,4 @@ data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pv
 
 
 
-
-
-```{r}
-
-#head(gene1.sorted)
-
-#gene1_ros <- RosmapData %>%  filter(gene=="RAB4B:ENSG00000167578.11")
-
-
-
-
-#melt_x2 <- melt(rownames_to_column(data, var="probe"), id="probe")
-#head(melt_x2)
-
-#ggplot() + aes(x2)+ geom_histogram(binwidth=1, colour="black", fill="white")
-
-#new_Data <- left_join(filtered_pvalue, melt_x2, by= c("probe"="probe", "gene"="variable"))
-```
 
