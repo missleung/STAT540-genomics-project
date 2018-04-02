@@ -5,18 +5,18 @@ date: '2018-04-02'
 output: github_document
 ---
 
-# step4.Rmd and step4.md
+## step4.Rmd and step4.md
 
  - Please describe the step4.Rmd and step4.md contents in point form
 
-# geneset_enrichment_analysis.md and geneset enrichment analysis.Rmd
+## geneset_enrichment_analysis.md and geneset enrichment analysis.Rmd
 
 - Please describe the geneset_enrichment_analysis.md and geneset enrichment analysis.Rmd contents in point form
 
-# step4_files (Images Folder)
+## step4_files (Images Folder)
 
 - This directory will include all the images that are involved in the Markdown file
 
-# Data
+## Data
 
 - This directory will include a description of the data links and the data sets involved in Step 4
