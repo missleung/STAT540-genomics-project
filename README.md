@@ -1,11 +1,11 @@
 # Gene Heroes's Repository 
 
-##Analysis
+## Analysis
 
 - Consists of 
 
-##Data
+## Data
 
-##zz_Deliverable
+## zz_Deliverable
 
-##shinyApp
+## shinyApp
