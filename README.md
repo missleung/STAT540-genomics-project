@@ -49,8 +49,16 @@ We use a combination of two publicly available datasets, ROSMAP, namely as The R
 **Summary of analysis and major results**
 ------------------------
 
-.......
+**Step 1: Data Processing**: 
 
+**Step 2: Single Probe Analysis**: After data processing from the ROSMAP data, the PCA is used to adjust for any hidden confounders that could exist in our data sets (in both gene expression and DNA methylation). To choose the number of PCs adjusted for both gene expression data and DNA methylation probe data, we plotted the heatmap on the proportion of genes that have at least one significant probe with FDR < 0.1 based on number of PCs adjusted for both data sets. Note that the heatmap is based on 50 genes. For exploration, we also plotted the cumulative variance The optimal number of PCs adjusted will be the highest number of significant values based on the heatmap. 
+
+Based on the results, we concluded that the optimal DNA methylation probe data set should be adjusted for five PCs and gene expression data set is adjusted for 30 PCs. 
+
+
+**Step 3: Multiple Probe Analysis**:
+
+**Step 4: Biological Plausability**: 
 
 *References:*
 ---------------------------------------
