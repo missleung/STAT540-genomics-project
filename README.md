@@ -9,7 +9,7 @@ Members |  Department
 ---------|------------
 Tiam Heydari | *Department of Biophysics*
 Sina Jafarzadeh|	*Department of Bioinformatics*
-Lida Leung | *Department of Statisitcs*
+Lisa Leung | *Department of Statisitcs*
 Zohreh Sharafian|	*Department of Experimental Medicine*
 Hiwot Tafessu |*Department of Statistics*
 
@@ -17,15 +17,16 @@ Hiwot Tafessu |*Department of Statistics*
 **Brief description of directories:**
 ---------------------------------------
 
-**Step 1: Data Processing**:- Includes description of data used and methodologies implemented for processing data in preparation for data analysis  
+**Step 1: Data Processing**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. 
 
-**Step 2: Single Probe Analysis**:- eQTM analysis to find significant effect between methylation probes and gene expression
+**Step 2: Single Probe Analysis**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair.
 
-**Step 3: Multiple Probe Analysis**:- Exploring Multiple liniar regression, Non-linear regression and Neuronal Network Analysis 
+**Step 3: Multiple Probe Analysis**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method
 
-**Step 4: Biological Plausability**:- Findings from literature review to assess findings from prior steps and additional gene enrichment analysis
+**Step 4: Biological Plausability**:- This directory includes the visualizations and explanation behind biological reasonings
+and gene enrichment analysis. 
 
-**shinyApp**:- Data visiualization to supplement analysis 
+**shinyApp**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes 
 
 **zz_Deliverable**:- Project proposal, progress report and poster presentaion 
 
@@ -53,4 +54,6 @@ We use a combination of two publicly available datasets, ROSMAP, namely as The R
 
 *References:*
 ---------------------------------------
+
+........
 
