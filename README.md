@@ -58,7 +58,7 @@ As a [result](https://drive.google.com/open?id=1u7J2reJVtPl2IVVytpTqWqJm-76lu0OY
 
 **Step 3: Multiple Probe Analysis**:
 
-[**Step 4: Biological Plausability**]https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4.md: 
+[**Step 4: Biological Plausability**](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4.md): 
 
 *References:*
 ---------------------------------------
