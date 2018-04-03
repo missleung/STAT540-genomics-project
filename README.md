@@ -28,7 +28,7 @@ and gene enrichment analysis. (**Zohreh + Sina**)
 
 **shinyApp**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes (**Hiwot**)
 
-**zz_Deliverable**:- Project proposal, progress report and poster presentaion (**everyone**)
+**zz_Deliverable**:- Project proposal, progress report and poster presentaion (**Everyone**)
 
 
 **Introduction**
