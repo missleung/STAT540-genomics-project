@@ -17,18 +17,18 @@ Hiwot Tafessu |*Department of Statistics*
 **Brief description of directories:**
 ---------------------------------------
 
-**Step 1: Data Processing**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. (**Sina**)
+**Step 1: Data Processing**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. 
 
-**Step 2: Single Probe Analysis**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. (**Lisa + Hiwot**)
+**Step 2: Single Probe Analysis**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. 
 
-**Step 3: Multiple Probe Analysis**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method. (**Tiam + Sina**)
+**Step 3: Multiple Probe Analysis**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method. 
 
 **Step 4: Biological Plausability**:- This directory includes the visualizations and explanation behind biological reasonings
-and gene enrichment analysis. (**Zohreh + Sina**)
+and gene enrichment analysis. 
 
-**shinyApp**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes (**Hiwot**)
+**shinyApp**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes 
 
-**zz_Deliverable**:- Project proposal, progress report and poster presentaion (**Everyone**)
+**zz_Deliverable**:- Project proposal, progress report and poster presentaion 
 
 
 **Introduction**
