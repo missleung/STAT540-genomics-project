@@ -49,7 +49,7 @@ We use a combination of two publicly available datasets, [ROSMAP](https://drive.
 **Summary of analysis and major results**
 ------------------------
 
-**Step 1: Data Processing**: 
+[**Step 1: Data Processing**](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1.md):
 
 [**Step 2: Single Probe Analysis**](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-2-Single%20Probe%20Analysis/Step-2.md): After data processing from the [ROSMAP](https://drive.google.com/file/d/1Ieze9KwSy5UL9c6Vt5uFF9ta4U9kvkoe/) data, the PCA is used to adjust for any hidden confounders that could exist in our data sets (in both gene expression and DNA methylation). To choose the number of PCs adjusted for both gene expression data and DNA methylation probe data, we plotted the [heatmap](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-2-Single%20Probe%20Analysis/Step-2_files/prop_of_genes_sig_on_50_genes_V4_fdr.png) on the proportion of genes that have at least one significant probe with FDR < 0.1 based on number of PCs adjusted for both data sets. Note that the heatmap is based on 50 genes. For exploration, we also plotted the percentage of cumulative variance that additional PCs are adjusted for in both [gene expression data](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-2-Single%20Probe%20Analysis/Step-2_files/cum_var_explained_50_V4_gdata.png) and [DNA methylation data](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-2-Single%20Probe%20Analysis/Step-2_files/cum_var_explained_50_V4_probe.png). The optimal number of PCs adjusted will be the highest number of significant values based on the heatmap. 
 
@@ -58,7 +58,7 @@ As a [result](https://drive.google.com/open?id=1u7J2reJVtPl2IVVytpTqWqJm-76lu0OY
 
 **Step 3: Multiple Probe Analysis**:
 
-**Step 4: Biological Plausability**: 
+[**Step 4: Biological Plausability**]https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4.md: 
 
 *References:*
 ---------------------------------------
