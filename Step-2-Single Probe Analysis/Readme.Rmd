@@ -1,0 +1,18 @@
+---
+title: "Readme"
+author: "Lisa Leung"
+date: '2018-04-02'
+output: html_document
+---
+
+## Step-2.Rmd and Step-2.md
+
+- These markdown files are all the codes in Step 2. Please refer to Step-2.md for images and conclusions.
+
+## Step-2_files (Images Folder)
+
+- This directory consists of the images output from Step-2.md
+
+## Data
+
+- The Data directory consists of any data sets relevant to Step 2
