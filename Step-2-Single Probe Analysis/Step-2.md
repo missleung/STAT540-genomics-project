@@ -427,6 +427,8 @@ ggplot(aes(pvalue), data = lapply_results_PCA) + geom_histogram(bins=500) + ggti
 
 ![](Step-2_files/histogram_pvalue_V4.png)
 
+Histogram of p-value on correlation tests. After adjusting for 30 PCs in gene expression data and 1 PC in DNA methylation probe data, histogram of p-values are graphed. Because of the peak when p-value is very close to 0, we see that the null hypothesis of no significances on DNA methylation probe and gene pair is highly unlikely. Consequently, the current states of these two data sets seem to be suitable for our analysis.
+
 ``` r
 #dev.off()
 
