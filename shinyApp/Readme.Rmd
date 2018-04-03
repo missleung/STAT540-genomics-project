@@ -1,10 +1,3 @@
----
-title: "Readme"
-author: "Lisa Leung"
-date: '2018-04-02'
-output: html_document
----
-
 ## app.R
 
-- Describe your stuff in point form
+- The ShinyApp was made to supplement analysis of data and visualization for specific genes. It shows gene expression distribution, eQTM output and gene-probe pair correlation plots. 
