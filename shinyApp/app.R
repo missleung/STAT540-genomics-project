@@ -3,6 +3,7 @@ library(shinythemes)
 library(tidyverse) 
 library(reshape2) 
 library (corrplot)
+library(psych)
 
 
 #rosmap_data<-load("~/Stat_540/zz_tafesu-hiwot_STAT540_2018/Group_work/rosmap_postprocV2.RData")
@@ -31,6 +32,21 @@ select10<- 1:10
 is_outlier <- function(x) {
   return(x < quantile(x, 0.25) - 1.5 * IQR(na.omit(x)) | x > quantile(x, 0.75) + 1.5 * IQR(na.omit(x)))
 }
+
+
+#-----------------------------------------------------------------
+#From step-3
+#plot the correlation between probes, genes 
+plot_correlation <- function(designated.dataframe.for.specific.gene,number.of.picked.probes){
+  plot(designated.dataframe.for.specific.gene[,1:min(number.of.picked.probes,5)], pch=1,main=gene.name)
+  datacor = cor(designated.dataframe.for.specific.gene[1:number.of.picked.probes])
+  corrplot(datacor, method = "color",addCoef.col="grey",number.cex= 7/ncol(designated.dataframe.for.specific.gene))
+  auto.sel <- designated.dataframe.for.specific.gene[,1:number.of.picked.probes]
+  pairs.panels(auto.sel, col="red")
+}
+#-----------------------------------------------------------------
+
+
 ui <- fluidPage(theme = shinytheme("slate"),
                 #tabsetPanel(
                 
@@ -61,7 +77,11 @@ ui <- fluidPage(theme = shinytheme("slate"),
                                                        h4("The Spearman rank-order correlation"),
                                                        
                                                        selectInput("geneInput_cor", "Please select gene:", c("None",levels(factor(dat$gene_name)))),
-                                                       tableOutput("corTable"),
+                                                       tableOutput("corTable")
+                                                       
+                                                       
+                                              ),
+                                              tabPanel("Multiple Probes", 
                                                        
                                                        h5("Correlation Plots:"),
                                                        
@@ -69,8 +89,12 @@ ui <- fluidPage(theme = shinytheme("slate"),
                                                        
                                                        sliderInput("topProbes", "Number of probes:",
                                                                    min = 0, max = 50, value = 5),
-                                                       plotOutput("corPlot")
-                                              ) 
+                                                       plotOutput("corPlot"),
+                                                       plotOutput("corPlot2")
+                                                       
+                                                       
+                                                       
+                                              )
                          )         
                          )
                          
@@ -135,6 +159,30 @@ server <- function(input, output) {
     #plot(designated.dataframe.for.specific.gene[,1:number.of.picked.probes], pch=1,main=gene.name)
     datacor = cor(designated.dataframe.for.specific.gene[1:number.of.picked.probes])
     corrplot(datacor, method = "color", addCoef.col="grey", type= "lower") 
+    
+    
+    
+  })  
+  
+  output$corPlot2 <- renderPlot({
+    #From Step 3
+    rawdata.for.specific.gene <-cor_test_results %>% filter(gene==input$geneInput_cor2[1])
+    
+    rawdata.for.specific.gene <-          
+      rawdata.for.specific.gene[order(rawdata.for.specific.gene$adjusted.pvalue),]
+    gene.expressions<-data.frame(expression=subjects_genes[,input$geneInput_cor2[1]])
+    
+    names.of.ordered.probes<-rawdata.for.specific.gene$probe
+    ordered.probe.value<-as.data.frame(t(probes_subjects[as.character(names.of.ordered.probes),]))
+    designated.dataframe.for.specific.gene<-cbind(gene.expressions,ordered.probe.value)
+    number.of.picked.probes <- input$topProbes
+    number.of.picked.probes <- number.of.picked.probes +1
+    #plot(designated.dataframe.for.specific.gene[,1:number.of.picked.probes], pch=1,main=gene.name)
+    datacor = cor(designated.dataframe.for.specific.gene[1:number.of.picked.probes])
+    
+    plot_correlation(designated.dataframe.for.specific.gene,number.of.picked.probes)
+    
+    
   })  
   
   
