@@ -28,7 +28,7 @@ and gene enrichment analysis.
 
 **shinyApp**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes 
 
-**zz_Deliverable**:- Project proposal, progress report and poster presentaion 
+**zz_Deliverable**:- Project proposal, progress report and poster presentaion. 
 
 
 **Introduction**
