@@ -666,4 +666,4 @@ ggplot(aes(x=num_PC, y=value, colour=variable), data = toPlot_lapply_results_pca
 #dev.off()
 ```
 
-Here, you can see clearly how the number of PCs adjusted affects the number of significant probes by individual genes. For example, it seems that the number of PCs adjusted in probes does not affect the number of significances. This observation corresponds to the cumulative variance explained that was illustrated above - over 90% of variability was explained on the first PC. In the same gene for the second graph which looks at the number of PCs adjusted in genes affect a lot more especially between 20 to 30 PCs.
+Here, you can see clearly how the number of PCs adjusted affects the number of significant probes by individual genes. For example, it seems that the number of PCs adjusted in probes does not affect the number of significances. This observation corresponds to the heatmap in which we see a higher number of significant probes in lower number of PCs adjusted in DNA methylation data (given gene expression data is adjusted for 30 PCs).
