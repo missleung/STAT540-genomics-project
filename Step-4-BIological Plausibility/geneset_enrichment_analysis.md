@@ -190,15 +190,15 @@ enrichmentResult$results %>% arrange(CorrectedPvalue)
     ##    Name         ID     NumProbes NumGenes RawScore    Pval CorrectedPvalue
     ##    <chr>        <chr>      <int>    <int>    <dbl>   <dbl>           <dbl>
     ##  1 oxoacid met~ GO:00~        68       68   0.0784 2.20e-3           0.286
-    ##  2 fatty acid ~ GO:00~        29       29   0.0622 2.80e-3           0.312
-    ##  3 organic aci~ GO:00~        69       69   0.0783 3.50e-3           0.342
-    ##  4 carboxylic ~ GO:00~        64       64   0.0783 2.20e-3           0.344
-    ##  5 monocarboxy~ GO:00~        37       37   0.0695 2.00e-3           0.390
+    ##  2 fatty acid ~ GO:00~        29       29   0.0622 2.90e-3           0.324
+    ##  3 carboxylic ~ GO:00~        64       64   0.0783 2.20e-3           0.344
+    ##  4 monocarboxy~ GO:00~        37       37   0.0695 2.00e-3           0.390
+    ##  5 organic aci~ GO:00~        69       69   0.0783 4.60e-3           0.449
     ##  6 oxidation-r~ GO:00~        82       82   0.0921 6.00e-4           0.469
-    ##  7 lipid metab~ GO:00~       111      111   0.105  1.80e-3           0.469
-    ##  8 cellular li~ GO:00~        88       88   0.0922 1.30e-3           0.508
-    ##  9 drug metabo~ GO:00~        52       52   0.0639 8.60e-3           0.746
-    ## 10 response to~ GO:00~        23       23   0.0502 1.11e-2           0.788
+    ##  7 lipid metab~ GO:00~       111      111   0.105  2.00e-3           0.521
+    ##  8 cellular li~ GO:00~        88       88   0.0922 1.40e-3           0.547
+    ##  9 drug metabo~ GO:00~        52       52   0.0639 6.90e-3           0.599
+    ## 10 response to~ GO:00~        23       23   0.0502 9.90e-3           0.703
     ## # ... with 782 more rows, and 5 more variables: MFPvalue <dbl>,
     ## #   CorrectedMFPvalue <dbl>, Multifunctionality <dbl>, `Same as` <chr>,
     ## #   GeneMembers <chr>
