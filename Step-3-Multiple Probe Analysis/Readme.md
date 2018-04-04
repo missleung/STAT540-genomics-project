@@ -1,6 +1,6 @@
 Readme
 ================
-Lisa Leung
+Tiam Heydari
 2018-04-02
 
 step3.Rmd and step3.md
