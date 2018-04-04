@@ -1,13 +1,16 @@
 ---
-title: "Readme"
-author: "Lisa Leung"
+title: "Step4- Biological Plausibility"
+author: "zohreh Sharafian"
 date: '2018-04-02'
 output: github_document
 ---
 
-## step4.Rmd and step4.md
+## step4.Rmd and step4.md 
 
- - Please describe the step4.Rmd and step4.md contents in point form
+ - Assess the spatial distribution of significant methylation probes according to their distance from genes
+ - Analyze the distribution of significant methylation probes in different chromatin states using ChromHMM
+ - Rank the genes based on the number of significant corresponding probes as an indicator for the multifunctionality of the gene
+ - Gene set enrichment analysis to find the relationship between the number of significant probes and the complexity of gene regulation using erminR
 
 ## geneset_enrichment_analysis.md and geneset enrichment analysis.Rmd
 

@@ -1,4 +1,4 @@
-Step4-Biological Analysis-part 1
+Step4-Biological Plausibility-spatial distribution of methylated CpG sites
 ================
 Zohreh Sharafian
 March 24, 2018
