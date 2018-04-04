@@ -51,7 +51,7 @@ There are a few studies quantizing the relationship of methylation and gene expr
 
 
 ![](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/master/zz_Deliverable/figone.PNG?token=AVAzvOigxIEpdo_qYdVL1Q2YBvuf6rGjks5aznpIwA%3D%3D)
-Figure 1. Graphical overview of our data analysis pipeline. We first correct the data for confounders and outliers. Next, we apply eQTM analysis to assess significant correlations between the pairs of methylation probe and gene. We then extend the analysis to multivariate linear and non-linear regression models. We verify the biological plausibility of results using other data types including probe-gene distances and chromatin states.
+**Figure 1. Graphical overview of our data analysis pipeline.** We first correct the data for confounders and outliers. Next, we apply eQTM analysis to assess significant correlations between the pairs of methylation probe and gene. We then extend the analysis to multivariate linear and non-linear regression models. We verify the biological plausibility of results using other data types including probe-gene distances and chromatin states.
 
 
 **The Data**
@@ -88,18 +88,31 @@ any significant relationship between the numbers of significant methylated CpG s
 
 
 **Discussion and Conclusion**
-----------------
+Our study presents a large-scale analysis on the regulatory effect of methylation CpG sites on the expression value of genes in brain dorsolateral prefrontal cortex. We develop a set of regression models to assess the relationship between expression value of each gene and the methylation value of CpG sites. We investigate the distribution pattern of CpG sites considering the chromatin state and CpG-Gene distance. these findings are consistent with previous biological studies(Gutierrez-Arcelus et al., 2013; Numata et al., 2012; Saxonov, Berg, & Brutlag, 2006). 
+We observed that despite our initial expectation, the non-linear models (NN and CIT) did not provide better estimations in comparison to linear regression. We suspect that using more complicated models, e.g. increasing the number of hidden layers in NN may capture the potential non-linearity between the CpG-gene relationship. A line of research that we will address in future.
 
-*References:*
+
+
+**References**
+
 Acharya, C. R., Owzar, K., & Allen, A. S. (2017). Mapping eQTL by leveraging multiple tissues and DNA methylation. BMC Bioinformatics, 18(1), 1–20.
+
 Bennett, D. A., Schneider, J. A., Arvanitakis, Z., & Wilson, R. S. (2012). overviw and findings from the religious orders study. Current Alzheimer Research, 29(10), 628–645.
-Bennett, D. A., Schneider, J. A., Buchman, A. S., Barnes, L. L., Boyle, P. A., & Wilson, R. S. (2012). Overview and findings from the rush Memory and Aging Project. Current Alzheimer Research, 9(6), 646–63. 
-Bonder, M. J., Luijk, R., Zhernakova, D. V., Moed, M., Deelen, P., Vermaat, M., … Heijmans, B. T. (2017). Disease variants alter transcription factor levels and methylation of their binding sites. Nature Genetics, 49(1), 131–138.
+
+Bennett, D. A., Schneider, J. A., Buchman, A. S., Barnes, L. L., Boyle, P. A., & Wilson, R. S. (2012). Overview and findings from the rush Memory and Aging Project. Current Alzheimer Research, 9(6), 646–63.
+
+Bonder, M. J., Luijk, R., Zhernakova, D. V., Moed, M., Deelen, P., Vermaat, M.,Heijmans, B. T. (2017). Disease variants alter transcription factor levels and methylation of their binding sites. Nature Genetics, 49(1), 131–138.
+
 Ernst, J., & Kellis, M. (2012). ChromHMM: Automating chromatin-state discovery and characterization. Nature Methods, 9(3), 215–216.
+
 Gillis, J., Mistry, M., & Pavlidis, P. (2010). Gene function analysis in complex data sets using ermineJ. Nature Protocols, 5(6), 1148–1159.
-Gutierrez-Arcelus, M., Lappalainen, T., Montgomery, S. B., Buil, A., Ongen, H., Yurovsky, A., … Dermitzakis, E. T. (2013). Passive and active DNA methylation and the interplay with genetic variation in gene regulation. eLife, 2013(2), 1–18.
+
+Gutierrez-Arcelus, M., Lappalainen, T., Montgomery, S. B., Buil, A., Ongen, H., Yurovsky, A., Dermitzakis, E. T. (2013). Passive and active DNA methylation and the interplay with genetic variation in gene regulation. eLife, 2013(2), 1–18.
+
 Numata, S., Ye, T., Herman, M., & Lipska, B. K. (2014). DNA methylation changes in the postmortem dorsolateral prefrontal cortex of patients with schizophrenia. Frontiers in Genetics, 5(JUL), 1–7.
+
 Numata, S., Ye, T., Hyde, T. M., Guitart-Navarro, X., Tao, R., Wininger, M., … Lipska, B. K. (2012). DNA methylation signatures in development and aging of the human prefrontal cortex. American Journal of Human Genetics, 90(2), 260–272. 
+
 Saxonov, S., Berg, P., & Brutlag, D. L. (2006). A genome-wide analysis of CpG dinucleotides in the human genome distinguishes two distinct classes of promoters. Proceedings of the National Academy of Sciences, 103(5), 1412–1417.
 
 
