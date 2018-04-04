@@ -48,12 +48,10 @@ library(psych)
     ##     %+%, alpha
 
 ``` r
-#Local Directory
+#Local Directory (Please see Data file (Step-2))
 subjects_genes<-as.data.frame(readRDS("~/Stat_540/zz_tafesu-hiwot_STAT540_2018/Group_work/subjects_genes_PCA_adjusted_V4.RDS"))
 probes_subjects<-as.data.frame(readRDS("~/Stat_540/zz_tafesu-hiwot_STAT540_2018/Group_work/probes_subjects_PCA_adjusted_V4.RDS"))
 cor_test_results<-readRDS("~/Stat_540/zz_tafesu-hiwot_STAT540_2018/Group_work/cor_test_results_PCA_lapply_V4.RDS")
-
-
 
 
 #prep data for plot 
