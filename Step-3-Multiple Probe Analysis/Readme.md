@@ -12,3 +12,9 @@ Data
 --------------
 
 - The Data directory consists of any relevant data sets or links to data sets in Step 3.
+
+
+step3_files (Images Folder)
+--------------
+
+- The directory contains all images that are outputs from step3.md
