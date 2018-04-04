@@ -28,7 +28,7 @@ and gene enrichment analysis.
 
 **shinyApp (Hiwot)**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes 
 
-**zz_Deliverable**:- Project proposal (All), progress report (All) and poster presentation (Tiam, Zohreh, Hiwot, and Sina). 
+**zz_Deliverable**:- [Project proposal](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Group_Project_Proposal_Gene_Heroes.md) (All), [progress report](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Progressreport.md) (All) and [poster presentation](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Poster_draft%20(Zohreh%20Sharafian's%20conflicted%20copy%202018-04-02%20(1))%20(Zohreh%20Sharafian's%20conflicted%20copy%202018-04-02)%20(tiam%20heydari's%20conflicted%20copy%202018-04-03).pdf) (Tiam, Zohreh, Hiwot, and Sina). 
 
 **Introduction**
 ----------------
