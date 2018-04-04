@@ -17,9 +17,9 @@ Hiwot Tafessu |*Department of Statistics*
 **Task Division Brief description of directories:**
 ---------------------------------------
 
-[**Step 1: Data Processing](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-1-Data%20Processing) (Sina)**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. 
+**[Step 1: Data Processing](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-1-Data%20Processing) (Sina)**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. 
 
-[**Step 2: Single Probe Analysis](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-2-Single%20Probe%20Analysis) (Lisa)**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. 
+**[Step 2: Single Probe Analysis](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-2-Single%20Probe%20Analysis) (Lisa)**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. 
 
 **[Step 3: Multiple Probe Analysis](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-3-Multiple%20Probe%20Analysis) (Tiam and Sina)**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method. 
 
