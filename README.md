@@ -73,7 +73,7 @@ We also analyze the distribution of significant methylation probes in different 
 Moreover, we see that the number of negative regulating methylation probes in TSS region is higher compared to the positive ones. Biological experiments also verify that most of the methylated CpG sites near the TSS and gene promotor
 repress the expression value of the gene resulting in a down-regulation effect.
 We also perform [“Gene Set enrichment analysis”](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/geneset_enrichment_analysis.md) to find the relationship between the number of significant probes and the complexity of gene regulation using erminR package (Gillis et al., 2010). The analysis shows that there is not
-any significant relationship between the numbers of significant methylated CpG sites corresponding to genes and the multifunctionality. 
+any significant relationship between the numbers of significant methylated CpG sites corresponding to genes and the multifunctionality.
 
 
 **Discussion and Conclusion**
