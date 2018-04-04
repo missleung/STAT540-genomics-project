@@ -3,10 +3,10 @@ Readme
 Lisa Leung
 2018-04-02
 
-step3.Rmd
+step3.Rmd and step3.md
 --------------
 
--   Describe the code in step3.Rmd in point form
+- These files contain the codes to the procedures in step 3.
 
 Data
 --------------
