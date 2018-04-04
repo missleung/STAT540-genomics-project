@@ -17,16 +17,16 @@ Hiwot Tafessu |*Department of Statistics*
 **Task Division Brief description of directories:**
 ---------------------------------------
 
-**Step 1: Data Processing (Sina)**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. 
+[**Step 1: Data Processing](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-1-Data%20Processing) (Sina)**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. 
 
-**Step 2: Single Probe Analysis (Lisa)**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. 
+[**Step 2: Single Probe Analysis](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-2-Single%20Probe%20Analysis) (Lisa)**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. 
 
-**Step 3: Multiple Probe Analysis (Tiam and Sina)**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method. 
+**[Step 3: Multiple Probe Analysis](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-3-Multiple%20Probe%20Analysis) (Tiam and Sina)**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method. 
 
-**Step 4: Biological Plausability (Zohreh)**:- This directory includes the visualizations and explanation behind biological reasonings
+**[Step 4: Biological Plausability](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-4-BIological%20Plausibility) (Zohreh)**:- This directory includes the visualizations and explanation behind biological reasonings
 and gene enrichment analysis. 
 
-**shinyApp (Hiwot)**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes 
+**[shinyApp](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/shinyApp) (Hiwot)**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes 
 
 **zz_Deliverable**:- [Project proposal](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Group_Project_Proposal_Gene_Heroes.md) (All), [progress report](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Progressreport.md) (All) and [poster presentation](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Poster_draft%20(Zohreh%20Sharafian's%20conflicted%20copy%202018-04-02%20(1))%20(Zohreh%20Sharafian's%20conflicted%20copy%202018-04-02)%20(tiam%20heydari's%20conflicted%20copy%202018-04-03).pdf) (Tiam, Zohreh, Hiwot, and Sina). 
 
