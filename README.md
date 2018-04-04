@@ -17,18 +17,23 @@ Hiwot Tafessu |*Department of Statistics*
 **Task Division Brief description of directories:**
 ---------------------------------------
 
-**[Step 1: Data Processing](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-1-Data%20Processing) (Sina)**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. 
+**[Step 1: Data Processing](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-1-Data%20Processing)** - Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. __Sina contributed in both the research and coding in Step 1.__ 
 
-**[Step 2: Single Probe Analysis](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-2-Single%20Probe%20Analysis) (Lisa)**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. 
+**[Step 2: Single Probe Analysis](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-2-Single%20Probe%20Analysis)** - This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. __Hiwot contributed in researching the topic and Lisa contributed in the coding.__
 
-**[Step 3: Multiple Probe Analysis](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-3-Multiple%20Probe%20Analysis) (Tiam and Sina)**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method. 
+**[Step 3: Multiple Probe Analysis](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-3-Multiple%20Probe%20Analysis)** - This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method. __Tiam contributed researching and coding using regression modelling and variable selection methods for Step 3 (full model, nonlinear regression, Lasso and Stepwise methods), and Sina contributed in the researching and coding in neural network method.__
 
-**[Step 4: Biological Plausability](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-4-BIological%20Plausibility) (Zohreh)**:- This directory includes the visualizations and explanation behind biological reasonings
-and gene enrichment analysis. 
+**[Step 4: Biological Plausability](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-4-BIological%20Plausibility)** - This directory includes the visualizations and explanation behind biological reasonings and gene enrichment analysis. __Sina contributed in the research and idea of gene enrichment analysis and Zohreh contributed in the coding and written aspect of the gene enrichment analysis.__
 
-**[shinyApp](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/shinyApp) (Hiwot)**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes 
+**[shinyApp](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/shinyApp)** - Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes. __Hiwot coded the shinyApp program.__ 
 
-**zz_Deliverable**:- [Project proposal](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Group_Project_Proposal_Gene_Heroes.md) (All), [progress report](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Progressreport.md) (All) and [poster presentation](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Poster_draft%20(Zohreh%20Sharafian's%20conflicted%20copy%202018-04-02%20(1))%20(Zohreh%20Sharafian's%20conflicted%20copy%202018-04-02)%20(tiam%20heydari's%20conflicted%20copy%202018-04-03).pdf) (Tiam, Zohreh, Hiwot, and Sina). 
+**[zz_Deliverable](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/zz_Deliverable)**:
+
+- [Project proposal](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Group_Project_Proposal_Gene_Heroes.md) - __Lisa prepared the proposal, Hiwot and Tiam contributed to the ideas, then Zohreh and Sina finalized the proposal.__
+- [Progress report](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Progressreport.md) - __Lisa prepared the report, Hiwot and Tiam contributed to the ideas, then Zohreh and Sina finalized the report.__
+- [Poster presentation](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Poster_draft%20(Zohreh%20Sharafian's%20conflicted%20copy%202018-04-02%20(1))%20(Zohreh%20Sharafian's%20conflicted%20copy%202018-04-02)%20(tiam%20heydari's%20conflicted%20copy%202018-04-03).pdf) - __Zohreh and Sina prepared and finalized the poster, then Hiwot and Tiam provided organized all the graphs plots.__
+
+**Repo Preparation** - Organizing and preparing the entire repository at presentable level. __Hiwot and Lisa organized the Repo. Zohreh and Sina wrote Introduction, Background and Data Description. Lisa prepared the summary analyses but are finalized by everyone accordingly to the steps they have contributed. Zohreh wrote Bibliography.__
 
 **Introduction**
 ----------------
@@ -48,7 +53,7 @@ We use a combination of two publicly available datasets, [ROSMAP](https://www.sy
 **Summary of analysis and major results**
 ------------------------
 
-**[Step 1: Data Processing](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1.md)**(https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1.md): ROSMAP raw data is preprocessed to prepare for the single probe and multiple probe analyses. We started with a gene expression data set, DNA methylation data set and its corresponding CpG sites. For this particular assignment, we are only interested in the probes within a 1Mb distance around the gene of interest. 
+**[Step 1: Data Processing](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1.md)**: ROSMAP raw data is preprocessed to prepare for the single probe and multiple probe analyses. We started with a gene expression data set, DNA methylation data set and its corresponding CpG sites. For this particular assignment, we are only interested in the probes within a 1Mb distance around the gene of interest. 
 
 In order to demonstrate our multiple probe analysis, we have to handle with the issue of multicollinearity between probes.  Hence, we decide to pick one probe out of a cluster of probes that are strongly correlated with each other (ie. probes that have strong linkage disequilibrium). We used A-clust algorithm to solve this issue. Based on the resulting plots of [number of non-singletone clusters](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1_files/figure-markdown_github/unnamed-chunk-1-1.png) and [average intra-cluster correlation](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1_files/figure-markdown_github/unnamed-chunk-1-2.png), we decide that correlation threshold of 0.8 and a base-pair distance of 1000 are the ideal parameters to separate the probes. In return, we are left with three data sets for Step 2 and 3: [probes_genes_distance, probes_subjects and subjects_genes](https://drive.google.com/file/d/1Ieze9KwSy5UL9c6Vt5uFF9ta4U9kvkoe/).
 
