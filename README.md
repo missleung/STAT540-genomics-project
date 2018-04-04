@@ -113,7 +113,7 @@ Gutierrez-Arcelus, M., Lappalainen, T., Montgomery, S. B., Buil, A., Ongen, H., 
 
 Numata, S., Ye, T., Herman, M., & Lipska, B. K. (2014). DNA methylation changes in the postmortem dorsolateral prefrontal cortex of patients with schizophrenia. Frontiers in Genetics, 5(JUL), 1–7.
 
-Numata, S., Ye, T., Hyde, T. M., Guitart-Navarro, X., Tao, R., Wininger, M., … Lipska, B. K. (2012). DNA methylation signatures in development and aging of the human prefrontal cortex. American Journal of Human Genetics, 90(2), 260–272. 
+Numata, S., Ye, T., Hyde, T. M., Guitart-Navarro, X., Tao, R., Wininger, M.,Lipska, B. K. (2012). DNA methylation signatures in development and aging of the human prefrontal cortex. American Journal of Human Genetics, 90(2), 260–272. 
 
 Saxonov, S., Berg, P., & Brutlag, D. L. (2006). A genome-wide analysis of CpG dinucleotides in the human genome distinguishes two distinct classes of promoters. Proceedings of the National Academy of Sciences, 103(5), 1412–1417.
 
