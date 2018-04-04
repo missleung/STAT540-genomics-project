@@ -60,7 +60,7 @@ As a [result](https://drive.google.com/open?id=1u7J2reJVtPl2IVVytpTqWqJm-76lu0OY
 
 **Step 3: Multiple Probe Analysis**:
 
-[**Step 4: Biological Plausability**](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4.md): 
+[**Step 4: Biological Plausability**](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4.md): Based on the single probe analysis in Step 1, we looked at the distances of probe and genes which are correlated at FDR < 0.05 in a [plot](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4_files/figure-markdown_github/unnamed-chunk-7-1.png). We observe that most of these pairs are very close by the distance, with very few pairs that are far from each other. Based on another [plot](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4_files/figure-markdown_github/unnamed-chunk-8-1.png), we also see that the average FDR increases when distances from probe and gene pair widen.
 
 *References:*
 ---------------------------------------
