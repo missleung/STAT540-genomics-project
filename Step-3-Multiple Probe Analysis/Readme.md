@@ -16,7 +16,7 @@ step3_files (Images Folder)
 Data
 --------------
 
-- ## (put name of data set here)
+## (put name of data set here)
 
 - Please describe the contents in point form
 
