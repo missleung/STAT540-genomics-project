@@ -87,13 +87,15 @@ We also perform [“Gene Set enrichment analysis”](https://github.com/STAT540-
 any significant relationship between the numbers of significant methylated CpG sites corresponding to genes and the multifunctionality.
 
 
-**Discussion and Conclusion**
+**Discussion**
+----------------
 Our study presents a large-scale analysis on the regulatory effect of methylation CpG sites on the expression value of genes in brain dorsolateral prefrontal cortex. We develop a set of regression models to assess the relationship between expression value of each gene and the methylation value of CpG sites. We investigate the distribution pattern of CpG sites considering the chromatin state and CpG-Gene distance. these findings are consistent with previous biological studies(Gutierrez-Arcelus et al., 2013; Numata et al., 2012; Saxonov, Berg, & Brutlag, 2006). 
 We observed that despite our initial expectation, the non-linear models (NN and CIT) did not provide better estimations in comparison to linear regression. We suspect that using more complicated models, e.g. increasing the number of hidden layers in NN may capture the potential non-linearity between the CpG-gene relationship. A line of research that we will address in future.
 
 
 
 **References**
+----------------
 
 Acharya, C. R., Owzar, K., & Allen, A. S. (2017). Mapping eQTL by leveraging multiple tissues and DNA methylation. BMC Bioinformatics, 18(1), 1–20.
 
