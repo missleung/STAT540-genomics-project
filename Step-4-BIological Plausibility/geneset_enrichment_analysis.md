@@ -1,20 +1,18 @@
-GeneSet Enrichment Analysis
+Step4- Biological Plausibility-Gene Set Enrichment Analysis
 ================
 Zohreh Sharafian
 March 27, 2018
 
-Question:
+Next, we study the relationship between numbers of significant methylated CpG sites corresponding to the genes and the function of those genes. In other words, we check if those genes that correspond to the multiple probes are multifunctional ane are more involved in biological process.
 
-Next, we study the relationship between numbers of significant methylated CpG sites, corresponding to the genes and the function of those genes. In other words, we check if the genes that correspond to multiple probes are multifunctional genes and have more biological functions.
-
-We load related library packages to understand and verify the biological aspects of our analysis.We use "ermineR" package for gene set enrichment analysis \[ref\].
+We load related library packages to understand and verify the biological aspects of our analysis.We use "ermineR" package for gene set enrichment analysis(Gillis et al., 2010).
 
 ### Loading data
 
-WE load a data set from eQTM analysis that we have peroformed in Step 2 which includes all the adjusted P values for analysing single probes.
+WE load dataset from eQTM analysis that we have peroformed in Step 2 including all the adjusted P values for analyzing single probes.
 
 ``` r
- original_data <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Code/Step4/cor_test_results_PCA_lapply_V4.rds")
+ original_data <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/cor_test_results_PCA_lapply_V4.rds")
 
 head(original_data)
 ```
@@ -65,7 +63,7 @@ head(modified_data)
 
 ### Preparing the inputs
 
-We extract three columns including "new gane name", "probe", and "adjusted P value" for all the genes in our data set. Next, we count the number of probes corresponding to a particular gene and assign zero to the probees that are not significant and have P value greater than 0.05.
+We extract three columns including "new gane name", "probe", and "adjusted P-value" for all the genes in our dataset. Next, we count the number of probes corresponding to a particular gene and assign zero to the probees that are not significant and have P-value&lt;0.05.
 
 ``` r
 extracted_data <- modified_data[,c(2, 3,6)]
@@ -102,7 +100,7 @@ filtered_adjusted_pvalue [1:20,]
     ## cor10861  RP4-697K14.7 cg00152041    7.394562e-05
     ## cor52215        IL27RA cg23218533    3.970250e-04
 
-We realize that there are 536 gene that have one or more significant probes.
+We realize that there are 536 genes that have one or more significant probes.
 
 ``` r
 nrow(filtered_adjusted_pvalue)
@@ -116,7 +114,7 @@ length(unique(filtered_adjusted_pvalue$new_gene_name))
 
     ## [1] 536
 
-We generate a new data set including the gene names and the count of corresponding probes for each gene.Those genes that do not have any related probe get zero value.
+We generate a new dataset including the gene names and the counts of corresponding probes corresponding to each gene.Those genes that do not have any related probes get zero value.
 
 ``` r
 library(tidyverse)
@@ -182,25 +180,25 @@ enrichmentResult <- precRecall(scores = ermineInputGeneScores,
                                geneSetDescription = "GO.xml") 
 ```
 
-The result show the "correctedMFPvalue"=1 for all the genes regardless of the number of corresponding probes.This result shows that there is not any relationship between the number of significant probes corresponding to the genes and the multifunctionality of the genes as there is no significant p value for the gene sets.
+The result show the "correctedMFPvalue"=1 for all the genes regardless of the number of corresponding probes.This result shows that there is not any relationship between the number of significant probes corresponding to the genes and the multifunctionality of the genes as there is no significant correctedMFPvalue for the gene sets.
 
 ``` r
-enrichmentResult$results %>% arrange(CorrectedMFPvalue)
+enrichmentResult$results %>% arrange(CorrectedPvalue) 
 ```
 
-    ## # A tibble: 749 x 12
+    ## # A tibble: 792 x 12
     ##    Name         ID     NumProbes NumGenes RawScore    Pval CorrectedPvalue
     ##    <chr>        <chr>      <int>    <int>    <dbl>   <dbl>           <dbl>
-    ##  1 monocarboxy~ GO:00~        35       35   0.0715 9.00e-4           0.664
-    ##  2 lipid metab~ GO:00~       107      107   0.104  1.40e-3           0.517
-    ##  3 fatty acid ~ GO:00~        26       26   0.0656 1.60e-3           0.394
-    ##  4 cellular li~ GO:00~        85       85   0.0917 1.80e-3           0.332
-    ##  5 oxidation-r~ GO:00~        83       83   0.0875 1.80e-3           0.266
-    ##  6 organic aci~ GO:00~        65       65   0.0776 3.30e-3           0.406
-    ##  7 carboxylic ~ GO:00~        62       62   0.0775 3.30e-3           0.348
-    ##  8 oxoacid met~ GO:00~        64       64   0.0778 3.30e-3           0.304
-    ##  9 drug metabo~ GO:00~        53       53   0.0654 5.80e-3           0.476
-    ## 10 small molec~ GO:00~       144      144   0.117  8.50e-3           0.627
-    ## # ... with 739 more rows, and 5 more variables: MFPvalue <dbl>,
+    ##  1 oxoacid met~ GO:00~        68       68   0.0784 2.20e-3           0.286
+    ##  2 fatty acid ~ GO:00~        29       29   0.0622 2.80e-3           0.312
+    ##  3 organic aci~ GO:00~        69       69   0.0783 3.50e-3           0.342
+    ##  4 carboxylic ~ GO:00~        64       64   0.0783 2.20e-3           0.344
+    ##  5 monocarboxy~ GO:00~        37       37   0.0695 2.00e-3           0.390
+    ##  6 oxidation-r~ GO:00~        82       82   0.0921 6.00e-4           0.469
+    ##  7 lipid metab~ GO:00~       111      111   0.105  1.80e-3           0.469
+    ##  8 cellular li~ GO:00~        88       88   0.0922 1.30e-3           0.508
+    ##  9 drug metabo~ GO:00~        52       52   0.0639 8.60e-3           0.746
+    ## 10 response to~ GO:00~        23       23   0.0502 1.11e-2           0.788
+    ## # ... with 782 more rows, and 5 more variables: MFPvalue <dbl>,
     ## #   CorrectedMFPvalue <dbl>, Multifunctionality <dbl>, `Same as` <chr>,
     ## #   GeneMembers <chr>

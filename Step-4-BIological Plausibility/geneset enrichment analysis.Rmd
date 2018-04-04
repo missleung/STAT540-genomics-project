@@ -1,14 +1,13 @@
 ---
-title: "GeneSet Enrichment Analysis"
+title: "Step4- Biological Plausibility-Gene Set Enrichment Analysis"
 author: "Zohreh Sharafian"
 date: "March 27, 2018"
 output: github_document
 ---
-Question:
 
-Next, we study the relationship between numbers of significant methylated CpG sites, corresponding to the genes and the function of those genes. In other words, we check if the genes that correspond to multiple probes are multifunctional genes and have more biological functions.
+Next, we study the relationship between numbers of significant methylated CpG sites corresponding to the genes and the function of those genes. In other words, we check if those genes that correspond to the multiple probes are multifunctional ane are more involved in biological process.
 
-We load related library packages to understand and verify the biological aspects of our analysis.We use "ermineR" package for gene set enrichment analysis [ref].
+We load related library packages to understand and verify the biological aspects of our analysis.We use "ermineR" package for gene set enrichment analysis(Gillis et al., 2010).
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -19,10 +18,10 @@ ermineR:::findJava()
 ```
 ### Loading data
 
-WE load a data set from eQTM analysis that we have peroformed in Step 2 which includes all the adjusted P values for analysing single probes.
+WE load  dataset from eQTM analysis that we have peroformed in Step 2 including all the adjusted P values for analyzing single probes.
 
 ```{r}
- original_data <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Code/Step4/cor_test_results_PCA_lapply_V4.rds")
+ original_data <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/cor_test_results_PCA_lapply_V4.rds")
 
 head(original_data)
 
@@ -44,7 +43,8 @@ head(modified_data)
 ```
 ### Preparing the inputs
 
-We extract three columns including "new gane name", "probe", and "adjusted P value" for all the genes in our data set. Next, we count the number of probes corresponding to a particular gene and assign zero to the probees that are not significant and have P value greater than 0.05.
+We extract three columns including "new gane name", "probe", and "adjusted P-value" for all the genes in our dataset. Next, we count the number of probes corresponding to a particular gene and assign zero to the probees that are not significant and have P-value<0.05.
+
 ```{r}
 
 extracted_data <- modified_data[,c(2, 3,6)]
@@ -59,7 +59,7 @@ remaining_names$count=0;
 filtered_adjusted_pvalue [1:20,]
 
 ```
-We realize that there are 536 gene that have one or more significant probes.
+We realize that there are 536 genes that have one or more significant probes.
 ```{r}
 
 nrow(filtered_adjusted_pvalue)
@@ -69,7 +69,7 @@ length(unique(filtered_adjusted_pvalue$new_gene_name))
 
 ```
 
-We generate a new data set including the gene names and the count of corresponding probes for each gene.Those genes that do not have any related probe get zero value.
+We generate a new dataset including the gene names and the counts of corresponding probes corresponding to each gene.Those genes that do not have any related probes get zero value.
 ```{r}
 library(tidyverse)
 
@@ -113,10 +113,10 @@ enrichmentResult <- precRecall(scores = ermineInputGeneScores,
                                geneSetDescription = "GO.xml") 
 ```
 
-The result show the "correctedMFPvalue"=1 for all the genes regardless of the number of corresponding probes.This result shows that there is not any relationship between the number of significant probes corresponding to the genes and the multifunctionality of the genes as there is no significant p value for the gene sets.
+The result show the "correctedMFPvalue"=1 for all the genes regardless of the number of corresponding probes.This result shows that there is not any relationship between the number of significant probes corresponding to the genes and the multifunctionality of the genes as there is no significant correctedMFPvalue for the gene sets.
 ```{r}
 
-enrichmentResult$results %>% arrange(CorrectedMFPvalue)
+enrichmentResult$results %>% arrange(CorrectedPvalue) 
 
 ```
 
