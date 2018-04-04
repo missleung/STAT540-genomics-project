@@ -37,13 +37,16 @@ Hiwot Tafessu |*Department of Statistics*
 
 **Introduction**
 ----------------
+DNA methylation is an epigenetic mechanism which plays a role in regulating tissue specific gene expression(Acharya, Owzar, & Allen, 2017). DNA methylation mostly occurs when a cytosine base is next to a guanine base, forming a CpG site. Early studies showed that methylation of CpG sites prevent the expression of genes. However, recent studies revealed that methylation can be linked with both decreasing and increasing of gene expressions(Gutierrez-Arcelus et al., 2013). 
+In this study, we characterize the relationship between DNA methylation and gene expression in a quantitative manner, i.e. evaluating the statistical significance of the effect of methylated CpG sites on gene expressions colloquiality known as **expression Quantitative Trait Methylation (eQTM)** in human dorsolateral prefrontal cortex (DLPFC).
 
-DNA methylation is an epigenetic mechanism which plays a role in regulating tissue specific gene expression 1. DNA methylation mostly occurs when a cytosine base is next to a guanine base, forming a CpG site. Early studies showed that methylation of CpG sites prevent the expression of genes. Ho wever, recent studies revealed that methylation can be linked with both decreasing and increasing of gene expressions 2. In this study, we investigate the correlation between DNA methylation and gene expression in a quantitative manner (eQTM), i.e. evaluating the statistical significance of the effect of methylated CpG sites on gene expressions. In this project, we study the association of methylation and gene expression in human dorsolateral prefrontal cortex (DLPFC) 3.
 
 **Goal**
 ----------------
 
-There are a few studies quantizing the relationship of methylation and gene expression in a tissue specific manner4. However, this project has several advantages in terms of data type and analysis methods. 1) previous study investigate eQTM analysis in common tissue type including whole blood4, while we perform eQTM  of two data sets derived from the dorsolateral prefrontal cortex (DLPFC)5,6.2) we study the collective effect of multiple CpG sites on the expression of genes, while Bonder et al. only addressed the relationship of single CpG sites and genes. 3) we quantitatively assess the roles of chromatin states7, CpG site distance from gene and chromosome number on the regulatory relationship between methylation probes and genes. This provides us more biological intuition behind the regulatory processes in human brain.
+There are a few studies quantizing the relationship of methylation and gene expression in a tissue specific manner(Bonder et al., 2017). In this project, we perform eQTM  of two data sets derived from the dorsolateral prefrontal cortex (DLPFC)(Bennett, Schneider, Buchman, et al., 2012; Bennett, Schneider, Arvanitakis, & Wilson, 2012). 
+**1)** We analyze the correlation of each gene and the probes located near that gene. **2)** We extend our model to include the collective effect of multiple CpG sites on the expression of genes. **3)** We quantitatively assess the roles of chromatin states and CpG site distance from gene on the regulatory relationship between methylation probes and a gene expression on brain tissue. This provides us more biological intuition behind the regulatory processes in human brain.
+
 
 
 ![](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/master/zz_Deliverable/figone.PNG?token=AVAzvOigxIEpdo_qYdVL1Q2YBvuf6rGjks5aznpIwA%3D%3D)
