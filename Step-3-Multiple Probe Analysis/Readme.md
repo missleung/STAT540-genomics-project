@@ -3,12 +3,18 @@ Readme
 Lisa Leung
 2018-04-02
 
-step3.Rmd
+step3.Rmd and step3.md
 --------------
 
--   Describe the code in step3.Rmd in point form
+- These files contain the codes to the procedures in step 3.
 
 Data
 --------------
 
 - The Data directory consists of any relevant data sets or links to data sets in Step 3.
+
+
+step3_files (Images Folder)
+--------------
+
+- The directory contains all images that are outputs from step3.md

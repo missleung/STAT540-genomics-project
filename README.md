@@ -14,22 +14,21 @@ Zohreh Sharafian|	*Department of Experimental Medicine*
 Hiwot Tafessu |*Department of Statistics*
 
 
-**Brief description of directories:**
+**Task Division Brief description of directories:**
 ---------------------------------------
 
-**Step 1: Data Processing**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. 
+**Step 1: Data Processing (Sina)**:- Includes description of data, codes for data preprocessing in preparation for data analysis and image outputs from this step. 
 
-**Step 2: Single Probe Analysis**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. 
+**Step 2: Single Probe Analysis (Lisa)**:- This directory includes code and images on PCA analysis, eQTM analysis and correlation results of each probe and gene pair. 
 
-**Step 3: Multiple Probe Analysis**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method. 
+**Step 3: Multiple Probe Analysis (Tiam and Sina)**:- This directory will include the code and images on the exploration of multiple probe regression (full model using all probes that are significant), nonlinear regression, and LASSO variable selection, Stepwise (Forward and Backward) variable selection, and neural network method. 
 
-**Step 4: Biological Plausability**:- This directory includes the visualizations and explanation behind biological reasonings
+**Step 4: Biological Plausability (Zohreh)**:- This directory includes the visualizations and explanation behind biological reasonings
 and gene enrichment analysis. 
 
-**shinyApp**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes 
+**shinyApp (Hiwot)**:- Data visiualization app to supplement analysis outputs and visualize expression and methylation data for selected genes 
 
-**zz_Deliverable**:- Project proposal, progress report and poster presentaion. 
-
+**zz_Deliverable**:- Project proposal (All), progress report (All) and poster presentation (Tiam, Zohreh, Hiwot, and Sina). 
 
 **Introduction**
 ----------------
@@ -58,9 +57,12 @@ In order to demonstrate our multiple probe analysis, we have to handle with the 
 As a [result](https://drive.google.com/open?id=1u7J2reJVtPl2IVVytpTqWqJm-76lu0OY), we concluded that the optimal DNA methylation probe data set should be adjusted for five PCs and gene expression data set is adjusted for 30 PCs. To observe [the effects of adjusting for number of PCs in the gene expression data](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-2-Single%20Probe%20Analysis/Step-2_files/gene_C21orf56_gdata.png), we took a look at a gene that show the most number of significant probes. Similarly, [the effects of adjusting for number of PCs in DNA methylation data](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-2-Single%20Probe%20Analysis/Step-2_files/gene_C21orf56_probes.png) are explored in the same gene.  
 
 
-**Step 3: Multiple Probe Analysis**:
+[**Step 3: Multiple Probe Analysis**](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-3-Multiple%20Probe%20Analysis/step3.md): Based on the single probe analysis, we would like to explore what happens when we modelled linear regression with more than one probe for each gene epxression. Specifically, we ran a single linear regression (using the probe with the smallest FDR value) and compared with the multiple linear regression using all significant probes (FDR < 0.05). In addition, we also ran Forward and Backward stepwise variable selection method for each gene, LASSO variable selection method and 
 
-[**Step 4: Biological Plausability**](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4.md): 
+[**Step 4: Biological Plausability**](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4.md): Based on the single probe analysis in Step 1, we looked at the distances of probe and genes which are correlated at FDR < 0.05 in a [plot](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4_files/figure-markdown_github/unnamed-chunk-7-1.png). We observe that most of these pairs are very close by the distance, with very few pairs that are far from each other. Based on another [plot](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-4-BIological%20Plausibility/step4_files/figure-markdown_github/unnamed-chunk-8-1.png), we also see that the average FDR increases when distances from probe and gene pair widen.jb
+
+**Discussion and Conclusion**
+----------------
 
 *References:*
 ---------------------------------------
