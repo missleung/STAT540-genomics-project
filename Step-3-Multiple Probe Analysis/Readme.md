@@ -8,6 +8,11 @@ step3.Rmd and step3.md
 
 - These files contain the codes to the procedures in step 3.
 
+step3_files (Images Folder)
+--------------
+
+- The directory contains all images that are outputs from step3.md
+
 Data
 --------------
 
@@ -35,8 +40,3 @@ https://drive.google.com/drive/folders/1u7J2reJVtPl2IVVytpTqWqJm-76lu0OY
 
 https://drive.google.com/drive/folders/1u7J2reJVtPl2IVVytpTqWqJm-76lu0OY 
 
-
-step3_files (Images Folder)
---------------
-
-- The directory contains all images that are outputs from step3.md
