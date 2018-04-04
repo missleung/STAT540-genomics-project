@@ -7,8 +7,8 @@ step3.Rmd and step3.md
 --------------
 
 - These files contain the codes to the procedures in step 3.
--Use linear regression model
--Feature selection: Most significant probe, Forward probe selection, Backward probe selection (MASS), Lasso- (GLMnet), and Full probes.
+- Use linear regression model
+- Feature selection: Most significant probe, Forward probe selection, Backward probe selection (MASS), Lasso- (GLMnet), and Full probes.
 -Use 80% of subjects as train and 20% as test. We train the model using 3-fold cross validation.
 
 step3_files (Images Folder)
