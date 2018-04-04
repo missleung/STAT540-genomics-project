@@ -1,4 +1,4 @@
-Step4-Biological Analysis-part 1
+Step4-Biological Plausibility-spatial distribution of methylated CpG sites
 ================
 Zohreh Sharafian
 March 24, 2018
@@ -7,7 +7,7 @@ We load related library packages to understand and verify the biological aspects
 
 ### Loading data
 
-We load data set from Step 1:probes\_subjects that contains DNA methylation probe values, subjects\_genes that contains gene expression values, and probes\_genes\_distance that is a sparse matrix containing the distances between a gene and a probe.Note that probes\_genes\_distance is 0 when probe and gene distance is over 1Mb.
+We load dataset from Step 1:probes\_subjects that contains DNA methylation probe values, subjects\_genes that contains gene expression values, and probes\_genes\_distance that is a sparse matrix containing the distances between a gene and a probe.Note that probes\_genes\_distance is 0 when probe and gene distance is over 1Mb.
 
 ``` r
 RosmapData <- load("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/rosmap_postprocV2.RData")
@@ -73,10 +73,10 @@ ncol(probes_genes_distance) #number of genes
 
     ## [1] 1795
 
-WE also load a data set from eQTM analysis that we have peroformed in Step 2, including all the adjusted P values for analysing single probes.
+WE also load a dataset from eQTM analysis that we have peroformed in Step 2, including all the adjusted P-values for analyzing single probes.
 
 ``` r
-cor_test_results_PCA_lapply_V4 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Code/Step4/cor_test_results_PCA_lapply_V4.rds")
+cor_test_results_PCA_lapply_V4 <- readRDS("C:/Users/zohre/Desktop/Repo_team_Gene_Heroes/Data/cor_test_results_PCA_lapply_V4.rds")
 head (cor_test_results_PCA_lapply_V4)
 ```
 
@@ -95,9 +95,9 @@ head (cor_test_results_PCA_lapply_V4)
     ## cor4       0.9527597
     ## cor5       0.9801636
 
-### setting a cut of 0.05 for "adjusted P value"
+### Setting a cut of 0.05 for "adjusted P-value"
 
-Next, We extract three columns including gene, probe, and adjusted P value and filtering the genes based on adjusted P value that are greater than 0.05 .
+Next, We extract three columns including gene, probe, and adjusted P value and filtering the genes based on adjusted P-value that are greater than 0.05.
 
 ``` r
 extracted_matrix <- cor_test_results_PCA_lapply_V4 [,c(1,2, 5)]
@@ -143,34 +143,37 @@ inds=cbind(match_probes,matche_genes)
 
 match_data <- data[inds]
 
+
+
 qplot(match_data,
       geom="histogram",
       main = "The distance of methylated CpG sites from Trascription Start Sites", 
       xlab = "methylated CpG sites distance from TSS",  
       fill=I("blue"), 
       col=I("red"), 
-      ) +theme_minimal()
+      ) +theme_minimal() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black"))
 ```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](step4_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](step4-spatial_distribution_of_methylated_CpG_sites_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
-**The histogram clearly shows that the majority of methylated CpG sites are concentrated near the transcription start sites (TSS) of genes.**
+**The histogram shows that the majority of methylated CpG sites are concentrated near the transcription start sites (TSS) of genes.**
 
-Next, we get the mean of adjusted P value for each bin of histogram (number of methylated CpG sites) to check the distance of the significant probes from TSS.
+Next, we get the mean of adjusted P-value for each bin of histogram (number of methylated CpG sites) to check the distance of the significant probes from TSS.
 
 ``` r
 tmp <- hist(match_data) 
 ```
 
-![](step4_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](step4-spatial_distribution_of_methylated_CpG_sites_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 ``` r
 intervals_values=findInterval(match_data,tmp$breaks)  #get the interval values from the histogram
 ```
 
-Using a for loop function to get the interval values for all the genes.Then, we generate a geome line plot of adjusted P value for all the methylated CpG sites in genes promoters.
+Using a for loop function to get the interval values for all the genes. Then, we generate a genome-line plot of adjusted P-value for all the methylated CpG sites in the genes promoters.
 
 ``` r
 histog <-  integer (10)
@@ -197,14 +200,14 @@ x=tmp$mids;
 y=histog;
 data_plot=cbind(x,y)
 data_plot=as.data.frame(data_plot)
-colnames(data_plot)=c("CpG_site_distance","Average_of_adjusted_Pvalue")
+colnames(data_plot)= c("CpG_Site_distance","Average_of_adjusted_Pvalue")
 
-data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_line(color='steelblue', size=2 )+ ggtitle ("The distance of significant methylated CpG sites from TSS")+ theme_minimal()
+data_plot %>% ggplot2::ggplot(aes(x= CpG_Site_distance, y=Average_of_adjusted_Pvalue)) +geom_line(color='steelblue', size=2 )+ ggtitle ("The distance of significant methylated CpG sites from TSS") + theme_minimal()
 ```
 
-![](step4_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](step4-spatial_distribution_of_methylated_CpG_sites_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
-**The bar grapgh shows that the methylated CpG sites with significant P values are located in the close distance from TSS. This result is consistant with previous data which showed that CpG sites are relatively enriched around transcription start sites of genes\[ref\].**
+**The bar graph shows that the methylated CpG sites with significant P values are in the close distance from TSS. This result is consistent with previous data which showed that CpG sites are relatively enriched around transcription start sites of genes (Numata et al., 2012; Saxonov, Berg, & Brutlag, 2006).**
 
 ``` r
 x=tmp$mids;
@@ -212,7 +215,8 @@ y=histog;
 data_plot=cbind(x,y)
 data_plot=as.data.frame(data_plot)
 colnames(data_plot)=c("CpG_site_distance","Average_of_adjusted_Pvalue")
-data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_bar(stat="identity",fill="Green4")+ggtitle ("The distance of significant methylated CpG sites from TSS")+ theme_minimal()
+data_plot %>% ggplot2::ggplot(aes(x= CpG_site_distance, y=Average_of_adjusted_Pvalue)) +geom_bar(stat="identity",fill="Green4")+ggtitle ("The distance of significant methylated CpG sites from TSS")+ theme_minimal()+theme_minimal() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black"))
 ```
 
-![](step4_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](step4-spatial_distribution_of_methylated_CpG_sites_files/figure-markdown_github/unnamed-chunk-9-1.png)
