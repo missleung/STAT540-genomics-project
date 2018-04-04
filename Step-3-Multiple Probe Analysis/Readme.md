@@ -16,11 +16,11 @@ step3_files (Images Folder)
 Data
 --------------
 
-## (put name of data set here)
+### (put name of data set here)
 
 - Please describe the contents in point form
 
-## cor_test_results_PCA_lapply_V4.rds
+### cor_test_results_PCA_lapply_V4.rds
 
 - The data set used in Step 3 consists of cor_test_results_PCA_lapply_V4.rds which is the results of correlation test between pairs of DNA methylation probes and genes. Since it is too large to be uploaded in github, the data set could be found in this Google Drive Folder:
 
