@@ -77,7 +77,7 @@ gene_list <- filtered_adjusted_pvalue %>% count(new_gene_name)
 gene_list[1:15,]
 colnames(remaining_names)=c("new_gene_name","n")
 gene_list=rbind(gene_list,remaining_names)
-gene_list$n=exp(gene_list$n)
+#gene_list$n=exp(gene_list$n)
 class(gene_list)
 
 ```

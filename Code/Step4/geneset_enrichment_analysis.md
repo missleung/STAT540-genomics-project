@@ -147,7 +147,7 @@ gene_list[1:15,]
 ``` r
 colnames(remaining_names)=c("new_gene_name","n")
 gene_list=rbind(gene_list,remaining_names)
-gene_list$n=exp(gene_list$n)
+#gene_list$n=exp(gene_list$n)
 class(gene_list)
 ```
 
@@ -192,15 +192,15 @@ enrichmentResult$results %>% arrange(CorrectedMFPvalue)
     ##    Name         ID     NumProbes NumGenes RawScore    Pval CorrectedPvalue
     ##    <chr>        <chr>      <int>    <int>    <dbl>   <dbl>           <dbl>
     ##  1 monocarboxy~ GO:00~        35       35   0.0715 9.00e-4           0.664
-    ##  2 lipid metab~ GO:00~       107      107   0.104  1.10e-3           0.406
-    ##  3 fatty acid ~ GO:00~        26       26   0.0656 1.50e-3           0.369
-    ##  4 cellular li~ GO:00~        85       85   0.0917 1.60e-3           0.295
-    ##  5 organic aci~ GO:00~        65       65   0.0776 2.30e-3           0.339
-    ##  6 carboxylic ~ GO:00~        62       62   0.0775 2.30e-3           0.283
-    ##  7 oxoacid met~ GO:00~        64       64   0.0778 2.30e-3           0.242
-    ##  8 oxidation-r~ GO:00~        83       83   0.0875 2.60e-3           0.240
-    ##  9 drug metabo~ GO:00~        53       53   0.0654 6.30e-3           0.517
-    ## 10 steroid met~ GO:00~        22       22   0.0520 8.70e-3           0.642
+    ##  2 lipid metab~ GO:00~       107      107   0.104  1.40e-3           0.517
+    ##  3 fatty acid ~ GO:00~        26       26   0.0656 1.60e-3           0.394
+    ##  4 cellular li~ GO:00~        85       85   0.0917 1.80e-3           0.332
+    ##  5 oxidation-r~ GO:00~        83       83   0.0875 1.80e-3           0.266
+    ##  6 organic aci~ GO:00~        65       65   0.0776 3.30e-3           0.406
+    ##  7 carboxylic ~ GO:00~        62       62   0.0775 3.30e-3           0.348
+    ##  8 oxoacid met~ GO:00~        64       64   0.0778 3.30e-3           0.304
+    ##  9 drug metabo~ GO:00~        53       53   0.0654 5.80e-3           0.476
+    ## 10 small molec~ GO:00~       144      144   0.117  8.50e-3           0.627
     ## # ... with 739 more rows, and 5 more variables: MFPvalue <dbl>,
     ## #   CorrectedMFPvalue <dbl>, Multifunctionality <dbl>, `Same as` <chr>,
     ## #   GeneMembers <chr>
