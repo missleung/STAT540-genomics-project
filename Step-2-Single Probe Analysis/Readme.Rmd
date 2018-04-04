@@ -7,7 +7,10 @@ output: html_document
 
 ## Step-2.Rmd and Step-2.md
 
-- These markdown files are all the codes in Step 2. Please refer to Step-2.md for images and conclusions.
+- These markdown files are all the codes, images and conclusions for Step 2.
+- With rosmap_postprocV2.RData, ran and adjusted for PCs for gene expression data and DNA methylation data
+- Correlation test on each pair for probe and gene
+- Plots on the heatmap for PC adjustments, percentage of variation taken by PC, and the results of a few randomly chosen individual gene
 
 ## Step-2_files (Images Folder)
 
