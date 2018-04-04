@@ -38,4 +38,7 @@ https://drive.google.com/drive/folders/1u7J2reJVtPl2IVVytpTqWqJm-76lu0OY
 
 ### Gene set enrichment dataset
 
+- The data set consists of the data that we use for gene set enrichment analysis.
+
+https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-4-BIological%20Plausibility/Data
 
