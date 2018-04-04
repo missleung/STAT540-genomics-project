@@ -18,7 +18,7 @@ output: github_document
 
 ## step4_files (Images Folder)
 
-- This directory will include all the images that are involved in the Markdown file
+- This directory consists of the images output from Step-4.md
 
 ## Data
 
