@@ -51,7 +51,7 @@ After the preprocessing methods in Step 1, we kept the original plan in Step 2 f
 
 The result shows the proportion of genes with at least one significant eQTM by looking at FDR &lt; 0.05 against the number of PCs adjusted in the gene expression data set. Due to computational timing issues, we are only able to look at a set of 50 random genes to plot instead of looking at all the genes. This plot is slightly difficult to interpret, but it seems like the proportion of genes increase in a general direction when more PCs are adjusted.
 
-![](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/master/Step-2-Single%20Probe%20Analysis/Step-2_files/cum_var_explained_50_V4_gdata.png?token=AVAzvEd8IRvFvHU4vd8-Qqdt_mAOHPb_ks5azq_0wA%3D%3D)
+![](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/ecf9d6c878e201e629133ec8a106cc8325f3ff92/images/cum_var_explained_all_V2.jpg?token=AVAzvOMI69ZW0qMEFdEqzau2XsAotlvFks5aztCKwA%3D%3D)
 
 The figure above shows the cumulative variance explained against the number of principal components adjusted. We decide to adjust for three principal components with approximately 0.3 variance explained overall.
 
@@ -70,7 +70,8 @@ Being the raw data in Matlab and Excel formats, we used various data conversion 
 
 Our results from the single probe analysis can help us identify which methylation probes are significantly associated with expression levels. In order to evaluate our findings from this analysis, we perform literature review for selected genes and verifying the biological plausibility. As an example, we have included the table below to show the result for a randomly chosen gene 'RAB4B' and the top 10 significantly associated methylation probes.
 
-![dsfsff](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/ecf9d6c878e201e629133ec8a106cc8325f3ff92/images/tableresult.PNG?token=AVAzvMAiFdo3eOuUUEy7tIR41jVYcm4fks5aztBSwA%3D%3D)
+![](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/ecf9d6c878e201e629133ec8a106cc8325f3ff92/images/tableresult.PNG?token=AVAzvMAiFdo3eOuUUEy7tIR41jVYcm4fks5aztBSwA%3D%3D)
+
 In addition, we are currently working on multiple probe analysis to assess how combinations of methylation probes can better explain gene expression levels compared to single probe analysis.
 
 -   **List some challenges that you encountered? How will you address them?**
