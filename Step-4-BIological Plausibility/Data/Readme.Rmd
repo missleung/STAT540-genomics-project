@@ -8,18 +8,22 @@ output: github_document
 ## ranked_gene_list.txt and ranked_gene_list.csv
 
 - The data set consists of the data that we use for gene set enrichment analysis.
+https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-4-BIological%20Plausibility/Data
 
 ## GO.xml.gz and GO.xml
 
 - The data set consists of the data that we use for gene set enrichment analysis.
+https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-4-BIological%20Plausibility/Data
 
 ## Generic_human.txt and Generic_human
 
 - The data set consists of the data that we use for gene set enrichment analysis.
+https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-4-BIological%20Plausibility/Data
 
 ## gene_multifunctionality_scores.csv
 
 - The data set consists of the data that we use for gene set enrichment analysis.
+https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/tree/master/Step-4-BIological%20Plausibility/Data
 
 ## cor_test_results_PCA_lapply_V4.rds
 
