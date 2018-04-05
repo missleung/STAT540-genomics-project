@@ -23,11 +23,17 @@ Step1\_files (Images Folder)
 
 -   Step\_files will include all the images that are produced in Markdown file
 
-Data 
-----------------------------
+Data
+----
 
-## rosmap_postprocV2.RData
+### ROSMAP Data
 
-- The data sets produced here consists of the results from Step 1. The .RData folder consists of three data sets: probes_subjects, subjects_genes, and probes_genes_distance. The probes_subjects data consists of DNA methylation probe data, subjects_genes consists of gene expression values, and probes_genes_distance consists of the distances on probes and genes where 0 represents a distance over 1Mb. Since it is too large to be uploaded in github, the data set could be found in this Google Drive Folder:
+-   We used the ROSMAP raw data published by [synapse](https://www.synapse.org/) as the input to this step. Due to the confidentiality issues, interested scientists can directly contact synapse for downloading the data using the link below:
 
-https://drive.google.com/drive/folders/1u7J2reJVtPl2IVVytpTqWqJm-76lu0OY?usp=sharing
+<https://www.synapse.org/#!Synapse:syn3219045>
+
+### rosmap\_postprocV2.RData
+
+-   The data sets produced here consists of the results from Step 1. The .RData folder consists of three data sets: probes\_subjects, subjects\_genes, and probes\_genes\_distance. The probes\_subjects data consists of DNA methylation probe data, subjects\_genes consists of gene expression values, and probes\_genes\_distance consists of the distances on probes and genes where 0 represents a distance over 1Mb. Since it is too large to be uploaded in github, the data set could be found in this Google Drive Folder:
+
+<https://drive.google.com/drive/folders/1u7J2reJVtPl2IVVytpTqWqJm-76lu0OY?usp=sharing>
