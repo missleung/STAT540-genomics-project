@@ -15,6 +15,16 @@ step3_files (Images Folder)
 
 - The directory contains all images that are outputs from step3.md
 
+step3-nonlinear.Rmd and step3-nonlinear.md : Non-linear models to predict gene expression level
+--------------
+- These files contain the codes related to the model extension to non-linear regression.
+- Use neural network and conditional inference tree,
+
+step3-nonlinear (Images Folder)
+--------------
+- The directory contains all images that are outputs from step3.md
+
+
 Data
 --------------
 
