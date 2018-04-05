@@ -32,7 +32,7 @@ Hiwot Tafessu |*Department of Statistics*
 
 - [Project proposal](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Group_Project_Proposal_Gene_Heroes.md) - __Lisa prepared the proposal, Hiwot and Tiam contributed to the ideas, then Zohreh and Sina finalized the proposal.__
 - [Progress report](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Progressreport.md) - __Lisa prepared the report, Hiwot and Tiam contributed to the ideas, then Zohreh and Sina finalized the report.__
-- [Poster presentation](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Poster_Final.pdf) - __Zohreh and Sina prepared and finalized the poster, then Hiwot and Tiam provided organized all the graphs plots.__
+- [Poster presentation](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/zz_Deliverable/Final_Poster.pdf) - __Zohreh and Sina prepared and finalized the poster, then Hiwot and Tiam provided organized all the graphs plots.__
 
 **Repo Preparation** - Organizing and preparing the entire repository at presentable level. __Hiwot and Lisa organized the Repo. Zohreh and Sina wrote Introduction, Background and Data Description. Lisa prepared the summary analyses but are finalized by everyone accordingly to the steps they have contributed. Zohreh wrote Bibliography.__
 
