@@ -5,8 +5,11 @@ date: '2018-04-02'
 output: github_document
 ---
 
-## (insert the data set names used here)
+## ROSMAP Data
 
+- We used the ROSMAP raw data published by [synapse](https://www.synapse.org/) as the input to this step. Due to the confidentiality issues, interested scientists can directly contact synapse for downloading the data using the link below:
+
+https://www.synapse.org/#!Synapse:syn3219045
 
 
 ## rosmap_postprocV2.RData
