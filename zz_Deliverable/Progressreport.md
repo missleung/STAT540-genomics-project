@@ -29,9 +29,9 @@ It is known that methylation probes can be in strong Linkage Disequilibrium (LD)
 
 This algorithm first merges each pair of nearby probes and all of the probes located between them if the correlation between that pair is more than corr\_dist\_thresh. Nearby pairs are pairs of probes with a base pair distance less than *bp\_dist\_thresh*. In the next step, it merges each two neighbour probes if their correlation distance is less than *corr\_dist\_thresh*. We find the best values for these parameters by creating train and validation datasets. We choose the parameters based on train data and then check if they work on another validation data. We choose CpG sites on chromosomes 1-18 as train data and CpG sites in chromosome 19-22 as validation. We select the parameters that decrease the number of probes (i.e. create as much cluster as possible) and yield the highest intra-cluster correlation between probes.
 
-![dsfsff](images/unnamed-chunk-1-1.png)
+![dsfsff](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/master/Step-1-Data%20Processing/Step1_files/figure-markdown_github/unnamed-chunk-1-1.png?token=AVAzvNXCSrOSnYHW_KIwVEU1aw5ZMaK2ks5azrA4wA%3D%3D)
 
-![dsfsff](images/unnamed-chunk-1-2.png)
+![dsfsff](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/master/Step-1-Data%20Processing/Step1_files/figure-markdown_github/unnamed-chunk-1-2.png?token=AVAzvNb7Gn5h8iZjZa-RcOPAd0Sx9Wtwks5azrBGwA%3D%3D)
 
 The plots suggest that *corr\_threshold* = 0.8 and *bp\_dist\_threshold* = 1000 are the best parameters in terms of the intra-cluster correlation/number of clusters trade-off. The authors of A-clust paper also suggested this parameter in their experiment on human methylation data, supporting the chosen parameters in our problem.
 
@@ -51,7 +51,7 @@ After the preprocessing methods in Step 1, we kept the original plan in Step 2 f
 
 The result shows the proportion of genes with at least one significant eQTM by looking at FDR &lt; 0.05 against the number of PCs adjusted in the gene expression data set. Due to computational timing issues, we are only able to look at a set of 50 random genes to plot instead of looking at all the genes. This plot is slightly difficult to interpret, but it seems like the proportion of genes increase in a general direction when more PCs are adjusted.
 
-![dsfsff](images/cum_var_explained_all_V2.jpg)
+![](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/master/Step-2-Single%20Probe%20Analysis/Step-2_files/cum_var_explained_50_V4_gdata.png?token=AVAzvEd8IRvFvHU4vd8-Qqdt_mAOHPb_ks5azq_0wA%3D%3D)
 
 The figure above shows the cumulative variance explained against the number of principal components adjusted. We decide to adjust for three principal components with approximately 0.3 variance explained overall.
 
