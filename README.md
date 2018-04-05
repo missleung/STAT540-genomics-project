@@ -61,7 +61,7 @@ There are a few studies quantizing the relationship of methylation and gene expr
 
 **Summary of analysis and major results**
 ------------------------
-0
+
 **[Step 1: Data Processing](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1.md)**: ROSMAP raw data is preprocessed to prepare for the single probe and multiple probe analyses. We started with a gene expression data set, DNA methylation data set and its corresponding CpG sites. For this particular assignment, we are only interested in the probes within a 1Mb distance around the gene of interest. 
 
 In order to demonstrate our multiple probe analysis, we have to handle with the issue of multicollinearity between probes.  Hence, we decide to pick one probe out of a cluster of probes that are strongly correlated with each other (ie. probes that have strong linkage disequilibrium). We used A-clust algorithm to solve this issue. Based on the resulting plots of [number of non-singletone clusters](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1_files/figure-markdown_github/unnamed-chunk-1-1.png) and [average intra-cluster correlation](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1_files/figure-markdown_github/unnamed-chunk-1-2.png), we decide that correlation threshold of 0.8 and a base-pair distance of 1000 are the ideal parameters to separate the probes. In return, we are left with three data sets for Step 2 and 3: [probes_genes_distance, probes_subjects and subjects_genes](https://drive.google.com/file/d/1Ieze9KwSy5UL9c6Vt5uFF9ta4U9kvkoe/).
