@@ -1,7 +1,9 @@
 Readme
 ================
-Lisa Leung
+Sina Jafarzadeh
 2018-04-02
+
+This directory belongs to R source code for a-clust algorithm. The two first files was written by us to use A-clust on our dataset using different appropriate settings and generate the reduced array of methylation probes.
 
 clustering\_methylation\_probes\_different\_settings.R
 ======================================================
