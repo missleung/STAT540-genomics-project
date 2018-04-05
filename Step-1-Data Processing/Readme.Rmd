@@ -1,6 +1,6 @@
 ---
 title: "Readme"
-author: "Lisa Leung"
+author: "Sina Jafarzadeh"
 date: '2018-04-02'
 output: github_document
 ---
