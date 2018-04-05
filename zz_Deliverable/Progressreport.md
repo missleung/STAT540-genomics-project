@@ -70,7 +70,7 @@ Being the raw data in Matlab and Excel formats, we used various data conversion 
 
 Our results from the single probe analysis can help us identify which methylation probes are significantly associated with expression levels. In order to evaluate our findings from this analysis, we perform literature review for selected genes and verifying the biological plausibility. As an example, we have included the table below to show the result for a randomly chosen gene 'RAB4B' and the top 10 significantly associated methylation probes.
 
-![dsfsff](images/tableresult.PNG)
+![dsfsff](https://raw.githubusercontent.com/STAT540-UBC/Repo_team_Gene_Heroes/ecf9d6c878e201e629133ec8a106cc8325f3ff92/images/tableresult.PNG?token=AVAzvMAiFdo3eOuUUEy7tIR41jVYcm4fks5aztBSwA%3D%3D)
 In addition, we are currently working on multiple probe analysis to assess how combinations of methylation probes can better explain gene expression levels compared to single probe analysis.
 
 -   **List some challenges that you encountered? How will you address them?**
