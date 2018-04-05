@@ -7,19 +7,19 @@ output: github_document
 
 ## ranked_gene_list.txt and ranked_gene_list.csv
 
-- Please describe the contents in point form
+- The data set consists of the data that we use for gene set enrichment analysis.
 
 ## GO.xml.gz and GO.xml
 
-- Please describe the contents in point form
+- The data set consists of the data that we use for gene set enrichment analysis.
 
 ## Generic_human.txt and Generic_human
 
-- Please describe the contents in point form
+- The data set consists of the data that we use for gene set enrichment analysis.
 
 ## gene_multifunctionality_scores.csv
 
-- Please describe the contents in point form
+- The data set consists of the data that we use for gene set enrichment analysis.
 
 ## cor_test_results_PCA_lapply_V4.rds
 
