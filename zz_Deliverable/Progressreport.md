@@ -57,7 +57,7 @@ The figure above shows the cumulative variance explained against the number of p
 
 -   **What R packages or other tools are you using for your analyses? You do not need to provide your scripts in your report.Provide the links to any markdown reports within your repo to refer to the relevant analysis.**
 
-Being the raw data in Matlab and Excel formats, we used various data conversion base libraries to transform data to appropriate R format. In order to represent sparse matrices, we used Matrix library. We adjusted A-clust external R package to address the multicolearity issue in our data as well. We used various statisticall methods from R base libraries to perform principle component analysis, hypothesis testing, etc. Aditional information is availabe in relevant Markdown files, [step1](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Report/Step1.md) and [step2](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Code/Step-2/Step-2.Rmd).
+Being the raw data in Matlab and Excel formats, we used various data conversion base libraries to transform data to appropriate R format. In order to represent sparse matrices, we used Matrix library. We adjusted A-clust external R package to address the multicolearity issue in our data as well. We used various statisticall methods from R base libraries to perform principle component analysis, hypothesis testing, etc. Aditional information is availabe in relevant Markdown files, [step1](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-1-Data%20Processing/Step1.md) and [step2](https://github.com/STAT540-UBC/Repo_team_Gene_Heroes/blob/master/Step-2-Single%20Probe%20Analysis/Step-2.md).
 
 -   **Provide references.**
 
